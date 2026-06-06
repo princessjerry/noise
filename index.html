@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소음 환경 기능적 의사소통 평가 프로토콜</title>
+<style>
+:root{
+  --bg:#f7f8fc;
+  --card:#ffffff;
+  --line:#dde5f3;
+  --line-strong:#c9d6ec;
+  --text:#1f2a37;
+  --muted:#6b7a90;
+  --accent:#4f6fff;
+  --accent-soft:#eef3ff;
+  --mint:#eefbf5;
+  --gold:#fff8e8;
+  --radius:24px;
+  --shadow:0 14px 36px rgba(31,42,55,.08);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(79,111,255,.08), transparent 26%),
+    radial-gradient(circle at top right, rgba(255,210,140,.18), transparent 22%),
+    linear-gradient(180deg,#fcfdff 0%,#f4f7fb 100%);
+  line-height:1.6;
+}
+.wrap{max-width:1360px;margin:0 auto;padding:22px}
+h1,h2,h3,h4{margin:0 0 10px}
+h1{font-size:36px;letter-spacing:-.03em}
+h2{font-size:25px}
+h3{font-size:18px}
+.sub{color:var(--muted)}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+.hero{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  align-items:flex-start;
+}
+.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.nav button{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:999px;
+  padding:11px 16px;
+  font-weight:800;
+  font-size:14px;
+  cursor:pointer;
+  color:var(--text);
+  transition:.2s ease;
+}
+.nav button.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:var(--accent);
+  box-shadow:0 8px 20px rgba(79,111,255,.12);
+}
+.page{display:none}
+.page.active{display:block}
+.audio-host{display:none}
+.eval-layout{display:grid;grid-template-columns:1fr;gap:18px}
+.stack{display:grid;gap:18px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.triple{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-weight:800;margin-bottom:6px;font-size:14px}
+input[type=text],select,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px 13px;
+  font-size:14px;
+  background:#fff;
+  color:var(--text);
+}
+textarea{min-height:120px;resize:vertical}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.badge{
+  display:inline-block;
+  background:var(--accent-soft);
+  color:var(--accent);
+  border-radius:999px;
+  padding:5px 10px;
+  font-size:12px;
+  font-weight:800;
+}
+.mini-badge{
+  display:inline-block;
+  background:#f5f7fc;
+  border:1px solid var(--line);
+  color:var(--muted);
+  border-radius:999px;
+  padding:5px 10px;
+  font-size:12px;
+  font-weight:700;
+}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+button{
+  border:none;
+  border-radius:16px;
+  padding:11px 14px;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+  background:#eef1f7;
+  color:var(--text);
+}
+.primary{background:var(--accent);color:#fff}
+.outline{background:#fff;border:1px solid var(--line)}
+.soft{background:var(--accent-soft);color:var(--accent)}
+.mint{background:var(--mint);color:#157f59}
+.small{font-size:13px;color:var(--muted)}
+.note{
+  background:#fffaf0;
+  border:1px solid #f0dfb6;
+  border-radius:18px;
+  padding:13px 14px;
+  font-size:13px;
+  color:#755200;
+}
+.summary{
+  border:1px solid #dce6fa;
+  background:#f9fbff;
+  border-radius:18px;
+  padding:14px;
+  white-space:pre-wrap;
+}
+.feedback{
+  margin-top:12px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  padding:14px;
+  background:#fcfdff;
+  white-space:pre-wrap;
+}
+.compact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.smallbox{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+  background:#fcfdff;
+}
+.stat-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:16px;
+  background:#fbfcff;
+}
+.label2{font-size:13px;color:var(--muted)}
+.value{font-size:26px;font-weight:900}
+.scene{
+  position:relative;
+  min-height:470px;
+  overflow:hidden;
+  border-radius:28px;
+  border:1px solid #d9e4f8;
+  background:
+    linear-gradient(180deg,#eaf3ff 0%,#d8ebff 52%,#f1e3c9 52%,#e6d3b5 100%);
+}
+.scene-top{
+  position:absolute;
+  inset:0 0 auto 0;
+  height:62%;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.5),transparent 38%),
+    linear-gradient(90deg,rgba(255,255,255,.18) 0 8%,transparent 8% 92%,rgba(255,255,255,.18) 92% 100%);
+}
+.window-strip{
+  position:absolute;
+  top:26px;
+  left:28px;
+  right:28px;
+  height:116px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.window{
+  border-radius:20px;
+  border:6px solid rgba(255,255,255,.78);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.12)),
+    linear-gradient(180deg,#cfe8ff 0%,#b9dcff 100%);
+  box-shadow:inset 0 -28px 34px rgba(255,255,255,.22);
+}
+.board{
+  position:absolute;
+  top:34px;
+  left:50%;
+  transform:translateX(-50%);
+  width:220px;
+  height:110px;
+  background:linear-gradient(180deg,#2f7d60,#286c55);
+  border:10px solid #d8b07b;
+  border-radius:22px;
+  box-shadow:0 10px 24px rgba(0,0,0,.08);
+}
+.board:after{
+  content:"오늘의 듣기 평가";
+  position:absolute;
+  inset:34px 0 auto;
+  text-align:center;
+  color:rgba(255,255,255,.86);
+  font-size:18px;
+  font-weight:800;
+}
+.floor{
+  position:absolute;
+  left:22px;
+  right:22px;
+  bottom:24px;
+  height:24px;
+  border-radius:999px;
+  background:rgba(174,130,78,.18);
+}
+.desk{
+  position:absolute;
+  width:138px;
+  height:62px;
+  border-radius:18px;
+  background:linear-gradient(180deg,#f1c886,#dea45a);
+  box-shadow:0 8px 18px rgba(116,82,39,.12);
+}
+.desk:before{
+  content:"";
+  position:absolute;
+  inset:auto 16px -10px;
+  height:12px;
+  border-radius:999px;
+  background:rgba(95,68,35,.16);
+}
+.desk.a{left:80px;bottom:150px}
+.desk.b{left:245px;bottom:118px}
+.desk.c{right:210px;bottom:118px}
+.desk.d{right:56px;bottom:150px}
+.avatar{
+  position:absolute;
+  width:88px;
+  height:132px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  z-index:4;
+}
+.avatar.focus{transform:translateY(-6px) scale(1.02)}
+.head{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background:#ffd9c2;
+  border:2px solid rgba(0,0,0,.06);
+  position:relative;
+}
+.hair{
+  position:absolute;
+  top:-4px;
+  left:4px;
+  width:42px;
+  height:23px;
+  background:#3f3b43;
+  border-radius:16px 16px 10px 10px;
+}
+.body2{
+  width:66px;
+  height:58px;
+  border-radius:18px 18px 16px 16px;
+  background:#9fc2ff;
+  border:2px solid rgba(0,0,0,.05);
+}
+.teacher .body2{background:#ffccd8}
+.studentA .body2{background:#9fc2ff}
+.studentB .body2{background:#bde8cc}
+.studentC .body2{background:#ffd58d}
+.studentD .body2{background:#d8c4ff}
+.tag{
+  font-size:12px;
+  font-weight:800;
+  background:rgba(255,255,255,.94);
+  padding:2px 8px;
+  border-radius:999px;
+  border:1px solid #dbe3ef;
+}
+.teacher{left:76px;bottom:86px}
+.studentA{left:250px;bottom:78px}
+.studentB{left:352px;bottom:78px}
+.studentC{left:474px;bottom:78px}
+.studentD{left:584px;bottom:78px}
+.speech-cloud{
+  position:absolute;
+  min-width:140px;
+  max-width:240px;
+  background:rgba(255,255,255,.96);
+  border:1px solid #dbe4f4;
+  border-radius:20px;
+  padding:12px 14px;
+  box-shadow:0 8px 22px rgba(31,42,55,.09);
+  z-index:5;
+  font-size:14px;
+  font-weight:700;
+}
+.speech-cloud:after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#fff;
+  border-left:1px solid #dbe4f4;
+  border-bottom:1px solid #dbe4f4;
+  transform:rotate(-45deg);
+  bottom:-8px;
+  left:24px;
+}
+.speech-cloud.main{left:84px;top:178px}
+.speech-cloud.alt1{left:286px;top:200px}
+.speech-cloud.alt2{left:500px;top:182px}
+.scene-info{
+  position:absolute;
+  top:16px;
+  right:16px;
+  max-width:250px;
+  background:rgba(255,255,255,.96);
+  border:1px solid #dce5f3;
+  border-radius:18px;
+  padding:12px;
+  z-index:6;
+  white-space:pre-wrap;
+  font-size:13px;
+  color:var(--muted);
+}
+.item-tabs{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+}
+.item-tab{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:16px;
+  padding:12px 8px;
+  font-weight:800;
+  font-size:14px;
+  text-align:center;
+}
+.item-tab.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:var(--accent);
+}
+.question-card{
+  border:1px dashed #c8d9fb;
+  border-radius:22px;
+  padding:16px;
+  background:linear-gradient(180deg,#fbfdff 0%,#f7faff 100%);
+}
+.big-text{
+  font-size:21px;
+  line-height:1.5;
+  font-weight:900;
+  white-space:pre-wrap;
+  margin:8px 0;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:10px 13px;
+  cursor:pointer;
+  font-size:14px;
+}
+.chip.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:var(--accent);
+  font-weight:800;
+}
+.strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.strategy-card{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+  background:#fff;
+  cursor:pointer;
+}
+.strategy-card.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+}
+.strategy-card .kr{font-size:16px;font-weight:900}
+.strategy-card .en{font-size:13px;color:var(--muted)}
+.response-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.phase-box{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  background:#fcfdff;
+}
+.caregiver-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+.caregiver-list{display:grid;gap:12px}
+.parent-raw-list{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#fcfdff;
+  padding:12px 14px;
+  white-space:pre-wrap;
+}
+.care-item{
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:16px;
+  background:#fff;
+}
+.care-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+.care-title{font-weight:900;font-size:16px}
+.care-sub{margin:6px 0 0 18px;padding:0;color:var(--muted);font-size:14px}
+.likert-row{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+.score-btn{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  padding:11px 8px;
+  font-size:13px;
+  font-weight:800;
+  color:var(--text);
+}
+.score-btn.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:var(--accent);
+}
+.note-input{
+  min-height:76px;
+  margin-top:12px;
+}
+.total-box{
+  border:1px solid #dce6fa;
+  background:#f9fbff;
+  border-radius:22px;
+  padding:18px;
+}
+.total-score{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:-.03em;
+}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{
+  border-bottom:1px solid var(--line);
+  padding:10px 8px;
+  text-align:left;
+  vertical-align:top;
+}
+th{background:#f8fbff;font-size:13px}
+@media (max-width:1180px){
+  .hero,.eval-layout,.caregiver-layout,.row,.split,.triple,.response-grid,.strategy-grid,.compact-grid{grid-template-columns:1fr}
+  .nav{justify-content:flex-start}
+}
+@media (max-width:760px){
+  .wrap{padding:16px}
+  h1{font-size:29px}
+  .item-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .likert-row{grid-template-columns:1fr 1fr}
+  .scene{min-height:420px}
+  .teacher{left:34px}
+  .studentA{left:146px}
+  .studentB{left:236px}
+  .studentC{left:340px}
+  .studentD{left:454px}
+  .desk.a{left:18px}
+  .desk.b{left:122px}
+  .desk.c{right:126px}
+  .desk.d{right:14px}
+  .speech-cloud.main{left:20px;top:182px}
+  .speech-cloud.alt1{left:164px;top:214px}
+  .speech-cloud.alt2{left:300px;top:186px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" style="margin-bottom:18px">
+    <div class="hero">
+      <div>
+        <h1>소음 환경 기능적 의사소통 평가 프로토콜</h1>
+      </div>
+      <div class="nav">
+        <button class="nav-btn active" data-page="evalPage">평가 진행</button>
+        <button class="nav-btn" data-page="parentPage">보호자 보고</button>
+        <button class="nav-btn" data-page="summaryPage">통합 평가 결과</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="evalPage" class="page active">
+    <div class="eval-layout">
+      <div class="stack">
+        <div class="card">
+          <div class="section-title"><h2>평가 준비 및 문항 선택</h2><span class="badge">고정 교실 조건</span></div>
+          <div class="triple">
+            <div>
+              <label for="childName">아동 이름</label>
+              <input id="childName" type="text" placeholder="예: 김도현">
+            </div>
+            <div>
+              <label for="sessionNo">평가 회차</label>
+              <input id="sessionNo" type="text" placeholder="예: 1차 평가">
+            </div>
+            <div>
+              <label for="speakerMode">화자 조건</label>
+              <select id="speakerMode" onchange="updateEvaluationUI()">
+                <option value="teacherSingle">화자 1명</option>
+                <option value="multiSpeaker">화자 3명 이상</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="compact-grid" style="margin-top:14px">
+            <div class="smallbox">
+              <div class="label2">장소</div>
+              <div style="font-weight:900;margin-top:4px">교실</div>
+            </div>
+            <div class="smallbox">
+              <div class="label2">배경소음</div>
+              <div style="font-weight:900;margin-top:4px">교실 소음 고정</div>
+            </div>
+            <div class="smallbox">
+              <div class="label2">자극음</div>
+              <div style="font-weight:900;margin-top:4px">남성 TTS · 60 dBA</div>
+            </div>
+            <div class="smallbox">
+              <div class="label2">평가 문항 수</div>
+              <div style="font-weight:900;margin-top:4px">18문항</div>
+            </div>
+          </div>
+
+          <div class="question-card" style="margin-top:16px">
+            <div class="section-title" style="margin-bottom:10px">
+              <h3>평가 문항</h3>
+              <span class="mini-badge" id="itemCategoryBadge">음식</span>
+            </div>
+            <div class="item-tabs" id="itemTabs"></div>
+            <label style="margin-top:14px">정오 반응 체크</label>
+            <div class="response-grid" style="margin-top:8px">
+              <div class="phase-box">
+                <label style="margin-bottom:8px">1차 반응</label>
+                <div class="chips">
+                  <button class="chip" data-group="phase1" data-value="정반응">정반응</button>
+                  <button class="chip" data-group="phase1" data-value="오반응">오반응</button>
+                  <button class="chip" data-group="phase1" data-value="미실시">미실시</button>
+                </div>
+              </div>
+              <div class="phase-box">
+                <label style="margin-bottom:8px">2차 반응</label>
+                <div class="chips">
+                  <button class="chip" data-group="phase2" data-value="정반응">정반응</button>
+                  <button class="chip" data-group="phase2" data-value="오반응">오반응</button>
+                  <button class="chip" data-group="phase2" data-value="미실시">미실시</button>
+                </div>
+              </div>
+              <div class="phase-box">
+                <label style="margin-bottom:8px">3차 반응</label>
+                <div class="chips">
+                  <button class="chip" data-group="phase3" data-value="정반응">정반응</button>
+                  <button class="chip" data-group="phase3" data-value="오반응">오반응</button>
+                  <button class="chip" data-group="phase3" data-value="미실시">미실시</button>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:14px">
+              <div class="big-text" id="stimulusPreview">문항 내용이 아직 입력되지 않았습니다.</div>
+              <div class="small" id="stimulusMeta">현재는 문항 탭 구조와 평가 기록 흐름만 먼저 구성되어 있습니다.</div>
+            </div>
+            <div class="btns" style="margin-top:14px">
+              <button class="primary" onclick="playCurrent()">현재 문항 듣기</button>
+              <button class="soft" onclick="playNoise()">교실 소음 재생</button>
+              <button class="outline" onclick="stopAllAudio()">전체 소리 정지</button>
+            </div>
+            <div class="feedback" id="audioStatus">오디오 상태: 아직 재생하지 않았습니다.</div>
+            <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--line)">
+              <div class="section-title"><h3>아동 반응 및 수정 전략 관찰</h3><span class="badge">평가 중 입력</span></div>
+              <label>지금 듣기 상태는 어때요?</label>
+              <div class="chips">
+                <button class="chip" data-group="selfAwareness" data-value="잘 들려요">잘 들려요</button>
+                <button class="chip" data-group="selfAwareness" data-value="조금 어려워요">조금 어려워요</button>
+                <button class="chip" data-group="selfAwareness" data-value="많이 어려워요">많이 어려워요</button>
+              </div>
+
+              <label style="margin-top:14px">반응 유형</label>
+              <div class="chips">
+                <button class="chip" data-group="responseType" data-value="정확히 들음">정확히 들음</button>
+                <button class="chip" data-group="responseType" data-value="부분적으로 들음">부분적으로 들음</button>
+                <button class="chip" data-group="responseType" data-value="못 들음">못 들음</button>
+              </div>
+
+              <label style="margin-top:14px">수정 전략</label>
+              <div class="strategy-grid">
+                <div class="strategy-card" data-group="repairStrategy" data-value="다시 말해주세요"><div class="kr">다시 말해주세요</div></div>
+                <div class="strategy-card" data-group="repairStrategy" data-value="잘 모르겠어요"><div class="kr">잘 모르겠어요</div></div>
+                <div class="strategy-card" data-group="repairStrategy" data-value="못 들었어요"><div class="kr">못 들었어요</div></div>
+                <div class="strategy-card" data-group="repairStrategy" data-value="반응하지 않음"><div class="kr">반응하지 않음</div></div>
+              </div>
+
+              <label style="margin-top:14px">자유 기록 메모</label>
+              <textarea id="freeNote" placeholder="예: 1차 반응은 놓쳤으나 반복 제시 후 핵심 단어를 파악함."></textarea>
+
+              <div class="btns" style="margin-top:12px">
+                <button class="mint" onclick="showInstantFeedback()">즉시 해석 보기</button>
+                <button class="primary" onclick="saveTrial()">이번 평가 기록하기</button>
+              </div>
+              <div class="feedback" id="instantFeedback">여기에 아동 반응에 대한 평가 해석이 표시됩니다.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="parentPage" class="page">
+    <div class="caregiver-layout">
+      <div class="stack">
+        <div class="card">
+          <div class="section-title"><h2>보호자 보고용 청각 반응 체크리스트</h2><span class="badge">Likert 5점 척도</span></div>
+          <p class="sub">본 체크리스트는 아동이 일상생활에서 청각보조기기를 얼마나 안정적으로 착용하고 사용하는지, 그리고 다양한 환경에서 청각적 단서에 자발적으로 주의를 기울이고 반응하는지를 보호자 보고를 통해 확인하기 위한 도구입니다. 보호자는 최근 아동의 일상적인 모습을 기준으로 각 문항에 해당하는 빈도를 선택합니다.</p>
+          <div class="note" style="margin-top:12px">0점: 전혀 · 1점: 거의 · 2점: 가끔 · 3점: 자주 · 4점: 항상</div>
+        </div>
+
+        <div id="parentChecklist" class="caregiver-list"></div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="section-title"><h2>응답 요약</h2><span class="badge">자동 계산</span></div>
+          <div class="total-box">
+            <div class="label2">총점</div>
+            <div class="total-score" id="parentTotalScore">총점: -- / 40점</div>
+            <div class="small" id="parentTotalMeta" style="margin-top:8px">모든 문항에 응답해야 총점이 계산됩니다.</div>
+          </div>
+          <label style="margin-top:14px">입력된 부모 보고/비고</label>
+          <div class="parent-raw-list" id="parentRawNotes">아직 입력된 비고가 없습니다.</div>
+          <label style="margin-top:14px">부모 보고/비고 요약</label>
+          <div class="summary" id="parentNotesSummary">입력된 비고가 생기면 여기에서 요약됩니다.</div>
+          <label style="margin-top:14px">결과 해석 참고</label>
+          <div class="summary" id="parentSummary">본 체크리스트의 총점이 높을수록 아동이 일상생활에서 청각보조기기를 안정적으로 사용하고, 다양한 환경에서 청각적 단서에 자발적으로 주의를 기울이며 반응하는 수준이 높다고 볼 수 있습니다. 다만 본 결과는 보호자 보고에 기반한 자료이므로, 실제 아동의 청각 반응 및 기능적 의사소통 능력은 직접 관찰, 임상가 평가, 부모 면담과 함께 통합적으로 해석해야 합니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="summaryPage" class="page">
+    <div class="stack">
+      <div class="card">
+        <div class="section-title"><h2>통합 평가 요약</h2><span class="badge">직접 평가 + 보호자 보고</span></div>
+        <div class="compact-grid">
+          <div class="stat-card"><div class="label2">총 평가 시행 수</div><div class="value" id="kpiTotal">0</div></div>
+          <div class="stat-card"><div class="label2">정확 반응 수</div><div class="value" id="kpiCorrect">0</div></div>
+          <div class="stat-card"><div class="label2">수정 전략 관찰 수</div><div class="value" id="kpiStrategy">0</div></div>
+          <div class="stat-card"><div class="label2">현재 SNR</div><div class="value" id="kpiSNR">+10</div></div>
+        </div>
+        <div style="margin-top:14px">
+          <label>자동 요약 문장</label>
+          <div class="summary" id="sessionSummary">아직 평가 기록이 없습니다.</div>
+        </div>
+        <div class="btns" style="margin-top:12px">
+          <button class="outline" onclick="showEvaluationInterpretation()">평가 해석 보기</button>
+          <button class="primary" onclick="downloadReport()">평가 요약 TXT 저장</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><h2>보호자 보고용 청각 반응 체크리스트</h2><span class="badge">통합 반영</span></div>
+        <div class="total-box">
+          <div class="label2">보호자 보고 총점</div>
+          <div class="total-score" id="summaryParentTotal">총점: -- / 40점</div>
+          <div class="small" id="summaryParentMeta" style="margin-top:8px">모든 문항에 응답해야 총점이 계산됩니다.</div>
+        </div>
+        <label style="margin-top:14px">입력된 부모 보고/비고</label>
+        <div class="parent-raw-list" id="summaryParentRawNotes">아직 입력된 비고가 없습니다.</div>
+        <label style="margin-top:14px">부모 보고/비고 요약</label>
+        <div class="summary" id="summaryParentNotesSummary">입력된 비고가 생기면 여기에서 요약됩니다.</div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><h2>기록된 평가</h2><span class="badge">메모 포함</span></div>
+        <table>
+          <thead>
+            <tr>
+              <th>문항</th>
+              <th>화자 조건</th>
+              <th>반응</th>
+              <th>1·2·3차 반응</th>
+              <th>수리전략</th>
+              <th>메모</th>
+            </tr>
+          </thead>
+          <tbody id="logTable"><tr><td colspan="6" class="sub">아직 평가 기록이 없습니다.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="audio-host" aria-hidden="true">
+  <audio id="stimulusPlayer" preload="auto" playsinline></audio>
+  <audio id="noisePlayer" preload="auto" playsinline loop></audio>
+</div>
+
+<script>
+const FIXED_SETTINGS = {
+  place: "교실",
+  noiseType: "classroom",
+  speechDb: 60,
+  noiseDb: 55,
+  speechRate: 0.9,
+  ttsVolume: 1,
+  noiseVolume: 0.45
+};
+
+const CLASSROOM_NOISE_FILE = "classroom_noise.mp4";
+const CLASSROOM_NOISE_START = 7.5;
+
+const caregiverItems = [
+  {
+    id: 1,
+    title: "1. 아동은 청각보조기기를 착용시켜 달라고 요구하거나, 시키지 않아도 스스로 착용하려고 합니까?"
+  },
+  {id:2,title:"2. 어떤 이유로든 청각보조기기가 작동하지 않으면, 아동은 이를 표현하거나 속상해합니까?"},
+  {id:3,title:"3. 조용한 환경에서 이름을 부르면, 아동은 시각적 단서 없이 청각적 단서만으로 자발적으로 반응합니까?"},
+  {id:4,title:"4. 배경소음이 있는 환경에서 이름을 부르면, 아동은 시각적 단서 없이 청각적 단서만으로 자발적으로 반응합니까?"},
+  {id:5,title:"5. 누가 말해주거나 가르쳐주지 않아도, 아동은 집안의 환경음, 예: 초인종 소리, 전화벨 소리에 자발적으로 주의를 기울입니까?"},
+  {id:6,title:"6. 아동은 새로운 환경에서 들리는 청각적 신호에 자발적으로 주의를 기울입니까?"},
+  {id:7,title:"7. 아동은 학교나 가정생활에서 들리는 청각적 신호를 자발적으로 알아듣고 반응합니까?"},
+  {id:8,title:"8. 아동은 청각적 단서만으로 두 사람의 목소리, 예: 엄마와 아빠 목소리, 부모와 형제·자매 목소리를 자발적으로 구별할 수 있습니까?"},
+  {id:9,title:"9. 아동은 소리만 듣고 말소리와 말소리가 아닌 소리를 자발적으로 구별할 수 있습니까?"},
+  {id:10,title:"10. 아동은 소리만 듣고 목소리 톤과 관련된 의미, 예: 화남, 흥분, 걱정 등을 자발적으로 이해할 수 있습니까?"}
+];
+
+const assessmentItems = [
+  {id:1,label:"1번 문항",category:"음식",prompt:"밥솥에 삼계탕도 끓일 수 있어요.",audio:"item01.mp3"},
+  {id:2,label:"2번 문항",category:"음식",prompt:"조금 전 마시던 녹차가 다 식었다.",audio:"item02.mp3"},
+  {id:3,label:"3번 문항",category:"음식",prompt:"선물을 뜯으니 안에 과자가 들어있다.",audio:"item03.mp3"},
+  {id:4,label:"4번 문항",category:"음식",prompt:"아까 먹고 남은 빵은 어디 있나요?",audio:"item04.mp3"},
+  {id:5,label:"5번 문항",category:"음식",prompt:"오래된 우유를 마시고 배탈이 났어요.",audio:"item05.mp3"},
+  {id:6,label:"6번 문항",category:"음식",prompt:"마늘과 간장을 넣고 나물을 무쳤다."},
+  {id:7,label:"7번 문항",category:"장소",prompt:"주말에 영화관은 사람으로 붐볐다."},
+  {id:8,label:"8번 문항",category:"장소",prompt:"주유소에 가니 기름 값이 올랐어요."},
+  {id:9,label:"9번 문항",category:"장소",prompt:"악기를 배우려고 학원에 등록했다."},
+  {id:10,label:"10번 문항",category:"장소",prompt:"백화점에서 구입한 옷을 잃어버렸다."},
+  {id:11,label:"11번 문항",category:"장소",prompt:"바지를 줄이려고 세탁소에 맡겼어요."},
+  {id:12,label:"12번 문항",category:"장소",prompt:"새벽인데 문을 연 약국이 있을까요?"},
+  {id:13,label:"13번 문항",category:"생활용품",prompt:"신청서는 연필로 작성해야 하나요?"},
+  {id:14,label:"14번 문항",category:"생활용품",prompt:"다리미에 물을 넣고 바지를 다렸다."},
+  {id:15,label:"15번 문항",category:"생활용품",prompt:"침대 위에 있던 안경을 깔고 앉았다."},
+  {id:16,label:"16번 문항",category:"생활용품",prompt:"이번 겨울에는 짧은 치마가 유행이다."},
+  {id:17,label:"17번 문항",category:"생활용품",prompt:"가구가 적어서 방이 넓어 보여요."},
+  {id:18,label:"18번 문항",category:"생활용품",prompt:"화장품을 써보니 피부에 잘 맞아요."}
+];
+
+const scoreLabels = [
+  {score:0,label:"0점",desc:"전혀"},
+  {score:1,label:"1점",desc:"거의"},
+  {score:2,label:"2점",desc:"가끔"},
+  {score:3,label:"3점",desc:"자주"},
+  {score:4,label:"4점",desc:"항상"}
+];
+
+const state = {
+  selections: {},
+  itemObservations: {},
+  logs: [],
+  parentScores: {},
+  parentNotes: {},
+  currentItem: 0,
+  koreanVoices: [],
+  noiseAudio: null,
+  stimulusAudio: null,
+  preparedStimulusSrc: "",
+  preparedNoiseSrc: "",
+  showInterpretation: false
+};
+
+function initNav(){
+  document.querySelectorAll(".nav-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+      document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.page).classList.add("active");
+    });
+  });
+}
+
+document.addEventListener("click",e=>{
+  if(e.target.classList.contains("chip")){
+    const group=e.target.dataset.group;
+    document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(x=>x.classList.remove("active"));
+    e.target.classList.add("active");
+    state.selections[group]=e.target.dataset.value;
+    persistCurrentObservation();
+    updateSummaries();
+  }
+  const strategyCard=e.target.closest(".strategy-card");
+  if(strategyCard){
+    const group=strategyCard.dataset.group;
+    document.querySelectorAll(`.strategy-card[data-group="${group}"]`).forEach(x=>x.classList.remove("active"));
+    strategyCard.classList.add("active");
+    state.selections[group]=strategyCard.dataset.value;
+    persistCurrentObservation();
+    updateSummaries();
+  }
+});
+
+function defaultObservation(){
+  return {
+    selfAwareness: "",
+    responseType: "",
+    phase1: "미실시",
+    phase2: "미실시",
+    phase3: "미실시",
+    repairStrategy: "",
+    note: ""
+  };
+}
+
+function currentItemId(){
+  return assessmentItems[state.currentItem].id;
+}
+
+function getObservation(itemId=currentItemId()){
+  if(!state.itemObservations[itemId]){
+    state.itemObservations[itemId]=defaultObservation();
+  }
+  return state.itemObservations[itemId];
+}
+
+function persistCurrentObservation(){
+  const observation=getObservation();
+  observation.selfAwareness=state.selections.selfAwareness || "";
+  observation.responseType=state.selections.responseType || "";
+  observation.phase1=state.selections.phase1 || "미실시";
+  observation.phase2=state.selections.phase2 || "미실시";
+  observation.phase3=state.selections.phase3 || "미실시";
+  observation.repairStrategy=state.selections.repairStrategy || "";
+  observation.note=document.getElementById("freeNote")?.value.trim() || "";
+}
+
+function setStrategySelection(value){
+  document.querySelectorAll('.strategy-card[data-group="repairStrategy"]').forEach(x=>{
+    x.classList.toggle("active", x.dataset.value===value);
+  });
+  state.selections.repairStrategy=value || "";
+}
+
+function loadObservationIntoUI(itemId=currentItemId()){
+  const observation=getObservation(itemId);
+  setChipSelection("selfAwareness", observation.selfAwareness);
+  setChipSelection("responseType", observation.responseType);
+  setChipSelection("phase1", observation.phase1 || "미실시");
+  setChipSelection("phase2", observation.phase2 || "미실시");
+  setChipSelection("phase3", observation.phase3 || "미실시");
+  setStrategySelection(observation.repairStrategy);
+  document.getElementById("freeNote").value=observation.note || "";
+  document.getElementById("instantFeedback").textContent="여기에 아동 반응에 대한 평가 해석이 표시됩니다.";
+}
+
+function renderItemTabs(){
+  const root=document.getElementById("itemTabs");
+  root.innerHTML="";
+  assessmentItems.forEach((item,idx)=>{
+    const btn=document.createElement("button");
+    btn.className="item-tab" + (idx===state.currentItem ? " active" : "");
+    btn.textContent=String(idx+1);
+    btn.addEventListener("click",()=>{
+      persistCurrentObservation();
+      state.currentItem=idx;
+      renderItemTabs();
+      renderCurrentItem();
+      loadObservationIntoUI();
+    });
+    root.appendChild(btn);
+  });
+}
+
+function renderCurrentItem(){
+  const item=assessmentItems[state.currentItem];
+  const prompt=item.prompt.trim();
+  document.getElementById("stimulusPreview").textContent = prompt || "문항 내용이 아직 입력되지 않았습니다.";
+  document.getElementById("stimulusMeta").textContent =
+    prompt
+      ? `${item.category} · ${item.label} · ${speakerModeLabel(document.getElementById("speakerMode").value)}`
+      : `${item.label} · 문항 음성과 텍스트를 추후 연결할 예정입니다.`;
+  document.getElementById("itemCategoryBadge").textContent = item.category || "평가 문항";
+  if(item.audio){
+    prepareStimulusAudio(item.audio);
+  } else {
+    state.preparedStimulusSrc="";
+    ensureAudioPlayers();
+    state.stimulusAudio.removeAttribute("src");
+  }
+}
+
+function setChipSelection(group,value){
+  document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(x=>{
+    x.classList.toggle("active", x.dataset.value===value);
+  });
+  state.selections[group]=value;
+}
+
+function speakerModeLabel(mode){
+  return mode==="teacherSingle" ? "화자 1명" : "화자 3명 이상";
+}
+
+function updateEvaluationUI(){
+  renderCurrentItem();
+  updateSummaries();
+}
+
+function renderParentChecklist(){
+  const root=document.getElementById("parentChecklist");
+  root.innerHTML="";
+  caregiverItems.forEach(item=>{
+    const div=document.createElement("div");
+    div.className="care-item";
+    div.innerHTML=`
+      <div class="care-head">
+        <div>
+          <div class="care-title">${item.title}</div>
+          ${item.subs ? `<ul class="care-sub">${item.subs.map(sub=>`<li>${sub}</li>`).join("")}</ul>` : ""}
+        </div>
+      </div>
+      <div class="likert-row" id="scoreRow${item.id}"></div>
+      <label for="note${item.id}" style="margin-top:12px">부모 보고/비고</label>
+      <textarea class="note-input" id="note${item.id}" placeholder="관찰된 특징이나 예시를 간단히 적어 주세요."></textarea>
+    `;
+    root.appendChild(div);
+
+    const scoreRow=div.querySelector(`#scoreRow${item.id}`);
+    scoreLabels.forEach(meta=>{
+      const btn=document.createElement("button");
+      btn.className="score-btn";
+      btn.innerHTML=`${meta.label}<br><span class="small">${meta.desc}</span>`;
+      btn.addEventListener("click",()=>{
+        setParentScore(item.id, meta.score);
+      });
+      scoreRow.appendChild(btn);
+    });
+
+    div.querySelector(`#note${item.id}`).addEventListener("input",e=>{
+      state.parentNotes[item.id]=e.target.value;
+    });
+  });
+}
+
+function setParentScore(itemId,score){
+  state.parentScores[itemId]=score;
+  const row=document.getElementById(`scoreRow${itemId}`);
+  if(row){
+    [...row.children].forEach((btn,idx)=>{
+      btn.classList.toggle("active", idx===score);
+    });
+  }
+  updateParentSummary();
+  updateSummaries();
+}
+
+function rawParentNotesText(){
+  const entries=caregiverItems.map(item=>{
+    const note=(state.parentNotes[item.id] || "").trim();
+    const score=Object.prototype.hasOwnProperty.call(state.parentScores,item.id) ? `${state.parentScores[item.id]}점` : "미응답";
+    return note ? `${item.id}. ${score} | ${note}` : "";
+  }).filter(Boolean);
+  return entries.length ? entries.join("\n\n") : "아직 입력된 비고가 없습니다.";
+}
+
+function summarizedParentNotesText(){
+  const entries=caregiverItems.map(item=>{
+    const note=(state.parentNotes[item.id] || "").trim();
+    const score=state.parentScores[item.id];
+    return note ? {id:item.id, score, note} : null;
+  }).filter(Boolean);
+  if(!entries.length) return "입력된 비고가 생기면 여기에서 요약됩니다.";
+
+  const high=entries.filter(x=>typeof x.score==="number" && x.score>=3).map(x=>`${x.id}번`);
+  const mid=entries.filter(x=>typeof x.score==="number" && x.score===2).map(x=>`${x.id}번`);
+  const examples=entries.slice(0,3).map(x=>x.note).join(" / ");
+  let text="";
+  if(high.length) text += `보호자 비고와 함께 자주/항상 수준으로 보고된 항목은 ${high.join(", ")}입니다.\n`;
+  if(mid.length) text += `가끔 수준으로 보고된 항목은 ${mid.join(", ")}입니다.\n`;
+  text += `입력된 비고에서는 ${examples}`;
+  if(entries.length>3) text += " 등의 관찰이 반복적으로 기록되었습니다.";
+  else text += " 와 같은 관찰이 기록되었습니다.";
+  return text;
+}
+
+function updateParentSummary(){
+  const answeredCount=Object.keys(state.parentScores).length;
+  if(answeredCount===caregiverItems.length){
+    const total=Object.values(state.parentScores).reduce((a,b)=>a+b,0);
+    document.getElementById("parentTotalScore").textContent=`총점: ${total} / 40점`;
+    document.getElementById("parentTotalMeta").textContent=`총 ${answeredCount}개 문항에 모두 응답했습니다.`;
+  } else {
+    document.getElementById("parentTotalScore").textContent="총점: -- / 40점";
+    document.getElementById("parentTotalMeta").textContent=`모든 문항에 응답해야 총점이 계산됩니다. (현재 ${answeredCount}/${caregiverItems.length} 응답)`;
+  }
+
+  const rawText=rawParentNotesText();
+  const summaryText=summarizedParentNotesText();
+  document.getElementById("parentRawNotes").textContent=rawText;
+  document.getElementById("parentNotesSummary").textContent=summaryText;
+  document.getElementById("summaryParentRawNotes").textContent=rawText;
+  document.getElementById("summaryParentNotesSummary").textContent=summaryText;
+  document.getElementById("summaryParentTotal").textContent=document.getElementById("parentTotalScore").textContent;
+  document.getElementById("summaryParentMeta").textContent=document.getElementById("parentTotalMeta").textContent;
+
+  document.getElementById("parentSummary").textContent =
+    "본 체크리스트의 총점이 높을수록 아동이 일상생활에서 청각보조기기를 안정적으로 사용하고, 다양한 환경에서 청각적 단서에 자발적으로 주의를 기울이며 반응하는 수준이 높다고 볼 수 있습니다. 다만 본 결과는 보호자 보고에 기반한 자료이므로, 실제 아동의 청각 반응 및 기능적 의사소통 능력은 직접 관찰, 임상가 평가, 부모 면담과 함께 통합적으로 해석해야 합니다.";
+}
+
+function populateVoices(){
+  if(!("speechSynthesis" in window)) return;
+  const voices=window.speechSynthesis.getVoices().filter(v=>v.lang && v.lang.toLowerCase().startsWith("ko"));
+  const preferredMaleNames=["Grandpa","Reed","Rocko","Eddy"];
+  const preferredMaleVoices=preferredMaleNames
+    .map(name=>voices.find(v=>v.name && v.name.includes(name)))
+    .filter(Boolean);
+  const remaining=voices.filter(v=>!preferredMaleVoices.includes(v));
+  const maleFirst=[...remaining].sort((a,b)=>voiceGenderScore(b.name)-voiceGenderScore(a.name));
+  state.koreanVoices=[...preferredMaleVoices,...maleFirst];
+}
+
+if("speechSynthesis" in window){
+  window.speechSynthesis.onvoiceschanged=populateVoices;
+}
+
+function voiceForCurrent(){
+  return state.koreanVoices[0] || null;
+}
+
+function voiceGenderScore(name){
+  const lower=(name || "").toLowerCase();
+  if(
+    lower.includes("grandpa") ||
+    lower.includes("reed") ||
+    lower.includes("rocko") ||
+    lower.includes("eddy") ||
+    lower.includes("male") ||
+    lower.includes("man") ||
+    lower.includes("남")
+  ) return 3;
+  if(lower.includes("grandma") || lower.includes("flo") || lower.includes("sandy") || lower.includes("shelley") || lower.includes("yuna")) return 0;
+  return 0;
+}
+
+function setAudioStatus(msg){
+  document.getElementById("audioStatus").textContent=msg;
+}
+
+function describePlaybackError(err){
+  if(!err) return "알 수 없는 재생 오류";
+  return [err.name, err.message].filter(Boolean).join(": ");
+}
+
+function describeMediaError(mediaEl){
+  if(!mediaEl || !mediaEl.error) return "미디어 오류 정보 없음";
+  const codeMap = {
+    1: "MEDIA_ERR_ABORTED",
+    2: "MEDIA_ERR_NETWORK",
+    3: "MEDIA_ERR_DECODE",
+    4: "MEDIA_ERR_SRC_NOT_SUPPORTED"
+  };
+  return codeMap[mediaEl.error.code] || `MEDIA_ERR_${mediaEl.error.code}`;
+}
+
+function resolveMediaUrl(path){
+  try{
+    return new URL(path, window.location.href).href;
+  }catch(_err){
+    return path;
+  }
+}
+
+function ensureAudioPlayers(){
+  if(!state.stimulusAudio){
+    state.stimulusAudio=document.getElementById("stimulusPlayer");
+  }
+  if(!state.noiseAudio){
+    state.noiseAudio=document.getElementById("noisePlayer");
+  }
+  if(state.stimulusAudio){
+    state.stimulusAudio.volume=1;
+  }
+  if(state.noiseAudio){
+    state.noiseAudio.volume=FIXED_SETTINGS.noiseVolume;
+  }
+}
+
+function prepareNoiseAudio(){
+  ensureAudioPlayers();
+  const mediaUrl=resolveMediaUrl(CLASSROOM_NOISE_FILE);
+  if(state.preparedNoiseSrc!==mediaUrl){
+    state.noiseAudio.src=mediaUrl;
+    state.noiseAudio.load();
+    state.preparedNoiseSrc=mediaUrl;
+  }
+}
+
+function prepareStimulusAudio(src){
+  ensureAudioPlayers();
+  const mediaUrl=resolveMediaUrl(src);
+  if(state.preparedStimulusSrc!==mediaUrl){
+    state.stimulusAudio.src=mediaUrl;
+    state.stimulusAudio.load();
+    state.preparedStimulusSrc=mediaUrl;
+  }
+}
+
+function currentLines(){
+  const item=assessmentItems[state.currentItem];
+  const prompt=item.prompt.trim();
+  if(!prompt) return [];
+
+  if(document.getElementById("speakerMode").value==="teacherSingle"){
+    return [{speaker:"선생님",text:prompt}];
+  }
+
+  const lines=prompt.split("\n").map(x=>x.trim()).filter(Boolean);
+  return lines.length ? lines.map((text,idx)=>({speaker:`화자${idx+1}`,text})) : [{speaker:"화자1",text:prompt}];
+}
+
+function playCurrent(){
+  const item=assessmentItems[state.currentItem];
+  if(item.audio){
+    playStimulusAudio(item.audio, item.label);
+    return;
+  }
+  const lines=currentLines();
+  if(!lines.length){
+    setAudioStatus("현재 문항 음성은 아직 입력되지 않았습니다.");
+    return;
+  }
+  playLines(lines);
+}
+
+function stopStimulusOnly(updateStatus=false){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  ensureAudioPlayers();
+  if(state.stimulusAudio){
+    state.stimulusAudio.pause();
+    state.stimulusAudio.currentTime=0;
+  }
+  if(updateStatus){
+    setAudioStatus("문항 음성을 정지했습니다.");
+  }
+}
+
+function playStimulusAudio(src,label){
+  ensureAudioPlayers();
+  stopStimulusOnly();
+  prepareStimulusAudio(src);
+  state.stimulusAudio.pause();
+  state.stimulusAudio.currentTime=0;
+  state.stimulusAudio.onplay=()=>setAudioStatus(`재생 중: ${label} 음성 파일`);
+  state.stimulusAudio.onended=()=>setAudioStatus("문항 음성 재생이 끝났습니다.");
+  state.stimulusAudio.onerror=()=>setAudioStatus(`문항 음성 파일 오류: ${describeMediaError(state.stimulusAudio)} (${src})`);
+  state.stimulusAudio.play().catch((err)=>{
+    setAudioStatus(`문항 음성 파일 재생 실패: ${describePlaybackError(err)} (${src})`);
+  });
+}
+
+function playLines(lines){
+  if(!("speechSynthesis" in window)){
+    setAudioStatus("이 브라우저에서는 TTS를 지원하지 않습니다.");
+    return;
+  }
+  stopStimulusOnly();
+  const rate=FIXED_SETTINGS.speechRate;
+  const vol=FIXED_SETTINGS.ttsVolume;
+  let idx=0;
+  const speakNext=()=>{
+    if(idx>=lines.length){
+      setAudioStatus("문항 음성 재생이 끝났습니다.");
+      return;
+    }
+    const line=lines[idx];
+    const utter=new SpeechSynthesisUtterance(line.text);
+    utter.lang="ko-KR";
+    utter.voice=voiceForCurrent();
+    utter.rate=rate;
+    utter.volume=vol;
+    utter.onstart=()=>setAudioStatus(`재생 중: ${line.speaker} - ${line.text}`);
+    utter.onend=()=>{ idx++; setTimeout(speakNext, 160); };
+    utter.onerror=()=>setAudioStatus("TTS 재생 중 오류가 발생했습니다.");
+    window.speechSynthesis.speak(utter);
+  };
+  speakNext();
+}
+
+function stopAllAudio(){
+  stopStimulusOnly();
+  ensureAudioPlayers();
+  if(state.noiseAudio){
+    state.noiseAudio.pause();
+    state.noiseAudio.currentTime=0;
+  }
+  setAudioStatus("오디오 상태: 모든 소리를 정지했습니다.");
+}
+
+function playNoise(){
+  ensureAudioPlayers();
+  stopStimulusOnly();
+  prepareNoiseAudio();
+  state.noiseAudio.pause();
+  state.noiseAudio.onloadedmetadata=()=>{
+    const start=Math.min(CLASSROOM_NOISE_START, Math.max(0, state.noiseAudio.duration-1));
+    state.noiseAudio.currentTime=start;
+  };
+  state.noiseAudio.onplay=()=>setAudioStatus("교실 소음을 재생 중입니다. 앞부분 종소리는 건너뛰고 시작합니다.");
+  state.noiseAudio.onerror=()=>setAudioStatus(`교실 소음 파일 오류: ${describeMediaError(state.noiseAudio)} (${CLASSROOM_NOISE_FILE})`);
+  state.noiseAudio.play().then(()=>{
+    if(state.noiseAudio.currentTime < CLASSROOM_NOISE_START){
+      state.noiseAudio.currentTime=CLASSROOM_NOISE_START;
+    }
+  }).catch((err)=>{
+    setAudioStatus(`교실 소음 파일 재생 실패: ${describePlaybackError(err)} (${CLASSROOM_NOISE_FILE})`);
+  });
+}
+
+function showInstantFeedback(){
+  persistCurrentObservation();
+  const observation=getObservation();
+  const response=observation.responseType || "미선택";
+  const strategy=observation.repairStrategy || "미선택";
+  const selfA=observation.selfAwareness || "미선택";
+  const phase1=observation.phase1 || "미선택";
+  const phase2=observation.phase2 || "미선택";
+  const phase3=observation.phase3 || "미선택";
+  let text=`자기인식: ${selfA}\n반응 유형: ${response}\n1차 반응: ${phase1}\n2차 반응: ${phase2}\n3차 반응: ${phase3}\n수정 전략: ${strategy}\n\n`;
+  if(response==="정확히 들음"){
+    text+="현재 조건에서는 핵심 정보를 비교적 정확하게 파악한 것으로 기록할 수 있습니다. 반복 제시 여부와 1차 반응의 정확도도 함께 비교해 보세요.";
+  } else if(response==="부분적으로 들음"){
+    text+=strategy==="미선택"
+      ? "현재 조건에서는 부분적 정보 파악이 관찰되었습니다. 반복 제시 전후의 반응 변화를 함께 기록하면 해석에 도움이 됩니다."
+      : `현재 조건에서는 부분적 정보 파악이 관찰되었고, "${strategy}"와 같은 수정 전략이 함께 관찰되었습니다.`;
+  } else if(response==="못 들음"){
+    text+="현재 조건에서는 핵심 정보 파악의 어려움이 관찰되었습니다. 동일 문항에서 반복 제시 후 반응 변화와 수정 전략 여부를 함께 확인해 보세요.";
+  } else {
+    text+="아직 반응 유형이 선택되지 않았습니다. 필요한 항목을 선택하면 평가 해석이 업데이트됩니다.";
+  }
+  document.getElementById("instantFeedback").textContent=text;
+}
+
+function saveTrial(){
+  persistCurrentObservation();
+  const item=assessmentItems[state.currentItem];
+  const observation=getObservation();
+  const logItem={
+    itemLabel:item.label,
+    speakerMode:speakerModeLabel(document.getElementById("speakerMode").value),
+    response:observation.responseType || "미선택",
+    selfAwareness:observation.selfAwareness || "미선택",
+    phase1:observation.phase1 || "미선택",
+    phase2:observation.phase2 || "미선택",
+    phase3:observation.phase3 || "미선택",
+    strategy:observation.repairStrategy || "미선택",
+    note:observation.note || "",
+    snr:`${FIXED_SETTINGS.speechDb-FIXED_SETTINGS.noiseDb>=0?"+":""}${FIXED_SETTINGS.speechDb-FIXED_SETTINGS.noiseDb} dB`
+  };
+  state.logs.push(logItem);
+  renderLogs();
+  updateSummaries();
+  document.getElementById("instantFeedback").textContent="이번 평가가 기록되었습니다.";
+}
+
+function renderLogs(){
+  const tbody=document.getElementById("logTable");
+  tbody.innerHTML="";
+  if(!state.logs.length){
+    tbody.innerHTML='<tr><td colspan="6" class="sub">아직 평가 기록이 없습니다.</td></tr>';
+    return;
+  }
+  state.logs.forEach(item=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${item.itemLabel}</td>
+      <td>${item.speakerMode}<br><span class="small">${item.snr}</span></td>
+      <td>${item.response}<br><span class="small">자기인식: ${item.selfAwareness}</span></td>
+      <td>${item.phase1} / ${item.phase2} / ${item.phase3}</td>
+      <td>${item.strategy}</td>
+      <td>${item.note || "-"}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function parentTotalComplete(){
+  return Object.keys(state.parentScores).length===caregiverItems.length;
+}
+
+function parentTotalValue(){
+  if(!parentTotalComplete()) return null;
+  return Object.values(state.parentScores).reduce((a,b)=>a+b,0);
+}
+
+function directPerformanceText(total, correct){
+  if(total===0) return "아직 직접 평가 기록이 없어 수행 해석이 제한적입니다.";
+  if(correct/total>=0.8) return "직접 평가 장면에서는 핵심 정보를 비교적 안정적으로 파악하는 모습이 관찰됩니다.";
+  if(correct/total>=0.5) return "직접 평가 장면에서는 문항과 제시 조건에 따라 수행 변동이 관찰됩니다.";
+  return "직접 평가 장면에서는 핵심 정보 파악의 어려움이 비교적 뚜렷하게 관찰됩니다.";
+}
+
+function buildEvaluationInterpretation(total, correct, parentTotal){
+  if(total===0){
+    return "아직 평가 기록이 충분하지 않아 통합 해석을 제시하기 어렵습니다.";
+  }
+  if(correct/total>=0.8 && (parentTotal===null || parentTotal<20)){
+    return "현재 조건에서는 기능적 듣기 어려움이 크지 않은 것으로 해석될 수 있습니다.";
+  }
+  if(correct/total>=0.8 && parentTotal!==null && parentTotal>=20){
+    return "구조화된 평가 장면에서는 수행이 양호하나 일상생활 보고에서는 어려움이 나타날 수 있어 환경별 추가 관찰이 필요합니다.";
+  }
+  return "소음 조건에서 핵심 정보 파악의 어려움이 관찰되며, 반복 제시 전후 반응과 수정 전략 사용 여부를 추가로 확인할 필요가 있습니다.";
+}
+
+function updateSessionSummary(){
+  const total=state.logs.length;
+  const correct=state.logs.filter(x=>x.response==="정확히 들음").length;
+  const strategy=state.logs.filter(x=>x.strategy!=="미선택").length;
+  const parentTotal=parentTotalValue();
+  document.getElementById("kpiTotal").textContent=total;
+  document.getElementById("kpiCorrect").textContent=correct;
+  document.getElementById("kpiStrategy").textContent=strategy;
+  document.getElementById("kpiSNR").textContent=`${FIXED_SETTINGS.speechDb-FIXED_SETTINGS.noiseDb>=0?"+":""}${FIXED_SETTINGS.speechDb-FIXED_SETTINGS.noiseDb}`;
+
+  const child=document.getElementById("childName").value || "아동";
+  const session=document.getElementById("sessionNo").value || "현재 평가";
+
+  let text=
+    "본 평가는 아동 직접 반응과 보호자 보고를 통합하여 소음 환경에서의 기능적 듣기 및 의사소통 특성을 파악하기 위한 사전평가입니다.\n\n"+
+    `${session} 기준 ${child}은/는 교실 소음이 포함된 고정 조건에서 ${speakerModeLabel(document.getElementById("speakerMode").value)} 상황을 중심으로 평가되었습니다.\n`+
+    `현재 문장 제시 수준은 ${FIXED_SETTINGS.speechDb} dBA로 설정되어 있습니다.\n\n`+
+    `직접 평가 기록은 총 ${total}회이며, 정확 반응 ${correct}회, 수정 전략 관찰 ${strategy}회가 기록되었습니다.\n`+
+    `${directPerformanceText(total, correct)}\n\n`;
+
+  if(parentTotal===null){
+    text += "보호자 보고 체크리스트는 아직 전체 응답이 완료되지 않았습니다.\n";
+  } else {
+    text += `보호자 보고 체크리스트 총점은 ${parentTotal}/40점입니다.\n`;
+  }
+
+  if(state.showInterpretation){
+    text += `\n[평가 해석]\n${buildEvaluationInterpretation(total, correct, parentTotal)}`;
+  }
+
+  document.getElementById("sessionSummary").textContent=text;
+}
+
+function showEvaluationInterpretation(){
+  state.showInterpretation=true;
+  updateSessionSummary();
+}
+
+function updateSummaries(){
+  updateSessionSummary();
+}
+
+function downloadReport(){
+  updateSummaries();
+  const sessionText=document.getElementById("sessionSummary").textContent;
+  const parentText=document.getElementById("parentSummary").textContent;
+  const parentTotal=document.getElementById("parentTotalScore").textContent;
+  const parentNotesSummary=document.getElementById("parentNotesSummary").textContent;
+  const logs=state.logs.map((x,i)=>`${i+1}. ${x.itemLabel} / ${x.speakerMode} / ${x.snr}\n반응 유형: ${x.response}\n1차·2차·3차 반응: ${x.phase1} / ${x.phase2} / ${x.phase3}\n수리전략: ${x.strategy}\n메모: ${x.note || "-"}`).join("\n\n");
+  const caregiverNotes=caregiverItems.map(item=>`${item.id}. 점수: ${Object.prototype.hasOwnProperty.call(state.parentScores,item.id) ? state.parentScores[item.id] : "미응답"} | 비고: ${state.parentNotes[item.id] || "-"}`).join("\n");
+  const content=
+    `[통합 평가 요약]\n${sessionText}\n\n`+
+    `[보호자 보고 체크리스트]\n${parentTotal}\n${parentText}\n\n[부모 보고/비고 요약]\n${parentNotesSummary}\n\n`+
+    `[보호자 보고 비고]\n${caregiverNotes}\n\n`+
+    `[직접 평가 기록]\n${logs || "기록 없음"}`;
+  const blob=new Blob([content],{type:"text/plain;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="기능적_의사소통_평가_요약.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function init(){
+  initNav();
+  ensureAudioPlayers();
+  prepareNoiseAudio();
+  renderItemTabs();
+  renderCurrentItem();
+  loadObservationIntoUI();
+  document.getElementById("freeNote").addEventListener("input",()=>{
+    persistCurrentObservation();
+  });
+  renderParentChecklist();
+  updateParentSummary();
+  populateVoices();
+  updateSessionSummary();
+}
+
+init();
+</script>
+</body>
+</html>
