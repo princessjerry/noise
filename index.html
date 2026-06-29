@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>난청 아동의 소음 환경 기능적 의사소통 평가 프로토타입</title>
+<title>소음 환경 기능적 듣기 평가 프로토콜</title>
 <style>
 :root{
   --bg:#F6F8FC;
   --card:#FFFFFF;
   --primary:#5B7FE8;
   --primary-soft:rgba(91,127,232,.10);
-  --primary-line:rgba(91,127,232,.20);
+  --primary-line:rgba(91,127,232,.22);
   --accent:#FFC857;
   --accent-soft:rgba(255,200,87,.18);
   --success:#64C7A5;
@@ -18,6 +18,7 @@
   --text:#273043;
   --muted:#6B7280;
   --line:rgba(107,114,128,.16);
+  --danger:#B45309;
   --radius:20px;
   --shadow:0 14px 34px rgba(39,48,67,.07);
 }
@@ -38,11 +39,12 @@ body{
 }
 .wrap{max-width:900px;margin:0 auto;padding:28px 20px 44px}
 h1,h2,h3{margin:0 0 10px;letter-spacing:-.035em;color:var(--text)}
-h1{font-size:clamp(30px,5vw,46px);line-height:1.15;font-weight:900;word-break:break-word;overflow-wrap:anywhere}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.15;font-weight:900;word-break:keep-all}
 h2{font-size:clamp(22px,3vw,28px);line-height:1.25;font-weight:900}
 h3{font-size:19px;line-height:1.35;font-weight:900}
+p{margin:0 0 10px}
 .sub,.small,.label2,.kpi-meta{color:var(--muted)}
-.sub{font-size:16px;margin:0;word-break:break-word;overflow-wrap:anywhere}
+.sub{font-size:16px}
 .small,.label2,.kpi-meta{font-size:14px}
 .card{
   background:var(--card);
@@ -61,25 +63,17 @@ h3{font-size:19px;line-height:1.35;font-weight:900}
   margin-bottom:20px;
   padding:16px;
   backdrop-filter:blur(12px);
-  background:rgba(255,255,255,.88);
+  background:rgba(255,255,255,.90);
 }
 .brand{display:flex;flex-direction:column;gap:1px;font-weight:900;letter-spacing:-.02em}
 .brand span{font-size:14px;color:var(--muted);font-weight:800}
-.nav,.btns,.chips{display:flex;flex-wrap:wrap;gap:10px}
+.session-status{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
 .main-tabs{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:8px;
   width:100%;
 }
-.main-tabs button,.chip{border:1px solid var(--primary-line);background:#FFFFFF}
-.main-tabs button.active,.chip.active{
-  background:var(--primary-soft);
-  border-color:var(--primary);
-  color:var(--primary);
-  box-shadow:0 0 0 3px rgba(91,127,232,.10);
-}
-.main-tabs button.active{background:var(--primary);color:#FFFFFF}
 button{
   min-height:48px;
   border:1px solid transparent;
@@ -94,7 +88,7 @@ button{
 }
 button:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(39,48,67,.08)}
 button:active{transform:translateY(0);box-shadow:none}
-button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{
   outline:3px solid rgba(255,200,87,.65);
   outline-offset:3px;
 }
@@ -104,14 +98,15 @@ button:disabled{cursor:not-allowed;opacity:.55;transform:none;box-shadow:none}
 .soft{background:var(--primary-soft);border-color:var(--primary-line);color:var(--primary)}
 .mint{background:var(--success-soft);border-color:rgba(100,199,165,.36);color:var(--text)}
 .danger-soft{background:var(--accent-soft);color:var(--text);border-color:rgba(255,200,87,.45)}
+.main-tabs button{border:1px solid var(--primary-line);background:#FFFFFF}
+.main-tabs button.active{background:var(--primary);border-color:var(--primary);color:#FFFFFF}
 .page{display:none}
 .page.active{display:block}
 .stack,.caregiver-list,.notice-stack{display:grid;gap:18px}
-.eval-layout{display:grid;grid-template-columns:1fr;gap:18px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .compact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.caregiver-layout{display:grid;grid-template-columns:1fr;gap:18px}
+.btns,.chips{display:flex;flex-wrap:wrap;gap:10px}
 label{display:block;font-weight:900;margin-bottom:7px;font-size:15px}
 input[type=text],input[type=date],select,textarea{
   width:100%;
@@ -138,25 +133,15 @@ textarea{min-height:112px;resize:vertical}
 }
 .badge{background:var(--primary-soft);color:var(--primary)}
 .mini-badge{background:#FFFFFF;border:1px solid var(--primary-line);color:var(--muted)}
-.smallbox,.stat-card,.phase-box{
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:15px;
-  background:#FFFFFF;
-}
-.stat-card{
-  border-radius:20px;
-  padding:18px;
-  background:linear-gradient(180deg,#FFFFFF,rgba(91,127,232,.045));
-}
-.value{font-size:28px;font-weight:950;line-height:1.2}
-.note,.privacy-note{
+.note,.privacy-note,.mode-notice{
   border-radius:18px;
   padding:14px 15px;
   font-size:14px;
 }
 .note{background:var(--accent-soft);border:1px solid rgba(255,200,87,.42);color:var(--text)}
 .privacy-note{background:var(--primary-soft);border:1px solid var(--primary-line);color:var(--text)}
+.mode-notice{background:var(--success-soft);border:1px solid rgba(100,199,165,.36)}
+.mode-notice.demo{background:var(--accent-soft);border-color:rgba(255,200,87,.42)}
 .summary,.feedback,.parent-raw-list{
   border:1px solid var(--primary-line);
   background:rgba(91,127,232,.045);
@@ -166,13 +151,7 @@ textarea{min-height:112px;resize:vertical}
   font-size:15px;
 }
 .feedback{margin-top:12px;background:#FFFFFF;border-color:var(--line)}
-.start-card{
-  padding:34px;
-  display:grid;
-  gap:24px;
-  overflow:hidden;
-  position:relative;
-}
+.start-card{padding:34px;display:grid;gap:24px;overflow:hidden;position:relative}
 .start-card::after{
   content:"";
   position:absolute;
@@ -185,526 +164,1024 @@ textarea{min-height:112px;resize:vertical}
   pointer-events:none;
 }
 .start-content,.start-content>*{position:relative;z-index:1;min-width:0}
-.start-content{display:grid;gap:18px}
-.step-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.step-card{
-  min-height:124px;
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:16px;
-  background:#FFFFFF;
-}
-.step-no{
-  display:inline-grid;
-  place-items:center;
-  width:34px;
-  height:34px;
-  border-radius:999px;
-  background:var(--primary);
-  color:#FFFFFF;
-  font-weight:950;
-  margin-bottom:10px;
-}
-.start-button{
-  min-height:58px;
-  font-size:17px;
-  border-radius:18px;
-  justify-self:start;
-  padding-inline:28px;
-}
-.info-details,.settings-panel{
-  border:1px solid var(--line);
-  border-radius:20px;
-  background:#FFFFFF;
-  overflow:hidden;
-}
-.info-details summary,.settings-panel summary{
-  cursor:pointer;
-  list-style:none;
-  padding:16px 18px;
-  font-weight:950;
-  color:var(--text);
-}
-.info-details summary::-webkit-details-marker,.settings-panel summary::-webkit-details-marker{display:none}
-.info-details summary::after,.settings-panel summary::after{content:"＋";float:right;color:var(--primary)}
-.info-details[open] summary::after,.settings-panel[open] summary::after{content:"－"}
-.details-body{display:grid;gap:14px;padding:0 18px 18px}
-.question-card{padding:0;overflow:hidden}
-.question-top{
-  display:grid;
-  gap:12px;
-  padding:24px;
-  background:linear-gradient(180deg,rgba(91,127,232,.09),rgba(255,255,255,0));
-}
-.current-item-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.progress-wrap{display:grid;gap:8px}
-.progress-bar{
-  width:100%;
-  height:12px;
-  border-radius:999px;
-  background:rgba(107,114,128,.13);
-  overflow:hidden;
-}
-.progress-fill{
-  display:block;
-  width:0%;
-  height:100%;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--primary),var(--success));
-  transition:width .2s ease;
-}
-.item-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-.item-tab{
-  border:1px solid var(--line);
-  background:#FFFFFF;
-  border-radius:15px;
-  padding:10px 6px;
-  font-weight:900;
-  font-size:14px;
-  text-align:center;
-}
-.item-tab.active{border-color:var(--primary);box-shadow:0 0 0 3px rgba(91,127,232,.14)}
-.item-tab.in-progress{background:var(--accent-soft);border-color:rgba(255,200,87,.58)}
-.item-tab.completed{background:var(--success-soft);border-color:rgba(100,199,165,.58);color:var(--text)}
-.eval-block{display:grid;gap:14px;margin:0 24px 24px}
-.stimulus-panel,.audio-panel,.record-panel{
+.mode-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.choice-card,.preflight-section,.item-shell,.record-panel{
   border:1px solid var(--line);
   border-radius:20px;
   padding:18px;
   background:#FFFFFF;
 }
-.big-text{font-size:22px;line-height:1.55;font-weight:950;white-space:pre-wrap;margin:8px 0}
-.audio-panel .btns button{flex:1 1 190px}
-#playAssessmentBtn{
-  min-height:58px;
+.choice-card.primary-choice{background:linear-gradient(180deg,#FFFFFF,rgba(91,127,232,.075))}
+.choice-card.demo-choice{background:linear-gradient(180deg,#FFFFFF,rgba(255,200,87,.13))}
+.preflight-section{display:grid;gap:12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid .full{grid-column:1/-1}
+.profile-card{
+  border:1px solid var(--primary-line);
   border-radius:18px;
-  font-size:16px;
+  padding:15px;
+  background:rgba(91,127,232,.045);
+  white-space:pre-wrap;
 }
-.response-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.phase-box{margin:0}
-.phase-box legend{font-weight:950;padding:0 6px}
-.phase-box.disabled{opacity:.56;background:rgba(107,114,128,.06)}
-.chip{border-radius:999px;padding:10px 14px}
-.strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.strategy-card{
+.profile-card.empty{color:var(--muted);background:#FFFFFF;border-color:var(--line)}
+.check-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.check-list li{
   border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
+  border-radius:16px;
+  padding:12px;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
   background:#FFFFFF;
-  cursor:pointer;
-  text-align:left;
 }
-.strategy-card.active{
-  background:var(--primary-soft);
+.check-list input{width:20px;height:20px;accent-color:var(--primary);margin-top:3px}
+.progress-wrap{display:grid;gap:8px}
+.progress-bar{height:12px;background:var(--primary-soft);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--success));transition:width .2s ease}
+.item-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
+.item-tab{min-width:76px;border:1px solid var(--line);background:#FFFFFF;color:var(--muted)}
+.item-tab.active{border-color:var(--primary);color:var(--primary);background:var(--primary-soft)}
+.item-tab.completed{border-color:rgba(100,199,165,.55);background:var(--success-soft);color:var(--text)}
+.eval-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:18px;align-items:start}
+.sentence-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:20px;
+  background:linear-gradient(180deg,#FFFFFF,rgba(91,127,232,.045));
+}
+.sentence-text{font-size:22px;font-weight:900;line-height:1.5;letter-spacing:-.025em}
+.option-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.option-card{
+  min-height:170px;
+  display:grid;
+  gap:10px;
+  place-items:center;
+  text-align:center;
+  border:2px solid var(--line);
+  background:#FFFFFF;
+  padding:14px;
+}
+.option-card img{width:100%;max-width:210px;height:110px;object-fit:contain;border-radius:14px;background:var(--bg)}
+.option-card.selected{border-color:var(--primary);background:var(--primary-soft)}
+.option-card.correct{border-color:var(--success);background:var(--success-soft)}
+.option-card.error{border-color:var(--accent);background:var(--accent-soft)}
+.option-label{font-size:14px;color:var(--muted);font-weight:900}
+.chip,.score-btn{
+  border:1px solid var(--primary-line);
+  background:#FFFFFF;
+  color:var(--text);
+}
+.chip.active,.score-btn.active{
   border-color:var(--primary);
   color:var(--primary);
+  background:var(--primary-soft);
   box-shadow:0 0 0 3px rgba(91,127,232,.10);
 }
-.strategy-card .kr{font-size:16px;font-weight:950}
-.checkbox-row{display:flex;align-items:center;gap:10px;margin-top:14px}
-.checkbox-row input{width:20px;height:20px;accent-color:var(--primary)}
-.checkbox-row label{margin:0}
-.care-item{border:1px solid var(--line);border-radius:20px;padding:18px;background:#FFFFFF}
-.care-title{font-weight:950;font-size:16px}
-.likert-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
-.score-btn{border:1px solid var(--line);background:#FFFFFF;padding:11px 8px;font-size:14px}
-.score-btn.active{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}
-.note-input{min-height:76px;margin-top:12px}
-.total-box{border:1px solid var(--primary-line);background:var(--primary-soft);border-radius:20px;padding:18px}
-.total-score{font-size:28px;font-weight:950}
-.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:18px;border:1px solid var(--line)}
-.table-scroll table{min-width:1420px}
-table{width:100%;border-collapse:collapse;font-size:14px;background:#FFFFFF}
-th,td{border-bottom:1px solid var(--line);padding:12px 10px;text-align:left;vertical-align:top}
-th{background:var(--primary-soft);font-size:14px;color:var(--text)}
-tr:last-child td{border-bottom:none}
-.audio-host{display:none}
-
-.preflight-grid{display:grid;gap:18px}.preflight-section{border:1px solid var(--line);border-radius:20px;padding:18px;background:#fff}.preflight-title{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.mode-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.choice-card{border:1px solid var(--line);border-radius:22px;padding:20px;background:#fff;display:grid;gap:12px}.choice-card.primary-choice{border-color:var(--primary-line);background:linear-gradient(180deg,#fff,rgba(91,127,232,.055))}.choice-card.demo-choice{border-color:rgba(255,200,87,.45);background:linear-gradient(180deg,#fff,rgba(255,200,87,.10))}.mode-status-card{border:1px solid var(--primary-line);border-radius:20px;padding:16px;background:var(--primary-soft);display:grid;gap:4px}.mode-status-card.demo{background:var(--accent-soft);border-color:rgba(255,200,87,.55)}.mode-status-card.formal{background:var(--success-soft);border-color:rgba(100,199,165,.38)}.mode-status-card h3{margin:0}.program-guide{border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden}.program-guide summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:950}.program-guide summary::-webkit-details-marker{display:none}.program-guide summary::after{content:"＋";float:right;color:var(--primary)}.program-guide[open] summary::after{content:"－"}.program-guide ul{margin:0;padding:0 18px 18px 38px;color:var(--muted)}.required-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}.required-list li{display:flex;gap:10px;border:1px solid var(--line);border-radius:16px;padding:12px;background:#fff}.required-list input{width:20px;height:20px;accent-color:var(--primary);margin-top:2px;flex:none}.profile-card{border:1px solid var(--primary-line);border-radius:20px;padding:16px;background:linear-gradient(180deg,#fff,rgba(91,127,232,.045));display:grid;gap:8px}.profile-card strong{font-size:20px}.profile-card.empty{border-color:var(--line);background:#fff}.profile-meta{color:var(--muted);font-size:14px;line-height:1.6}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.form-grid .full{grid-column:1/-1}.calibration-dialog{width:min(860px,calc(100vw - 32px));border:0;border-radius:24px;padding:0;box-shadow:0 22px 70px rgba(39,48,67,.20)}.calibration-dialog::backdrop{background:rgba(39,48,67,.48)}.dialog-body{padding:24px;background:var(--card);border-radius:24px}.session-status{display:grid;gap:3px;margin-top:8px;font-size:14px;color:var(--muted)}.warning-box,.mode-warning{background:var(--accent-soft);border:1px solid rgba(255,200,87,.55);border-radius:18px;padding:15px;color:var(--text);font-size:15px}.warning-box p{margin:0 0 8px}.asset-list{font-size:14px;color:var(--muted);white-space:pre-wrap}.start-actions{display:flex;gap:10px;flex-wrap:wrap}.start-actions button{flex:1 1 220px}@media(max-width:820px){.form-grid{grid-template-columns:1fr}.preflight-title{display:grid}.start-actions button{width:100%}.mode-choice-grid{grid-template-columns:1fr}}@media(max-width:480px){.main-tabs{grid-template-columns:1fr}}
-
-@media(max-width:820px){
-  .wrap{padding:20px 20px 36px}
-  .app-header{position:static}
-  h1{font-size:27px;line-height:1.24;word-break:break-all;overflow-wrap:anywhere}
-  h2{font-size:22px}
-  .sub,.small{word-break:break-all;overflow-wrap:anywhere}
-  .row,.response-grid,.strategy-grid,.compact-grid,.step-list,.kpi-grid{grid-template-columns:1fr}
-  .start-card{padding:24px}
-  .question-top,.eval-block{padding:20px;margin:0}
-  .eval-block{padding-top:0;padding-bottom:20px}
-  .item-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .likert-row{grid-template-columns:1fr 1fr}
-  .section-title,.current-item-head{align-items:flex-start;flex-direction:column}
-  .btns button{width:100%}
+.care-item{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  background:#FFFFFF;
 }
-@media(max-width:420px){
-  .wrap{padding-inline:20px}
-  .card{padding:20px}
-  .question-card{padding:0}
-  .start-button{width:100%;justify-self:stretch}
-  .item-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+.care-title{font-weight:900;margin-bottom:12px}
+.likert-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.score-btn{min-height:54px;padding:10px;font-size:13px}
+.stat-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  background:linear-gradient(180deg,#FFFFFF,rgba(91,127,232,.045));
+}
+.value{font-size:28px;font-weight:950;line-height:1.2}
+.table-scroll{overflow:auto;border-radius:18px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:#FFFFFF;min-width:1040px}
+th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px}
+th{background:var(--primary-soft);font-weight:900;color:var(--text)}
+.result-cards{display:none;gap:12px}
+.result-card{border:1px solid var(--line);border-radius:18px;padding:14px;background:#FFFFFF}
+.program-guide{border:1px solid var(--line);border-radius:20px;background:#FFFFFF;overflow:hidden}
+.program-guide summary{padding:16px 18px;cursor:pointer;font-weight:900}
+.program-guide ul{margin:0;padding:0 18px 18px 36px;color:var(--muted)}
+.dialog-body{max-width:760px;max-height:84vh;overflow:auto}
+dialog{
+  border:0;
+  border-radius:24px;
+  box-shadow:0 30px 70px rgba(39,48,67,.28);
+  padding:0;
+  width:min(760px,calc(100vw - 32px));
+}
+dialog::backdrop{background:rgba(39,48,67,.34)}
+.dialog-body{padding:24px;background:#FFFFFF}
+.management-actions{display:grid;gap:10px}
+@media(max-width:720px){
+  .wrap{padding:18px 20px 34px}
+  .card,.start-card{padding:20px}
+  .mode-choice-grid,.row,.form-grid,.eval-grid,.kpi-grid{grid-template-columns:1fr}
+  .compact-grid{grid-template-columns:repeat(2,1fr)}
+  .option-grid{grid-template-columns:1fr}
+  .record-panel{border-top:6px solid var(--primary-soft)}
+  .table-scroll{display:none}
+  .result-cards{display:grid}
+  .likert-row{grid-template-columns:1fr 1fr}
+  .sentence-text{font-size:20px}
+}
+@media(max-width:480px){
+  .main-tabs{grid-template-columns:1fr}
+  .compact-grid{grid-template-columns:1fr}
+  button{width:100%}
+  .section-title{align-items:flex-start;flex-direction:column}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="app-header card" id="appHeader" hidden>
-    <div class="brand">소음 환경 기능적 듣기 평가 <span>초등학교 저학년 난청 아동을 위한 웹 기반 프로토타입</span><div class="session-status" id="sessionStatus" hidden><span class="badge" id="sessionModeBadge">검사 전</span><span id="sessionAcousticInfo"></span></div></div>
-    <nav class="main-tabs" aria-label="주요 화면">
-      <button type="button" class="nav-btn" data-page="evalPage">평가 진행</button>
-      <button type="button" class="nav-btn" data-page="parentPage">보호자 체크리스트</button>
-      <button type="button" class="nav-btn" data-page="summaryPage">평가 결과</button>
+  <header class="app-header card">
+    <div class="brand">
+      소음 환경 기능적 듣기 평가 프로토콜
+      <span>초등학교 1학년 난청 아동을 위한 웹 기반 예비 프로토콜</span>
+      <div class="session-status" id="sessionStatus" hidden>
+        <span class="badge" id="sessionModeBadge">모드 미선택</span>
+        <span class="small" id="sessionAcousticInfo"></span>
+      </div>
+    </div>
+    <nav class="main-tabs" aria-label="주요 메뉴">
+      <button type="button" class="nav-btn active" data-page="evalPage">평가 진행</button>
+      <button type="button" class="nav-btn" data-page="caregiverPage">보호자 보고</button>
+      <button type="button" class="nav-btn" data-page="resultPage">평가 결과</button>
     </nav>
   </header>
 
-  <main>
-    <section id="startPage" class="page active" role="dialog" aria-modal="true" aria-labelledby="preflightTitle">
-      <div class="card start-card"><div class="start-content preflight-grid">
-        <span class="badge">웹 기반 프로토타입</span><div><h1 id="preflightTitle">소음 환경 기능적 듣기 평가</h1><p class="sub">초등학교 저학년 난청 아동을 위한 웹 기반 프로토타입</p></div>
-        <section class="preflight-section" id="modeChoiceSection"><div class="preflight-title"><h2>평가 모드 선택</h2><span class="badge">시작</span></div><div class="mode-choice-grid"><div class="choice-card primary-choice"><h3>연구용 평가</h3><p class="sub">등록된 검사 장비 설정과 음향 보정값을 확인한 후 평가를 진행합니다.</p><button type="button" class="primary" id="showFormalPreflightBtn">연구용 평가 시작</button></div><div class="choice-card demo-choice"><h3>체험 모드</h3><p class="sub">음향 보정 없이 프로그램의 화면과 기능을 확인합니다. 체험 결과는 연구자료로 사용할 수 없습니다.</p><button type="button" class="outline" id="demoStartBtn">체험 모드로 둘러보기</button></div></div></section>
-        <div id="formalPreflightPanel" class="preflight-grid" hidden>
-          <section class="preflight-section"><div class="preflight-title"><h2>1. 목표 음향 조건</h2><span class="badge">목표값</span></div><div class="compact-grid" id="targetAcousticCards"></div><div class="note" style="margin-top:14px">표시된 수치는 연구에서 설정한 목표 음향 조건입니다. 실제 음향 조건은 지정된 재생 장비와 수검자 위치에서 소음계를 이용하여 측정한 값을 기준으로 합니다.</div></section>
-          <section class="preflight-section"><div class="preflight-title"><h2>2. 보정 프로필 선택</h2><span class="badge" id="calibrationStatusBadge">미보정</span></div><div class="form-grid"><label class="full" for="calibrationProfileSelect">보정 프로필 선택<select id="calibrationProfileSelect"></select></label><label class="full" for="preflightExaminer">검사자<input id="preflightExaminer" type="text" autocomplete="name" placeholder="예: 홍길동"></label></div><div id="calibrationProfileSummary" class="profile-card empty" aria-live="polite"></div><details class="info-details" style="margin-top:14px"><summary>상세정보 보기</summary><div class="details-body"><div id="calibrationProfileDetails" class="summary"></div><div class="form-grid"><label>문장 허용범위 ± dB<input id="toleranceSpeech" type="text" inputmode="decimal" value="1"></label><label>소음 허용범위 ± dB<input id="toleranceNoise" type="text" inputmode="decimal" value="1"></label><label>목표 SNR 허용범위 ± dB<input id="toleranceSnr" type="text" inputmode="decimal" value="1"></label><div class="small full">위 값은 본 연구에서 설정한 보정 허용범위입니다. 초기 기준은 문장 59.0~61.0 dBA, 소음 54.0~56.0 dBA, SNR +4.0~+6.0 dB입니다.</div></div></div></details><div class="btns" style="margin-top:14px"><button type="button" class="outline" id="editCalibrationBtn">보정 프로필 관리</button></div></section>
-          <section class="preflight-section"><div class="preflight-title"><h2>3. 검사 전 확인 체크리스트</h2><span class="badge" id="checklistCountBadge">0 / 5</span></div><ul class="required-list" id="preflightChecklist"></ul></section>
-          <section class="preflight-section"><div class="preflight-title"><h2>4. 시험음 재생 및 평가 시작</h2><span class="badge" id="audioAssetBadge">음원 확인 중</span></div><div class="asset-list" id="audioAssetStatus" role="status">연구용 음원을 확인하고 있습니다.</div><div class="btns" style="margin-top:14px"><button type="button" class="soft" id="testSpeechBtn">문장 시험음 재생</button><button type="button" class="soft" id="testNoiseBtn">교실 소음 시험 재생</button><button type="button" class="outline" id="preflightStopAudioBtn">전체 소리 정지</button></div><div class="feedback" id="preflightStatus" role="status">시험음은 장비 작동과 왜곡 여부 확인용이며, 본 사이트가 dBA를 측정하지 않습니다.</div><div class="start-actions" style="margin-top:14px"><button type="button" class="primary" id="formalStartBtn" disabled>연구용 평가 시작</button></div></section>
+  <main id="preflightPage" class="page active">
+    <section class="card start-card">
+      <div class="start-content">
+        <span class="badge">웹 기반 예비 프로토콜</span>
+        <div>
+          <h1>소음 환경 기능적 듣기 평가 프로토콜</h1>
+          <p class="sub">초등학교 1학년 난청 아동을 위한 웹 기반 예비 프로토콜입니다.</p>
         </div>
-      </div></div>
-    </section>
-
-    <section id="evalPage" class="page">
-      <div class="eval-layout"><div class="stack">
-        <div id="modeStatusCard" class="mode-status-card" role="status" hidden></div>
-        <div class="card">
-          <details class="settings-panel" open>
-            <summary>세부 설정 및 고정 평가 조건</summary>
-            <div class="details-body">
-              <div class="row">
-                <div><label for="childName">아동 이름</label><input id="childName" type="text" placeholder="예: 김도현"></div>
-                <div><label for="sessionNo">평가 회차</label><input id="sessionNo" type="text" placeholder="예: 1차 평가"></div>
-              </div>
-              <div class="compact-grid">
-                <div class="smallbox"><div class="label2">장소</div><strong>교실</strong></div>
-                <div class="smallbox"><div class="label2">배경소음</div><strong>교실 소음</strong></div>
-                <div class="smallbox"><div class="label2">자극 제시</div><strong>단일 화자 문장</strong></div>
-                <div class="smallbox"><div class="label2">평가 문항 수</div><strong>18문항</strong></div>
-              </div>
+        <section class="preflight-section">
+          <div class="section-title"><h2>평가 모드 선택</h2><span class="badge">시작</span></div>
+          <div class="mode-choice-grid">
+            <div class="choice-card primary-choice">
+              <h3>연구자용 보정 모드</h3>
+              <p class="sub">저장된 보정 프로필과 검사 전 확인 항목을 확인한 뒤 평가를 진행합니다.</p>
+              <button type="button" class="primary" id="showFormalPreflightBtn">연구자용 보정 모드 시작</button>
             </div>
-          </details>
-        </div>
-
-        <div class="card question-card">
-          <div class="question-top">
-            <div class="current-item-head">
-              <div>
-                <h2 id="currentItemCounter">현재 문항 1 / 18</h2>
-                <p class="small">저장 완료된 문항은 초록 표시와 체크로 구분됩니다.</p>
-              </div>
-              <span class="mini-badge" id="progressBadge">평가 기록 0 / 18문항</span>
-            </div>
-            <div class="progress-wrap" aria-label="문항 진행률">
-              <div class="progress-bar"><span class="progress-fill" id="itemProgressFill"></span></div>
-            </div>
-            <div class="item-tabs" id="itemTabs"></div>
-          </div>
-          <div class="eval-block">
-            <div class="stimulus-panel">
-              <div class="section-title"><span class="mini-badge" id="itemCategoryBadge">음식</span><span class="small" id="itemStateText">미기록</span></div>
-              <div class="big-text" id="stimulusPreview"></div>
-              <div class="small" id="stimulusMeta"></div>
-            </div>
-            <div class="audio-panel">
-              <label>말소리 재생</label>
-              <div class="btns">
-                <button type="button" class="primary" id="playAssessmentBtn">소음 조건에서 문항 듣기</button>
-                <button type="button" class="soft" id="previewNoiseBtn">교실 소음 미리듣기</button>
-                <button type="button" class="outline" id="stopAudioBtn">전체 소리 정지</button>
-              </div>
-              <div class="feedback" id="audioStatus" role="status">오디오 상태: 아직 재생하지 않았습니다.</div>
+            <div class="choice-card demo-choice">
+              <h3>체험 모드</h3>
+              <p class="sub">음향 미보정 · 체험 결과는 연구자료로 사용할 수 없습니다.</p>
+              <button type="button" class="outline" id="demoStartBtn">체험 모드로 둘러보기</button>
             </div>
           </div>
+        </section>
 
-          <div class="eval-block">
-          <div class="record-panel">
-            <label>정오 반응 기록</label>
-            <div class="response-grid">
-              <fieldset class="phase-box" id="phase1Box"><legend>1차 반응</legend><div class="chips">
-                <button type="button" class="chip" data-group="phase1" data-value="정반응">정반응</button><button type="button" class="chip" data-group="phase1" data-value="오반응">오반응</button>
-              </div></fieldset>
-              <fieldset class="phase-box disabled" id="phase2Box" disabled><legend>2차 반응</legend><div class="chips">
-                <button type="button" class="chip" data-group="phase2" data-value="정반응" disabled>정반응</button><button type="button" class="chip" data-group="phase2" data-value="오반응" disabled>오반응</button><button type="button" class="chip" data-group="phase2" data-value="미실시" disabled>미실시</button>
-              </div></fieldset>
-              <fieldset class="phase-box disabled" id="phase3Box" disabled><legend>3차 반응</legend><div class="chips">
-                <button type="button" class="chip" data-group="phase3" data-value="정반응" disabled>정반응</button><button type="button" class="chip" data-group="phase3" data-value="오반응" disabled>오반응</button><button type="button" class="chip" data-group="phase3" data-value="미실시" disabled>미실시</button>
-              </div></fieldset>
+        <section id="formalPreflightPanel" class="stack" hidden>
+          <section class="preflight-section">
+            <div class="section-title"><h2>1. 고정 평가 조건</h2><span class="badge">조건</span></div>
+            <div class="compact-grid">
+              <div class="stat-card"><div class="label2">화자</div><div class="value" style="font-size:18px">성인 표준어 화자 1인</div></div>
+              <div class="stat-card"><div class="label2">소음</div><div class="value" style="font-size:18px">교실소음 1종</div></div>
+              <div class="stat-card"><div class="label2">직접평가 문항</div><div class="value" style="font-size:18px">18문항</div></div>
+              <div class="stat-card"><div class="label2">응답 방식</div><div class="value" style="font-size:18px">그림 선택</div></div>
             </div>
+            <p class="small">물리적 음향 수치는 유효한 보정 프로필이 선택된 경우에만 표시됩니다.</p>
+          </section>
 
-            <label style="margin-top:16px">지금 듣기 상태는 어때요?</label>
-            <div class="chips"><button type="button" class="chip" data-group="selfAwareness" data-value="잘 들려요">잘 들려요</button><button type="button" class="chip" data-group="selfAwareness" data-value="조금 어려워요">조금 어려워요</button><button type="button" class="chip" data-group="selfAwareness" data-value="많이 어려워요">많이 어려워요</button></div>
-
-            <label style="margin-top:16px">문장 이해 수준: 평가자 관찰</label>
-            <div class="chips"><button type="button" class="chip" data-group="understandingLevel" data-value="핵심 정보를 정확히 파악함">핵심 정보를 정확히 파악함</button><button type="button" class="chip" data-group="understandingLevel" data-value="핵심 정보를 부분적으로 파악함">핵심 정보를 부분적으로 파악함</button><button type="button" class="chip" data-group="understandingLevel" data-value="핵심 정보 파악에 어려움이 있음">핵심 정보 파악에 어려움이 있음</button></div>
-
-            <label style="margin-top:16px">수정 전략</label>
-            <div class="strategy-grid">
-              <button type="button" class="strategy-card" data-group="repairStrategy" data-value="다시 말해주세요"><span class="kr">다시 말해주세요</span></button>
-              <button type="button" class="strategy-card" data-group="repairStrategy" data-value="잘 모르겠어요"><span class="kr">잘 모르겠어요</span></button>
-              <button type="button" class="strategy-card" data-group="repairStrategy" data-value="못 들었어요"><span class="kr">못 들었어요</span></button>
-              <button type="button" class="strategy-card" data-group="repairStrategy" data-value="사용하지 않음"><span class="kr">사용하지 않음</span></button>
+          <section class="preflight-section">
+            <div class="section-title"><h2>2. 보정 프로필 선택</h2><span class="badge" id="calibrationStatusBadge">미보정</span></div>
+            <div class="form-grid">
+              <label class="full" for="calibrationProfileSelect">보정 프로필 선택<select id="calibrationProfileSelect"></select></label>
+              <label class="full" for="examinerCode">평가자 코드<input id="examinerCode" type="text" autocomplete="off" placeholder="예: R01"></label>
             </div>
-            <label style="margin-top:16px">반응 행동</label><div class="chips"><button type="button" class="chip" data-group="responseBehavior" data-value="반응함">반응함</button><button type="button" class="chip" data-group="responseBehavior" data-value="무반응">무반응</button></div>
-            <label for="freeNote" style="margin-top:16px">자유 기록 메모</label><textarea id="freeNote" placeholder="예: 1차 반응은 놓쳤으나 반복 제시 후 핵심 단어를 파악함."></textarea>
-            <div class="btns" style="margin-top:12px">
-              <button type="button" class="mint" id="trialSummaryBtn">현재 문항 기록 요약</button>
-              <button type="button" class="primary" id="saveTrialBtn">이번 평가 기록하기</button>
-              <button type="button" class="danger-soft" id="deleteTrialBtn">현재 문항 기록 삭제</button>
+            <div id="calibrationProfileSummary" class="profile-card empty" aria-live="polite"></div>
+            <details class="program-guide">
+              <summary>상세정보 보기</summary>
+              <div class="summary" id="calibrationProfileDetails" style="margin:0 18px 18px"></div>
+            </details>
+            <div class="btns">
+              <button type="button" class="outline" id="editCalibrationBtn">보정 프로필 관리</button>
             </div>
-            <div class="feedback" id="instantFeedback" role="status">현재 문항의 입력 내용을 요약해 표시합니다.</div>
-          </div>
-          </div>
-        </div>
+          </section>
 
-        <div class="card">
-          <div class="section-title"><h3>평가 자료 초기화</h3><span class="badge">확인 후 실행</span></div>
-          <div class="btns"><button type="button" class="danger-soft" id="resetDirectBtn">직접 평가 기록만 초기화</button><button type="button" class="danger-soft" id="resetAllBtn">전체 평가 자료 초기화</button><button type="button" class="primary" id="newAssessmentBtn">새 평가 시작</button></div>
-          <p class="small">전체 평가 자료 초기화에는 직접 평가, 보호자 점수와 비고, 아동 이름 및 평가 회차가 포함됩니다.</p>
-        </div>
-        <details class="program-guide"><summary>프로그램 이용 안내</summary><ul><li>본 프로그램은 현재 표준화된 검사 또는 진단 도구가 아닙니다.</li><li>직접평가와 보호자 체크리스트 결과는 자동으로 정상·비정상을 판정하지 않습니다.</li><li>체험 모드의 출력은 실제 60 dBA 및 +5 dB SNR로 확인되지 않았습니다.</li><li>입력 내용은 현재 브라우저에서 처리되며, 외부 서버로 자동 전송되지 않습니다.</li><li>실제 출력 수준은 컴퓨터, 스피커, 이어폰 및 시스템 음량에 따라 달라질 수 있습니다.</li></ul><p class="small" style="padding:0 18px 18px;margin:0">프로그램 버전: <span class="programVersionText"></span></p></details>
-      </div></div>
-    </section>
+          <section class="preflight-section">
+            <div class="section-title"><h2>3. 검사 전 체크리스트</h2><span class="badge" id="checklistCountBadge">0 / 6</span></div>
+            <ul class="check-list" id="preflightChecklist"></ul>
+          </section>
 
-    <section id="parentPage" class="page">
-      <div class="caregiver-layout"><div class="stack">
-        <div class="card"><div class="section-title"><h2>보호자 체크리스트</h2><span class="badge">Likert 5점 척도</span></div><p class="sub">본 체크리스트는 아동이 일상생활에서 청각보조기기를 얼마나 안정적으로 착용하고 사용하는지, 그리고 다양한 환경에서 청각적 단서에 자발적으로 주의를 기울이고 반응하는지를 보호자 체크리스트를 통해 확인하기 위한 도구입니다. 보호자는 최근 아동의 일상적인 모습을 기준으로 각 문항에 해당하는 빈도를 선택합니다.</p><div class="note">0점: 전혀 · 1점: 거의 · 2점: 가끔 · 3점: 자주 · 4점: 항상</div></div>
-        <div id="parentChecklist" class="caregiver-list"></div>
-      </div><div class="stack"><div class="card">
-        <div class="section-title"><h2>응답 요약</h2><span class="badge">자동 계산</span></div>
-        <div class="total-box"><div class="label2">총점</div><div class="total-score" id="parentTotalScore">총점: -- / 40점</div><div class="small" id="parentTotalMeta"></div></div>
-        <label style="margin-top:14px">점수 범주별 문항 번호</label><div class="summary" id="parentCategorySummary"></div>
-        <label style="margin-top:14px">보호자 체크리스트/비고 원문</label><div class="parent-raw-list" id="parentRawNotes"></div>
-        <label style="margin-top:14px">결과 확인 참고</label><div class="summary" id="parentSummary"></div>
-      </div><details class="program-guide"><summary>프로그램 이용 안내</summary><ul><li>본 프로그램은 현재 표준화된 검사 또는 진단 도구가 아닙니다.</li><li>직접평가와 보호자 체크리스트 결과는 자동으로 정상·비정상을 판정하지 않습니다.</li><li>체험 모드의 출력은 실제 60 dBA 및 +5 dB SNR로 확인되지 않았습니다.</li><li>입력 내용은 현재 브라우저에서 처리되며, 외부 서버로 자동 전송되지 않습니다.</li><li>실제 출력 수준은 컴퓨터, 스피커, 이어폰 및 시스템 음량에 따라 달라질 수 있습니다.</li></ul><p class="small" style="padding:0 18px 18px;margin:0">프로그램 버전: <span class="programVersionText"></span></p></details></div></div>
-    </section>
+          <section class="preflight-section">
+            <div class="section-title"><h2>4. 음원 확인 및 평가 시작</h2><span class="badge" id="audioAssetBadge">음원 확인 중</span></div>
+            <div class="asset-list" id="audioAssetStatus" role="status">음원 로드 상태를 확인하고 있습니다.</div>
+            <div class="btns">
+              <button type="button" class="soft" id="testSpeechBtn">문장 시험음 재생</button>
+              <button type="button" class="soft" id="testNoiseBtn">교실소음 시험음 재생</button>
+              <button type="button" class="outline" id="preflightStopAudioBtn">전체 소리 정지</button>
+            </div>
+            <div class="feedback" id="preflightStatus" role="status">연구자용 보정 모드는 유효한 보정 프로필과 체크리스트 확인 후 시작할 수 있습니다.</div>
+            <button type="button" class="primary" id="formalStartBtn" disabled>연구자용 보정 모드 시작</button>
+          </section>
+        </section>
 
-    <section id="summaryPage" class="page"><div class="stack">
-      <div class="card">
-        <div class="section-title"><h2>평가 결과</h2><span class="badge">직접 평가 + 보호자 체크리스트</span></div>
-        <div class="kpi-grid"><div class="stat-card"><div class="label2">총 평가 시행 수</div><div class="value" id="kpiCompleted">0</div></div><div class="stat-card"><div class="label2">1차 제시 정반응 수</div><div class="value" id="kpiFirst">0</div></div><div class="stat-card"><div class="label2">반복 후 정반응 전환 수</div><div class="value" id="kpiImproved">0</div></div><div class="stat-card"><div class="label2">수정전략 사용 수</div><div class="value" id="kpiRepair">0</div></div><div class="stat-card"><div class="label2">무반응 수</div><div class="value" id="kpiNoResponse">0</div></div><div class="stat-card"><div class="label2">보호자 체크리스트 원점수</div><div class="value" id="kpiParentRaw">--</div></div><div class="stat-card"><div class="label2">평가 모드</div><div class="value" id="kpiMode">미시작</div></div><div class="stat-card"><div class="label2">음향 보정 상태</div><div class="value" id="kpiCalibration">미확인</div></div></div>
-        <label style="margin-top:14px">평가 기록 요약</label><div class="summary" id="sessionSummary"></div>
-        <div class="btns" style="margin-top:12px"><button type="button" class="outline" id="observationSummaryBtn">통합 관찰 요약 보기</button><button type="button" class="primary" id="downloadReportBtn">평가 요약 TXT 저장</button></div>
-        <div class="feedback" id="reportStatus" role="status" hidden></div>
+        <details class="program-guide">
+          <summary>프로그램 이용 안내</summary>
+          <ul>
+            <li>본 프로토콜은 현재 표준화 검사가 아닙니다.</li>
+            <li>직접평가와 보호자 보고 결과는 자동으로 능력 수준을 판정하지 않습니다.</li>
+            <li>체험 모드는 음향 미보정 상태이며 체험 결과는 연구자료로 사용할 수 없습니다.</li>
+            <li>입력 내용은 현재 브라우저에서 처리되며 외부 서버로 자동 전송되지 않습니다.</li>
+          </ul>
+          <p class="small" style="padding:0 18px 18px;margin:0">프로그램 버전: <span class="programVersionText"></span></p>
+        </details>
       </div>
-      <div class="card"><div class="section-title"><h2>보호자 체크리스트</h2><span class="badge">통합 반영</span></div><div class="total-box"><div class="label2">보호자 체크리스트 총점</div><div class="total-score" id="summaryParentTotal">총점: -- / 40점</div><div class="small" id="summaryParentMeta"></div></div><label style="margin-top:14px">점수 범주별 문항 번호</label><div class="summary" id="summaryParentCategories"></div><label style="margin-top:14px">보호자 체크리스트/비고 원문</label><div class="parent-raw-list" id="summaryParentRawNotes"></div></div>
-    <div class="card"><div class="section-title"><h2>기록된 직접 평가</h2><span class="badge">문항별 원자료</span></div><div class="table-scroll"><table><thead><tr><th>문항 번호</th><th>범주</th><th>문장</th><th>1차 반응</th><th>2차 반응</th><th>3차 반응</th><th>최종 결과</th><th>문장 이해 수준</th><th>자기인식</th><th>반응 행동</th><th>수정 전략</th><th>메모</th></tr></thead><tbody id="logTable"></tbody></table></div></div>
-      <details class="program-guide"><summary>프로그램 이용 안내</summary><ul><li>본 프로그램은 현재 표준화된 검사 또는 진단 도구가 아닙니다.</li><li>직접평가와 보호자 체크리스트 결과는 자동으로 정상·비정상을 판정하지 않습니다.</li><li>체험 모드의 출력은 실제 60 dBA 및 +5 dB SNR로 확인되지 않았습니다.</li><li>입력 내용은 현재 브라우저에서 처리되며, 외부 서버로 자동 전송되지 않습니다.</li><li>실제 출력 수준은 컴퓨터, 스피커, 이어폰 및 시스템 음량에 따라 달라질 수 있습니다.</li></ul><p class="small" style="padding:0 18px 18px;margin:0">프로그램 버전: <span class="programVersionText"></span></p></details>
-    </div></section>
+    </section>
+  </main>
+
+  <main id="evalPage" class="page">
+    <div class="stack">
+      <section class="card">
+        <div class="section-title">
+          <div><h2>평가 진행</h2><p class="sub" id="modeNotice">평가 모드를 먼저 선택해 주세요.</p></div>
+          <span class="badge" id="currentItemCounter">현재 문항 1 / 18</span>
+        </div>
+        <div class="row">
+          <label for="participantCode">참여자 코드<input id="participantCode" type="text" autocomplete="off" placeholder="예: P001"></label>
+          <label for="sessionNo">평가 회차<input id="sessionNo" type="text" autocomplete="off" placeholder="예: 1회기"></label>
+        </div>
+        <div class="progress-wrap" style="margin-top:14px">
+          <div class="section-title" style="margin:0"><span class="small" id="progressBadge">저장 0 / 18문항</span><span class="small" id="itemStateText">미저장</span></div>
+          <div class="progress-bar" aria-hidden="true"><div class="progress-fill" id="itemProgressFill"></div></div>
+        </div>
+        <div class="item-tabs" id="itemTabs" aria-label="문항 선택"></div>
+      </section>
+
+      <section class="eval-grid">
+        <div class="item-shell">
+          <div class="section-title">
+            <div>
+              <span class="badge" id="itemDomainBadge">영역</span>
+              <h2 id="itemTitle" style="margin-top:10px">1번 문항</h2>
+            </div>
+            <span class="mini-badge">그림 선택</span>
+          </div>
+          <div class="sentence-card">
+            <div class="label2">제시 문장</div>
+            <div class="sentence-text" id="sentenceText"></div>
+          </div>
+          <div class="btns" style="margin-top:14px">
+            <button type="button" class="primary" id="playAssessmentBtn">소음 조건에서 문항 듣기</button>
+            <button type="button" class="soft" id="repeatPlayBtn" disabled>추가 1회 재생</button>
+            <button type="button" class="outline" id="stopAudioBtn">전체 소리 정지</button>
+          </div>
+          <div class="feedback" id="audioStatus" role="status">기본 음원 재생은 한 번입니다.</div>
+          <div class="option-grid" id="optionGrid" aria-label="그림 선택지"></div>
+        </div>
+
+        <aside class="record-panel">
+          <div class="section-title"><h2>평가자 기록</h2><span class="badge">관찰</span></div>
+          <label>복구전략</label>
+          <div class="chips" id="repairTypeChips"></div>
+          <p class="small">복구전략은 아동에게 선택하게 하는 항목이 아니라 평가자가 자발적인 행동을 관찰해 기록하는 영역입니다.</p>
+
+          <label style="margin-top:14px">자기보고</label>
+          <div class="chips" id="selfReportChips"></div>
+
+          <label style="margin-top:14px"><input id="noResponseCheck" type="checkbox" style="width:20px;height:20px;accent-color:var(--primary);vertical-align:middle;margin-right:8px">무반응</label>
+
+          <label for="evaluatorNote" style="margin-top:14px">평가자 메모</label>
+          <textarea id="evaluatorNote" placeholder="관찰 내용 또는 특이사항을 입력하세요."></textarea>
+
+          <div class="btns" style="margin-top:14px">
+            <button type="button" class="primary" id="saveTrialBtn">현재 문항 저장</button>
+            <button type="button" class="outline" id="trialSummaryBtn">현재 문항 기록 요약</button>
+          </div>
+          <div class="feedback" id="instantFeedback" role="status">그림 선택과 평가자 기록을 입력한 뒤 저장하세요.</div>
+        </aside>
+      </section>
+
+      <details class="program-guide">
+        <summary>설정 및 관리</summary>
+        <div class="management-actions" style="padding:0 18px 18px">
+          <button type="button" class="danger-soft" id="resetDirectBtn">직접 평가 기록 초기화</button>
+          <button type="button" class="danger-soft" id="resetAllBtn">전체 평가 기록 초기화</button>
+          <button type="button" class="outline" id="newAssessmentBtn">새 평가 시작</button>
+        </div>
+      </details>
+    </div>
+  </main>
+
+  <main id="caregiverPage" class="page">
+    <div class="stack">
+      <section class="card">
+        <div class="section-title"><h2>보호자 보고</h2><span class="badge">10문항</span></div>
+        <div class="privacy-note">최근 2주를 기준으로 응답해 주세요.</div>
+        <div class="note" style="margin-top:10px">본 문항은 MAIS의 평가영역을 참고하여 구성한 연구자 개발 예비문항이며 정식 MAIS가 아닙니다.</div>
+      </section>
+      <section class="caregiver-list" id="caregiverList"></section>
+      <section class="card">
+        <div class="section-title"><h2>보호자 보고 기록</h2><span class="badge" id="caregiverCountBadge">0 / 10</span></div>
+        <div class="parent-raw-list" id="caregiverRawList"></div>
+      </section>
+    </div>
+  </main>
+
+  <main id="resultPage" class="page">
+    <div class="stack">
+      <section class="card">
+        <div class="section-title"><h2>평가 결과</h2><span class="badge">기록 요약</span></div>
+        <div class="kpi-grid">
+          <div class="stat-card"><div class="label2">완료 문항 수</div><div class="value" id="kpiCompleted">0</div></div>
+          <div class="stat-card"><div class="label2">최초 제시 정반응 수</div><div class="value" id="kpiInitialCorrect">0</div></div>
+          <div class="stat-card"><div class="label2">추가 제시 문항 수</div><div class="value" id="kpiRepeat">0</div></div>
+          <div class="stat-card"><div class="label2">추가 제시 후 반응 변화 수</div><div class="value" id="kpiChanged">0</div></div>
+          <div class="stat-card"><div class="label2">무반응 수</div><div class="value" id="kpiNoResponse">0</div></div>
+          <div class="stat-card"><div class="label2">보호자 응답 완료</div><div class="value" id="kpiCaregiver">0</div></div>
+        </div>
+        <div class="summary" id="technicalSummary" style="margin-top:14px"></div>
+        <div class="btns" style="margin-top:12px">
+          <button type="button" class="outline" id="recordSummaryBtn">통합 기록 요약 보기</button>
+          <button type="button" class="primary" id="downloadReportBtn">평가 기록 TXT 저장</button>
+        </div>
+        <div class="feedback" id="reportStatus" role="status"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-title"><h2>직접평가 문항별 기록</h2><span class="badge">원자료</span></div>
+        <div class="table-scroll"><table><thead><tr><th>문항 번호</th><th>영역</th><th>문장</th><th>최초 선택</th><th>최초 정오</th><th>복구전략</th><th>추가 제시 여부</th><th>최종 선택</th><th>최종 정오</th><th>자기보고</th><th>무반응 여부</th><th>평가자 메모</th></tr></thead><tbody id="logTable"></tbody></table></div>
+        <div class="result-cards" id="logCards"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-title"><h2>보호자 보고 결과</h2><span class="badge">문항별 응답</span></div>
+        <div class="summary" id="caregiverSummary"></div>
+        <div class="parent-raw-list" id="caregiverResultList" style="margin-top:14px"></div>
+      </section>
+    </div>
   </main>
 </div>
-<dialog id="demoIntroDialog" class="calibration-dialog" aria-labelledby="demoIntroTitle"><div class="dialog-body"><div class="section-title"><h2 id="demoIntroTitle">체험 모드 안내</h2><button type="button" class="outline" id="closeDemoIntroBtn">닫기</button></div><div class="mode-status-card demo"><h3>체험 모드 · 음향 미보정</h3><p>현재 음향 출력은 실제 60 dBA 및 +5 dB SNR로 확인되지 않았습니다. 이 모드의 결과는 연구자료로 사용할 수 없습니다.</p></div><div class="btns" style="margin-top:14px"><button type="button" class="primary" id="confirmDemoStartBtn">평가 화면으로 이동</button></div></div></dialog>
-<dialog id="calibrationDialog" class="calibration-dialog" aria-labelledby="calibrationDialogTitle"><div class="dialog-body"><div class="section-title"><h2 id="calibrationDialogTitle">보정 프로필 관리</h2><button type="button" class="outline" id="closeCalibrationBtn">닫기</button></div><p class="small">관리자 또는 연구책임자가 음향 보정 후 등록하는 화면입니다. dBA 값은 외부 소음계로 측정한 값을 직접 입력하며, 브라우저 음량값이나 마이크로 자동 추정하지 않습니다.</p><form id="calibrationForm"><div class="form-grid"><label>프로필 이름<input id="cal_profileName" type="text" required></label><label>재생 장치<input id="cal_playbackDevice" type="text" required></label><label>외장 스피커<input id="cal_speakerModel" type="text" required></label><label>컴퓨터 음량<input id="cal_operatingSystemVolume" type="text" required placeholder="예: 38%"></label><label>외장 스피커 출력 설정<input id="cal_speakerOutputSetting" type="text" required></label><label>스피커와 아동 간 거리(m)<input id="cal_distanceMeters" type="text" inputmode="decimal" required></label><label>스피커 방향 또는 위치<input id="cal_speakerPosition" type="text" required></label><label>측정된 문장 수준 dBA<input id="cal_measuredSpeechDbA" type="text" inputmode="decimal" required></label><label>측정된 교실 소음 수준 dBA<input id="cal_measuredNoiseDbA" type="text" inputmode="decimal" required></label><label>자동 계산 SNR dB<input id="cal_measuredSnrDb" type="text" readonly placeholder="미계산"></label><label>측정 장비<input id="cal_soundLevelMeter" type="text" required></label><label>보정일<input id="cal_calibrationDate" type="date" required></label><label>보정 담당자<input id="cal_examiner" type="text" required></label><label class="full">비고<textarea id="cal_note"></textarea></label><input id="cal_browserInfo" type="hidden"><input id="cal_measurementMethod" type="hidden" value="LAeq"><input id="cal_dailyCheckDate" type="hidden"></div><div class="feedback" id="calibrationFormStatus" aria-live="polite">측정된 문장 수준과 소음 수준을 입력하면 SNR이 자동 계산됩니다. 값이 하나라도 없으면 ‘미계산’으로 표시됩니다.</div><div class="btns"><button type="submit" class="primary">보정 프로필 저장</button><button type="button" class="outline" id="resetCalibrationFormBtn">빈 양식으로 초기화</button></div></form></div></dialog>
-<div class="audio-host" aria-hidden="true"><audio id="stimulusPlayer" preload="auto" playsinline></audio><audio id="noisePlayer" preload="auto" playsinline loop></audio></div>
+
+<dialog id="calibrationDialog" aria-labelledby="calibrationDialogTitle">
+  <div class="dialog-body">
+    <div class="section-title"><h2 id="calibrationDialogTitle">보정 프로필 관리</h2><button type="button" class="outline" id="closeCalibrationBtn">닫기</button></div>
+    <p class="small">연구자가 음향 보정 후 등록하는 화면입니다. 물리적 음향 수치는 외부 소음계 측정값을 직접 입력합니다.</p>
+    <form id="calibrationForm">
+      <div class="form-grid">
+        <label>프로필 이름<input id="cal_profileName" type="text" required></label>
+        <label>장치 ID<input id="cal_deviceId" type="text" required></label>
+        <label>재생 장치 설명<input id="cal_deviceLabel" type="text"></label>
+        <label>출력 장치/스피커<input id="cal_outputDevice" type="text"></label>
+        <label>음량 설정<input id="cal_volumeSetting" type="text"></label>
+        <label>문장 수준(dBA)<input id="cal_speechDba" type="text" inputmode="decimal" required></label>
+        <label>교실소음 수준(dBA)<input id="cal_noiseDba" type="text" inputmode="decimal" required></label>
+        <label>SNR(dB)<input id="cal_snrDb" type="text" readonly placeholder="자동 계산"></label>
+        <label>보정일<input id="cal_calibratedAt" type="date" required></label>
+        <label>거리<input id="cal_distance" type="text" required placeholder="예: 1 m"></label>
+        <label>위치<input id="cal_position" type="text" required placeholder="예: 정면"></label>
+        <label>보정 담당 코드<input id="cal_researcherCode" type="text"></label>
+        <label class="full">비고<textarea id="cal_note"></textarea></label>
+      </div>
+      <div class="feedback" id="calibrationFormStatus" aria-live="polite">문장 수준과 교실소음 수준을 입력하면 SNR이 자동 계산됩니다.</div>
+      <div class="btns"><button type="submit" class="primary">보정 프로필 저장</button><button type="button" class="outline" id="resetCalibrationFormBtn">빈 양식으로 초기화</button></div>
+    </form>
+  </div>
+</dialog>
 
 <script>
-"use strict";
-const PROGRAM_VERSION="2026.06.27-ui-simplified";
+const PROGRAM_VERSION="2026.06.29-research-protocol";
 const CLASSROOM_NOISE_FILE="classroom_noise.mp4";
-const CLASSROOM_NOISE_START=7.5;
-const PLAYBACK={stimulusVolume:1,noiseVolume:.45};
-const REAL_REPAIR_STRATEGIES=new Set(["다시 말해주세요","잘 모르겠어요","못 들었어요"]);
-const VALID_REPAIR_STRATEGIES=REAL_REPAIR_STRATEGIES;
-const ACOUSTIC_TARGET=Object.freeze({speechDbA:60,noiseDbA:55,snrDb:5,speakerCondition:"단일 표적화자",itemCount:18});
-const DEFAULT_CALIBRATION_PROFILE={status:"not_calibrated",profileName:"",playbackDevice:"",browserInfo:"",speakerModel:"",operatingSystemVolume:"",speakerOutputSetting:"",distanceMeters:"",speakerPosition:"",measuredSpeechDbA:null,measuredNoiseDbA:null,measuredSnrDb:null,soundLevelMeter:"",measurementMethod:"LAeq",calibrationDate:"",dailyCheckDate:"",examiner:"",note:""};
-const CALIBRATION_TOLERANCE=Object.freeze({speechDb:1,noiseDb:1,snrDb:1});
-const CALIBRATION_STORAGE_KEY="noiseFunctionalCommunicationCalibrationProfile";
-const UNCALIBRATED_WARNING="현재 출력은 실제 60 dBA 및 +5 dB SNR로 확인되지 않았습니다. 체험 모드 결과는 음향적으로 보정된 연구자료로 사용할 수 없습니다.";
-const caregiverItems=[
-{id:1,title:"1. 아동은 청각보조기기를 착용시켜 달라고 요구하거나, 시키지 않아도 스스로 착용하려고 합니까?"},
-{id:2,title:"2. 어떤 이유로든 청각보조기기가 작동하지 않으면, 아동은 이를 표현하거나 속상해합니까?"},
-{id:3,title:"3. 조용한 환경에서 이름을 부르면, 아동은 시각적 단서 없이 청각적 단서만으로 자발적으로 반응합니까?"},
-{id:4,title:"4. 배경소음이 있는 환경에서 이름을 부르면, 아동은 시각적 단서 없이 청각적 단서만으로 자발적으로 반응합니까?"},
-{id:5,title:"5. 누가 말해주거나 가르쳐주지 않아도, 아동은 집안의 환경음, 예: 초인종 소리, 전화벨 소리에 자발적으로 주의를 기울입니까?"},
-{id:6,title:"6. 아동은 새로운 환경에서 들리는 청각적 신호에 자발적으로 주의를 기울입니까?"},
-{id:7,title:"7. 아동은 학교나 가정생활에서 들리는 청각적 신호를 자발적으로 알아듣고 반응합니까?"},
-{id:8,title:"8. 아동은 청각적 단서만으로 두 사람의 목소리, 예: 엄마와 아빠 목소리, 부모와 형제·자매 목소리를 자발적으로 구별할 수 있습니까?"},
-{id:9,title:"9. 아동은 소리만 듣고 말소리와 말소리가 아닌 소리를 자발적으로 구별할 수 있습니까?"},
-{id:10,title:"10. 아동은 소리만 듣고 목소리 톤과 관련된 의미, 예: 화남, 흥분, 걱정 등을 자발적으로 이해할 수 있습니까?"}
-];
-const assessmentItems=[
-{id:1,category:"음식",prompt:"밥솥에 삼계탕도 끓일 수 있어요.",audio:"audio/item01.mp3"},{id:2,category:"음식",prompt:"조금 전 마시던 녹차가 다 식었다.",audio:"audio/item02.mp3"},{id:3,category:"음식",prompt:"선물을 뜯으니 안에 과자가 들어있다.",audio:"audio/item03.mp3"},{id:4,category:"음식",prompt:"아까 먹고 남은 빵은 어디 있나요?",audio:"audio/item04.mp3"},{id:5,category:"음식",prompt:"오래된 우유를 마시고 배탈이 났어요.",audio:"audio/item05.mp3"},{id:6,category:"음식",prompt:"마늘과 간장을 넣고 나물을 무쳤다.",audio:"audio/item06.mp3"},
-{id:7,category:"장소",prompt:"주말에 영화관은 사람으로 붐볐다.",audio:"audio/item07.mp3"},{id:8,category:"장소",prompt:"주유소에 가니 기름 값이 올랐어요.",audio:"audio/item08.mp3"},{id:9,category:"장소",prompt:"악기를 배우려고 학원에 등록했다.",audio:"audio/item09.mp3"},{id:10,category:"장소",prompt:"백화점에서 구입한 옷을 잃어버렸다.",audio:"audio/item10.mp3"},{id:11,category:"장소",prompt:"바지를 줄이려고 세탁소에 맡겼어요.",audio:"audio/item11.mp3"},{id:12,category:"장소",prompt:"새벽인데 문을 연 약국이 있을까요?",audio:"audio/item12.mp3"},
-{id:13,category:"생활용품",prompt:"신청서는 연필로 작성해야 하나요?",audio:"audio/item13.mp3"},{id:14,category:"생활용품",prompt:"다리미에 물을 넣고 바지를 다렸다.",audio:"audio/item14.mp3"},{id:15,category:"생활용품",prompt:"침대 위에 있던 안경을 깔고 앉았다.",audio:"audio/item15.mp3"},{id:16,category:"생활용품",prompt:"이번 겨울에는 짧은 치마가 유행이다.",audio:"audio/item16.mp3"},{id:17,category:"생활용품",prompt:"가구가 적어서 방이 넓어 보여요.",audio:"audio/item17.mp3"},{id:18,category:"생활용품",prompt:"화장품을 써보니 피부에 잘 맞아요.",audio:"audio/item18.mp3"}
-];
-const scoreLabels=[{score:0,label:"0점",desc:"전혀"},{score:1,label:"1점",desc:"거의"},{score:2,label:"2점",desc:"가끔"},{score:3,label:"3점",desc:"자주"},{score:4,label:"4점",desc:"항상"}];
-const state={currentItem:0,itemObservations:{},phaseTouches:{},logs:[],parentScores:{},parentNotes:{},showObservationSummary:false,playToken:0,timers:new Set(),saveLocked:false,assessmentMode:null,sessionCalibrationSnapshot:null,calibrationProfile:null,calibrationValidation:null,tolerance:{...CALIBRATION_TOLERANCE},preflightChecks:{},testPlayed:{speech:false,noise:false},conditionMatch:"",audioAssets:{checked:false,missing:[],available:[]}};
-const stimulusAudio=document.getElementById("stimulusPlayer");
-const noiseAudio=document.getElementById("noisePlayer");
-noiseAudio.src=CLASSROOM_NOISE_FILE; noiseAudio.volume=PLAYBACK.noiseVolume; stimulusAudio.volume=PLAYBACK.stimulusVolume;
-
-function defaultObservation(item){return{itemId:item.id,category:item.category,prompt:item.prompt,selfAwareness:"",understandingLevel:"",phase1:"",phase2:"미실시",phase3:"미실시",repairStrategy:"",responseBehavior:false,note:""}}
-function getObservation(itemId=assessmentItems[state.currentItem].id){if(!state.itemObservations[itemId]){const item=assessmentItems.find(x=>x.id===itemId);state.itemObservations[itemId]=defaultObservation(item);state.phaseTouches[itemId]={phase2:false,phase3:false}}return state.itemObservations[itemId]}
-function getTouches(itemId=assessmentItems[state.currentItem].id){getObservation(itemId);return state.phaseTouches[itemId]}
-function isDirty(o){return Boolean(o.phase1||o.selfAwareness||o.understandingLevel||o.repairStrategy||o.responseBehavior||o.note.trim()||o.phase2!=="미실시"||o.phase3!=="미실시")}
-function isSaved(itemId){return state.logs.some(x=>x.itemId===itemId)}
-function setStatus(id,text){const el=document.getElementById(id);el.textContent=text;el.hidden=false}
-function percent(n,d){return d?`${(n/d*100).toFixed(1)}%`:"--"}
-
-function showPage(pageId){document.getElementById("appHeader").hidden=pageId==="startPage";document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===pageId));document.querySelectorAll(".nav-btn").forEach(x=>x.classList.toggle("active",x.dataset.page===pageId));if(pageId==="summaryPage")updateSummaries();window.scrollTo({top:0,behavior:"smooth"})}
-document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",()=>showPage(btn.dataset.page)));
-
-function renderItemTabs(){const host=document.getElementById("itemTabs");host.textContent="";assessmentItems.forEach((item,index)=>{const b=document.createElement("button");b.type="button";b.className="item-tab";const saved=isSaved(item.id),dirty=isDirty(getObservation(item.id));if(saved)b.classList.add("completed");else if(dirty)b.classList.add("in-progress");if(index===state.currentItem)b.classList.add("active");b.textContent=saved?`✓ ${item.id}번`:dirty?`작성 중 ${item.id}번`:`${item.id}번`;b.setAttribute("aria-label",`${item.id}번 문항, ${saved?"저장 완료":dirty?"작성 중":"미기록"}`);b.addEventListener("click",()=>{persistCurrentObservation();state.currentItem=index;renderCurrentItem()});host.appendChild(b)});document.getElementById("progressBadge").textContent=`평가 기록 ${state.logs.length} / ${assessmentItems.length}문항`;document.getElementById("itemProgressFill").style.width=`${assessmentItems.length?state.logs.length/assessmentItems.length*100:0}%`;document.getElementById("currentItemCounter").textContent=`현재 문항 ${state.currentItem+1} / ${assessmentItems.length}`}
-function setSelected(group,value){document.querySelectorAll(`[data-group="${group}"]`).forEach(el=>el.classList.toggle("active",el.dataset.value===value))}
-function updatePhaseControls(){const o=getObservation();const phase2Enabled=o.phase1==="오반응";const phase3Enabled=phase2Enabled&&o.phase2==="오반응";[["phase2",phase2Enabled],["phase3",phase3Enabled]].forEach(([phase,enabled])=>{const box=document.getElementById(`${phase}Box`);box.disabled=!enabled;box.classList.toggle("disabled",!enabled);box.querySelectorAll("button").forEach(b=>b.disabled=!enabled)});setSelected("phase1",o.phase1);setSelected("phase2",o.phase2);setSelected("phase3",o.phase3)}
-function renderCurrentItem(){const item=assessmentItems[state.currentItem],o=getObservation(item.id);document.getElementById("itemCategoryBadge").textContent=item.category;document.getElementById("stimulusPreview").textContent=item.prompt;document.getElementById("stimulusMeta").textContent=`${item.id}번 문항 · 연결 파일: ${item.audio}`;document.getElementById("itemStateText").textContent=isSaved(item.id)?"✓ 저장 완료":isDirty(o)?"작성 중":"미기록";["selfAwareness","understandingLevel","repairStrategy"].forEach(g=>setSelected(g,o[g]));document.getElementById("responseBehavior").checked=o.responseBehavior;document.getElementById("freeNote").value=o.note;updatePhaseControls();renderItemTabs()}
-function persistCurrentObservation(){const o=getObservation();o.note=document.getElementById("freeNote").value;o.responseBehavior=document.getElementById("responseBehavior").checked}
-function handleSelection(group,value){const o=getObservation(),touch=getTouches();if(group==="phase1"){const previous=o.phase1;o.phase1=value;if(value==="정반응"){o.phase2="미실시";o.phase3="미실시";touch.phase2=false;touch.phase3=false}else if(previous!=="오반응"){o.phase2="미실시";o.phase3="미실시";touch.phase2=false;touch.phase3=false}}else if(group==="phase2"){if(o.phase1!=="오반응")return;const previous=o.phase2;o.phase2=value;touch.phase2=true;if(value!=="오반응"){o.phase3="미실시";touch.phase3=false}else if(previous!=="오반응"){o.phase3="미실시";touch.phase3=false}}else if(group==="phase3"){if(o.phase2!=="오반응")return;o.phase3=value;touch.phase3=true}else{o[group]=value}updatePhaseControls();renderItemTabs();document.getElementById("itemStateText").textContent=isSaved(o.itemId)?"✓ 저장 완료":"작성 중"}
-document.querySelectorAll("[data-group]").forEach(el=>el.addEventListener("click",()=>handleSelection(el.dataset.group,el.dataset.value)));
-document.getElementById("freeNote").addEventListener("input",()=>{persistCurrentObservation();renderItemTabs()});
-
-function getTrialMetrics(log){const phases=[log.phase1,log.phase2,log.phase3];const administered=phases.filter(x=>x&&x!=="미실시");const last=administered.at(-1)||null;const correctReachIndex=phases.findIndex(x=>x==="정반응");return{presentationCount:administered.length,firstCorrect:log.phase1==="정반응",finalCorrect:last==="정반응",improvedAfterRepeat:log.phase1==="오반응"&&correctReachIndex>0,difficultyPersisted:log.phase1==="오반응"&&last==="오반응",correctReach:correctReachIndex<0?null:correctReachIndex+1,finalResult:correctReachIndex>=0?`${correctReachIndex+1}차 정반응`:administered.length?"최종 오반응":"기록 불완전"}}
-function aggregateLogs(logs=state.logs){const metrics=logs.map(getTrialMetrics),completed=logs.length,firstCorrect=metrics.filter(x=>x.firstCorrect).length,finalCorrect=metrics.filter(x=>x.finalCorrect).length,improved=metrics.filter(x=>x.improvedAfterRepeat).length,difficulty=metrics.filter(x=>x.difficultyPersisted).length,repair=logs.filter(x=>REAL_REPAIR_STRATEGIES.has(x.repairStrategy)).length;const avgPresentations=completed?metrics.reduce((s,x)=>s+x.presentationCount,0)/completed:0;const reached=metrics.filter(x=>x.correctReach!==null);const avgReach=reached.length?reached.reduce((s,x)=>s+x.correctReach,0)/reached.length:null;return{completed,firstCorrect,finalCorrect,improved,difficulty,repair,avgPresentations,avgReach}}
-function validateCurrent(){const o=getObservation(),touch=getTouches();if(!o.phase1)return"1차 반응을 먼저 기록해 주세요.";if(o.phase1==="오반응"&&!touch.phase2)return"2차 반응을 선택해 주세요. 반복 제시를 하지 않았다면 ‘미실시’를 선택할 수 있습니다.";if(o.phase2==="오반응"&&!touch.phase3)return"3차 반응을 선택해 주세요. 3차 제시를 하지 않았다면 ‘미실시’를 선택할 수 있습니다.";return""}
-function saveTrial(){if(state.saveLocked)return;state.saveLocked=true;persistCurrentObservation();const error=validateCurrent();if(error){setStatus("instantFeedback",error);state.saveLocked=false;return}const o=getObservation(),index=state.logs.findIndex(x=>x.itemId===o.itemId),record={...o};if(index>=0)state.logs[index]=record;else state.logs.push(record);state.logs.sort((a,b)=>a.itemId-b.itemId);setStatus("instantFeedback",index>=0?"현재 문항의 평가 기록이 수정되었습니다.":"현재 문항의 평가 기록이 저장되었습니다.");renderLogs();updateSummaries();renderCurrentItem();state.saveLocked=false}
-function deleteCurrentTrial(){const item=assessmentItems[state.currentItem];if(!isSaved(item.id)){setStatus("instantFeedback","현재 문항에는 저장된 평가 기록이 없습니다.");return}if(!confirm(`${item.id}번 문항의 저장 기록을 삭제하시겠습니까?`))return;state.logs=state.logs.filter(x=>x.itemId!==item.id);setStatus("instantFeedback","현재 문항의 저장 기록이 삭제되었습니다. 작성 중인 입력 내용은 유지됩니다.");renderLogs();updateSummaries();renderCurrentItem()}
-function resetDirect(){if(!confirm("직접 평가 기록과 문항별 작성 내용을 모두 초기화하시겠습니까?"))return;state.logs=[];state.itemObservations={};state.phaseTouches={};state.currentItem=0;renderLogs();updateSummaries();renderCurrentItem();setStatus("instantFeedback","직접 평가 기록이 초기화되었습니다.")}
-function resetAll(){if(!confirm("직접 평가, 보호자 점수와 비고, 아동 이름 및 평가 회차를 모두 초기화하시겠습니까?"))return;state.logs=[];state.itemObservations={};state.phaseTouches={};state.parentScores={};state.parentNotes={};state.currentItem=0;document.getElementById("childName").value="";document.getElementById("sessionNo").value="";renderParentChecklist();renderLogs();updateSummaries();renderCurrentItem();setStatus("instantFeedback","전체 평가 자료가 초기화되었습니다.")}
-
-function currentTrialSummary(){persistCurrentObservation();const o=getObservation(),m=getTrialMetrics(o);const change=m.improvedAfterRepeat?"예":"아니요";setStatus("instantFeedback",`자기인식: ${o.selfAwareness||"미기록"}\n문장 이해 수준: ${o.understandingLevel||"미기록"}\n1차 반응: ${o.phase1||"미기록"}\n2차 반응: ${o.phase2}\n3차 반응: ${o.phase3}\n제시 횟수: ${m.presentationCount}회\n최종 결과: ${m.finalResult}\n반복 후 향상: ${change}\n수정 전략: ${o.repairStrategy||"미기록"}\n무반응 관찰: ${o.responseBehavior?"예":"아니요"}\n\n평가자가 기록한 문장 이해 수준은 ‘${o.understandingLevel||"미기록"}’입니다.`)}
-
-function clearTimer(id){clearTimeout(id);state.timers.delete(id)}
-function schedule(fn,delay){const id=setTimeout(()=>{state.timers.delete(id);fn()},delay);state.timers.add(id);return id}
-function resetNoisePosition(){try{noiseAudio.currentTime=CLASSROOM_NOISE_START}catch(_){}}
-function stopAllAudio(message="전체 소리를 정지했습니다."){state.playToken++;state.timers.forEach(clearTimeout);state.timers.clear();stimulusAudio.onended=null;stimulusAudio.onerror=null;noiseAudio.onerror=null;stimulusAudio.pause();noiseAudio.pause();stimulusAudio.removeAttribute("src");stimulusAudio.load();resetNoisePosition();document.getElementById("playAssessmentBtn").disabled=false;if(message)setStatus("audioStatus",message)}
-async function playAssessment(){stopAllAudio("");const token=state.playToken,item=assessmentItems[state.currentItem],button=document.getElementById("playAssessmentBtn");button.disabled=true;noiseAudio.src=CLASSROOM_NOISE_FILE;noiseAudio.volume=PLAYBACK.noiseVolume;resetNoisePosition();noiseAudio.onerror=()=>{if(token!==state.playToken)return;stopAllAudio("");setStatus("audioStatus",`교실 소음 파일을 재생할 수 없습니다: ${CLASSROOM_NOISE_FILE}`)};try{await noiseAudio.play()}catch(_){if(token!==state.playToken)return;stopAllAudio("");setStatus("audioStatus",`교실 소음 파일을 재생할 수 없습니다: ${CLASSROOM_NOISE_FILE}`);return}if(token!==state.playToken)return;setStatus("audioStatus","교실 소음을 먼저 재생하고 있습니다.");schedule(()=>{if(token!==state.playToken)return;stimulusAudio.src=item.audio;stimulusAudio.volume=PLAYBACK.stimulusVolume;stimulusAudio.onerror=()=>{if(token!==state.playToken)return;stopAllAudio("");setStatus("audioStatus",`문항 음성 파일을 찾을 수 없습니다: ${item.audio}`)};stimulusAudio.onended=()=>{if(token!==state.playToken)return;setStatus("audioStatus","문항 재생이 끝났습니다. 교실 소음을 정지합니다.");schedule(()=>{if(token!==state.playToken)return;noiseAudio.pause();resetNoisePosition();button.disabled=false;setStatus("audioStatus","소음 조건 문항 재생이 완료되었습니다.")},500)};stimulusAudio.play().then(()=>{if(token===state.playToken)setStatus("audioStatus",`교실 소음과 ${item.audio} 파일을 함께 재생 중입니다.`)}).catch(()=>{if(token!==state.playToken)return;stopAllAudio("");setStatus("audioStatus",`문항 음성 파일을 찾을 수 없습니다: ${item.audio}`)})},1000)}
-async function previewNoise(){stopAllAudio("");const token=state.playToken;noiseAudio.src=CLASSROOM_NOISE_FILE;noiseAudio.volume=PLAYBACK.noiseVolume;resetNoisePosition();noiseAudio.onerror=()=>{if(token!==state.playToken)return;stopAllAudio("");setStatus("audioStatus",`교실 소음 파일을 재생할 수 없습니다: ${CLASSROOM_NOISE_FILE}`)};try{await noiseAudio.play();if(token===state.playToken)setStatus("audioStatus","교실 소음을 미리듣는 중입니다. 문항 음성은 재생되지 않습니다.")}catch(_){if(token!==state.playToken)return;stopAllAudio("");setStatus("audioStatus",`교실 소음 파일을 재생할 수 없습니다: ${CLASSROOM_NOISE_FILE}`)}}
-
-function renderParentChecklist(){const host=document.getElementById("parentChecklist");host.textContent="";caregiverItems.forEach(item=>{const card=document.createElement("div");card.className="care-item";const title=document.createElement("div");title.className="care-title";title.textContent=item.title;card.appendChild(title);const row=document.createElement("div");row.className="likert-row";scoreLabels.forEach(s=>{const b=document.createElement("button");b.type="button";b.className="score-btn";if(state.parentScores[item.id]===s.score)b.classList.add("active");b.textContent=`${s.label} · ${s.desc}`;b.addEventListener("click",()=>{state.parentScores[item.id]=s.score;renderParentChecklist();updateParentSummary();updateSessionSummary()});row.appendChild(b)});card.appendChild(row);const label=document.createElement("label");label.htmlFor=`parentNote${item.id}`;label.textContent="보호자 체크리스트/비고";label.style.marginTop="12px";card.appendChild(label);const ta=document.createElement("textarea");ta.id=`parentNote${item.id}`;ta.className="note-input";ta.value=state.parentNotes[item.id]||"";ta.addEventListener("input",e=>{state.parentNotes[item.id]=e.target.value;updateParentSummary()});card.appendChild(ta);host.appendChild(card)})}
-function parentComplete(){return Object.keys(state.parentScores).length===caregiverItems.length}
-function parentTotal(){return parentComplete()?Object.values(state.parentScores).reduce((a,b)=>a+b,0):null}
-function parentCategories(){const low=[],mid=[],high=[];caregiverItems.forEach(item=>{const s=state.parentScores[item.id];if(s===0||s===1)low.push(`${item.id}번`);else if(s===2)mid.push(`${item.id}번`);else if(s===3||s===4)high.push(`${item.id}번`)});return{low,mid,high,text:`0～1점 응답 문항: ${low.join(", ")||"없음"}\n2점 응답 문항: ${mid.join(", ")||"없음"}\n3～4점 응답 문항: ${high.join(", ")||"없음"}`}}
-function parentNotesText(){const rows=caregiverItems.map(item=>({id:item.id,note:(state.parentNotes[item.id]||"").trim()})).filter(x=>x.note);return rows.length?rows.map(x=>`${x.id}번: ${x.note}`).join("\n"):"입력된 보호자 비고가 없습니다."}
-function updateParentSummary(){const complete=parentComplete(),total=parentTotal(),answered=Object.keys(state.parentScores).length,categories=parentCategories(),notes=parentNotesText();const totalText=complete?`총점: ${total} / 40점`:"총점: -- / 40점";const meta=complete?"10개 문항에 모두 응답했습니다.":`모든 문항에 응답해야 총점이 계산됩니다. (현재 ${answered}/10 응답)`;document.getElementById("parentTotalScore").textContent=totalText;document.getElementById("summaryParentTotal").textContent=totalText;document.getElementById("parentTotalMeta").textContent=meta;document.getElementById("summaryParentMeta").textContent=meta;document.getElementById("parentCategorySummary").textContent=categories.text;document.getElementById("summaryParentCategories").textContent=categories.text;document.getElementById("parentRawNotes").textContent=notes;document.getElementById("summaryParentRawNotes").textContent=notes;document.getElementById("parentSummary").textContent=complete?`보호자 체크리스트 총점은 ${total}/40점입니다. 점수가 높을수록 문항에 제시된 청각 관련 행동이 일상생활에서 더 자주 관찰된 것으로 보고되었음을 의미합니다. 본 점수는 진단적 절단점이 아니며, 문항별 응답과 보호자 비고를 함께 확인해야 합니다.`:"보호자 체크리스트가 완료되지 않았습니다. 총점은 10개 문항에 모두 응답한 뒤 표시됩니다. 문항별 응답과 보호자 비고를 함께 확인해야 합니다."}
-
-function renderLogs(){const tbody=document.getElementById("logTable");tbody.textContent="";if(!state.logs.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=12;td.className="sub";td.textContent="아직 저장된 직접 평가 기록이 없습니다.";tr.appendChild(td);tbody.appendChild(tr);return}state.logs.forEach(log=>{const m=getTrialMetrics(log),values=[`${log.itemId}번`,log.category,log.prompt,log.phase1||"미기록",log.phase2,log.phase3,m.finalResult,log.understandingLevel||"미기록",log.selfAwareness||"미기록",log.repairStrategy||"미기록",log.responseBehavior?"예":"아니요",log.note||"-"];const tr=document.createElement("tr");values.forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td)});tbody.appendChild(tr)})}
-function technicalSummary(a){if(!a.completed)return"아직 저장된 직접 평가 기록이 없습니다.";const reach=a.avgReach===null?"산출할 수 없습니다":`${a.avgReach.toFixed(1)}차`;return`직접 평가가 완료된 ${a.completed}문항 중 1차 정반응은 ${a.firstCorrect}문항, 최종 정반응은 ${a.finalCorrect}문항이었습니다. 1차 오반응 후 반복 제시에서 정반응으로 변화한 문항은 ${a.improved}문항이었으며, 마지막 제시에서도 오반응이 기록된 문항은 ${a.difficulty}문항이었습니다. 자발적인 의사소통 수정 전략은 ${a.repair}문항에서 관찰되었습니다. 전체 문항의 평균 제시 횟수는 ${a.avgPresentations.toFixed(1)}회이며, 정반응에 도달한 문항의 평균 정반응 도달 차수는 ${reach}입니다.`}
-function observationSummary(a){const pComplete=parentComplete(),pTotal=parentTotal();return`직접 평가 완료 문항 수: ${a.completed} / 18\n1차 정반응 수: ${a.firstCorrect} / ${a.completed}\n최종 정반응 수: ${a.finalCorrect} / ${a.completed}\n반복 후 향상 문항 수: ${a.improved}\n어려움 지속 문항 수: ${a.difficulty}\n수정 전략 사용 문항 수: ${a.repair}\n보호자 체크리스트 완료 여부: ${pComplete?"완료":"미완료"}\n보호자 체크리스트 총점: ${pComplete?`${pTotal} / 40점`:"미산출"}\n\n위 결과는 현재 평가 조건에서 기록된 수행과 보호자 체크리스트를 기술적으로 요약한 것입니다. 특정 점수만으로 아동의 능력을 단정적으로 판정할 수 없으며, 문항별 반응, 보호자 비고, 임상가 관찰 및 추가 평가와 함께 검토해야 합니다.`}
-function updateSessionSummary(){const a=aggregateLogs();document.getElementById("kpiCompleted").textContent=`${a.completed} / 18`;document.getElementById("kpiFirst").textContent=`${a.firstCorrect} / ${a.completed}`;document.getElementById("kpiFinal").textContent=`${a.finalCorrect} / ${a.completed}`;document.getElementById("kpiFirstPct").textContent=percent(a.firstCorrect,a.completed);document.getElementById("kpiFinalPct").textContent=percent(a.finalCorrect,a.completed);document.getElementById("kpiImproved").textContent=a.improved;document.getElementById("kpiDifficulty").textContent=a.difficulty;document.getElementById("kpiRepair").textContent=a.repair;document.getElementById("sessionSummary").textContent=state.showObservationSummary?observationSummary(a):technicalSummary(a)}
-function updateSummaries(){updateParentSummary();updateSessionSummary();renderLogs();renderItemTabs()}
-
-function reportDate(now){return`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`}
-function safeFilename(value){return value.replace(/[\\/:*?"<>|]/g,"").trim().replace(/\s+/g,"_")}
-function downloadReport(){persistCurrentObservation();const now=new Date(),child=document.getElementById("childName").value.trim(),session=document.getElementById("sessionNo").value.trim(),a=aggregateLogs(),categories=parentCategories(),complete=parentComplete(),total=parentTotal();const records=state.logs.length?state.logs.map(log=>{const m=getTrialMetrics(log);return`[${log.itemId}번]\n범주: ${log.category}\n문장: ${log.prompt}\n1차·2차·3차 반응: ${log.phase1} / ${log.phase2} / ${log.phase3}\n제시 횟수: ${m.presentationCount}회\n최종 결과: ${m.finalResult}\n문장 이해 수준: ${log.understandingLevel||"미기록"}\n자기인식: ${log.selfAwareness||"미기록"}\n수정 전략: ${log.repairStrategy||"미기록"}\n무반응 관찰: ${log.responseBehavior?"예":"아니요"}\n자유 메모: ${log.note||"-"}`}).join("\n\n"):"저장된 직접 평가 기록 없음";const report=`[1. 기본정보]\n아동 이름: ${child||"미입력"}\n평가 회차: ${session||"미입력"}\n평가 날짜와 시간: ${now.toLocaleString("ko-KR")}\n평가 장소: 교실 조건\n배경소음: 교실 소음\n자극 제시: 단일 화자 문장\n평가도구 성격: 웹 기반 평가 보조 프로토타입\n\n[2. 직접 평가 요약]\n평가 완료 문항 수: ${a.completed} / 18\n1차 정반응: ${a.firstCorrect} / ${a.completed} (${percent(a.firstCorrect,a.completed)})\n최종 정반응: ${a.finalCorrect} / ${a.completed} (${percent(a.finalCorrect,a.completed)})\n반복 후 향상 문항 수: ${a.improved}\n어려움 지속 문항 수: ${a.difficulty}\n수정 전략 사용 문항 수: ${a.repair}\n평균 제시 횟수: ${a.avgPresentations.toFixed(1)}회\n\n[3. 보호자 체크리스트 결과]\n응답 완료 여부: ${complete?"완료":"미완료"}\n총점: ${complete?`${total} / 40점`:"미산출"}\n${categories.text}\n보호자 비고 원문:\n${parentNotesText()}\n\n[4. 문항별 직접 평가 기록]\n${records}\n\n[5. 해석 주의사항]\n본 결과는 표준화된 진단 결과가 아니며, 현재 재생 환경과 평가 조건에서 기록된 반응을 정리한 자료입니다. 실제 음압 수준은 사용하는 기기와 시스템 설정에 따라 달라질 수 있습니다. 결과는 보호자 체크리스트, 임상가 관찰 및 추가 평가와 함께 검토해야 합니다.`;const blob=new Blob([report],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=child&&session?`${safeFilename(child)}_${safeFilename(session)}_기능적의사소통평가.txt`:`기능적의사소통평가_${reportDate(now)}.txt`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);setStatus("reportStatus",child&&session?"TXT 평가 보고서를 저장했습니다.":"아동 이름 또는 평가 회차가 미입력 상태로 표시된 TXT 평가 보고서를 저장했습니다.")}
-
-
-function todayString(){return new Date().toISOString().slice(0,10)}
-function deepCopy(obj){return JSON.parse(JSON.stringify(obj||{}))}
-function parseNum(v){const n=Number(String(v??"").trim());return Number.isFinite(n)?n:null}
-function fmtDb(v,u="dB"){return Number.isFinite(Number(v))?`${Number(v).toFixed(1)} ${u}`:"미측정"}
-function fmtSnr(v){return Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(1)} dB`:"미측정"}
-function calculateMeasuredSnr(profile){const speech=parseNum(profile.measuredSpeechDbA),noise=parseNum(profile.measuredNoiseDbA);return speech===null||noise===null?null:Number((speech-noise).toFixed(1))}
-function loadCalibrationProfile(){try{const raw=localStorage.getItem(CALIBRATION_STORAGE_KEY);return raw?{...DEFAULT_CALIBRATION_PROFILE,...JSON.parse(raw)}:{...DEFAULT_CALIBRATION_PROFILE}}catch(e){return{...DEFAULT_CALIBRATION_PROFILE}}}
-function saveCalibrationProfile(profile){try{const clean={...DEFAULT_CALIBRATION_PROFILE,...profile};clean.measuredSpeechDbA=parseNum(clean.measuredSpeechDbA);clean.measuredNoiseDbA=parseNum(clean.measuredNoiseDbA);clean.measuredSnrDb=calculateMeasuredSnr(clean);localStorage.setItem(CALIBRATION_STORAGE_KEY,JSON.stringify(clean));return true}catch(e){setStatus("calibrationFormStatus","보정 프로필을 저장하지 못했습니다.");return false}}
-function validateCalibrationProfile(profile=state.calibrationProfile){const required=["profileName","playbackDevice","browserInfo","speakerModel","operatingSystemVolume","speakerOutputSetting","distanceMeters","speakerPosition","measuredSpeechDbA","measuredNoiseDbA","soundLevelMeter","calibrationDate","dailyCheckDate","examiner"],missing=[];required.forEach(f=>{const v=profile[f];if(v===null||v===undefined||String(v).trim()==="")missing.push(f)});if(missing.length)return{status:"incomplete",valid:false,messages:["필수 보정 항목이 누락되었습니다."]};profile.measuredSnrDb=calculateMeasuredSnr(profile);if(profile.dailyCheckDate!==todayString())return{status:"expired",valid:false,messages:["당일 출력 확인이 완료되지 않았습니다. 현재 장비와 음량 설정을 확인한 후 당일 출력 확인일을 갱신해 주세요."]};const msg=[];if(Math.abs(profile.measuredSpeechDbA-ACOUSTIC_TARGET.speechDbA)>state.tolerance.speechDb)msg.push("측정된 문장 수준이 본 연구에서 설정한 보정 허용범위를 벗어났습니다.");if(Math.abs(profile.measuredNoiseDbA-ACOUSTIC_TARGET.noiseDbA)>state.tolerance.noiseDb)msg.push("측정된 소음 수준이 본 연구에서 설정한 보정 허용범위를 벗어났습니다.");if(Math.abs(profile.measuredSnrDb-ACOUSTIC_TARGET.snrDb)>state.tolerance.snrDb)msg.push("측정된 SNR이 본 연구에서 설정한 보정 허용범위를 벗어났습니다.");return{status:msg.length?"incomplete":"calibrated",valid:!msg.length,messages:msg}}
-function renderTargetAcoustics(){const host=document.getElementById("targetAcousticCards");if(!host)return;host.textContent="";[["목표 문장 제시 수준",`${ACOUSTIC_TARGET.speechDbA} dBA`],["목표 교실 소음 수준",`${ACOUSTIC_TARGET.noiseDbA} dBA`],["목표 SNR",`+${ACOUSTIC_TARGET.snrDb} dB`],["화자 조건",ACOUSTIC_TARGET.speakerCondition],["평가 문항 수",`${ACOUSTIC_TARGET.itemCount}문항`]].forEach(([l,v])=>{const d=document.createElement("div");d.className="smallbox";d.innerHTML="<div class='label2'></div><strong></strong>";d.querySelector(".label2").textContent=l;d.querySelector("strong").textContent=v;host.appendChild(d)})}
-function renderCalibrationProfile(){state.calibrationValidation=validateCalibrationProfile(state.calibrationProfile);state.calibrationProfile.status=state.calibrationValidation.status;const p=state.calibrationProfile,v=state.calibrationValidation;document.getElementById("calibrationStatusBadge").textContent={not_calibrated:"미보정",incomplete:"보정 정보 불완전",expired:"당일 확인 필요",calibrated:"보정 완료"}[v.status]||v.status;const lines=p.profileName?[`프로필: ${p.profileName}`,`재생 장치: ${p.playbackDevice} · 브라우저: ${p.browserInfo}`,`외장 스피커: ${p.speakerModel} · 컴퓨터 음량: ${p.operatingSystemVolume} · 스피커 출력: ${p.speakerOutputSetting}`,`거리/위치: ${p.distanceMeters} m · ${p.speakerPosition}`,`문장 ${fmtDb(p.measuredSpeechDbA,"dBA")} · 소음 ${fmtDb(p.measuredNoiseDbA,"dBA")} · SNR ${fmtSnr(p.measuredSnrDb)}`,`소음계: ${p.soundLevelMeter} · 보정일: ${p.calibrationDate} · 당일 확인일: ${p.dailyCheckDate} · 확인자: ${p.examiner}`]:["저장된 보정 프로필이 없습니다."];if(v.messages.length)lines.push("",...v.messages);document.getElementById("calibrationProfileSummary").textContent=lines.join("\n");updatePreflightAvailability()}
-function isChecklistComplete(){return Array.from({length:9},(_,i)=>state.preflightChecks[i]).every(Boolean)}
-function isFormalAssessmentAvailable(){return Boolean(state.calibrationValidation?.valid&&state.conditionMatch==="same"&&isChecklistComplete()&&state.audioAssets.checked&&!state.audioAssets.missing.length)}
-function renderChecklist(){const host=document.getElementById("preflightChecklist");if(!host)return;host.textContent="";["보정 당시와 동일한 노트북 또는 재생 장치를 사용하고 있습니다.","보정 당시와 동일한 외장 스피커와 오디오 출력 장치를 사용하고 있습니다.","컴퓨터 음량과 외장 스피커 출력 다이얼을 저장된 보정값에 맞추었습니다.","스피커와 아동 간 거리 및 방향을 보정 당시와 동일하게 설정했습니다.","검사 공간의 문과 창문을 닫고 불필요한 소음원을 제거했습니다.","문장 시험음을 재생하여 소리가 끊기거나 왜곡되지 않는 것을 확인했습니다.","교실 소음 시험음을 재생하여 소리가 정상적으로 출력되는 것을 확인했습니다.","아동의 보청기 또는 인공와우가 정상적으로 작동하며 평소 사용하는 설정으로 착용되어 있음을 확인했습니다.","현재 보정 설정은 표시된 장비와 환경에서만 유효하며 장비나 위치 변경 시 재보정이 필요함을 확인했습니다."].forEach((text,i)=>{const li=document.createElement("li"),id=`preflightCheck${i}`,input=document.createElement("input");input.type="checkbox";input.id=id;input.checked=!!state.preflightChecks[i];if(i===5&&!state.testPlayed.speech)input.disabled=true;if(i===6&&!state.testPlayed.noise)input.disabled=true;input.addEventListener("change",()=>{state.preflightChecks[i]=input.checked;updatePreflightAvailability()});const label=document.createElement("label");label.htmlFor=id;label.textContent=text;li.append(input,label);host.appendChild(li)});updatePreflightAvailability()}
-function updatePreflightAvailability(){const checked=Object.values(state.preflightChecks).filter(Boolean).length;const b=document.getElementById("checklistCountBadge");if(b)b.textContent=`${checked} / 9`;const f=document.getElementById("formalStartBtn");if(f)f.disabled=!isFormalAssessmentAvailable();const messages=[];if(state.calibrationValidation&&!state.calibrationValidation.valid)messages.push(...state.calibrationValidation.messages);if(state.conditionMatch!=="same")messages.push("표시된 장비, 음량, 거리 또는 위치와 동일한 조건인지 확인해 주세요.");if(!isChecklistComplete())messages.push("검사 전 체크리스트를 모두 선택해야 연구용 평가를 시작할 수 있습니다.");if(state.audioAssets.checked&&state.audioAssets.missing.length)messages.push("연구용 사전 녹음 음원이 누락되었습니다: "+state.audioAssets.missing.join(", "));const s=document.getElementById("preflightStatus");if(s)s.textContent=messages.join("\n")||"연구용 평가 시작 조건이 충족되었습니다."}
-async function validateAudioAssets(){const missing=[];for(const item of assessmentItems){try{const r=await fetch(item.audio,{method:"HEAD"});if(!r.ok)missing.push(item.audio)}catch(e){missing.push(item.audio)}}state.audioAssets={checked:true,missing,available:assessmentItems.map(x=>x.audio).filter(x=>!missing.includes(x))};document.getElementById("audioAssetBadge").textContent=missing.length?"음원 누락":"음원 확인 완료";document.getElementById("audioAssetStatus").textContent=missing.length?`누락된 파일:
-${missing.join("\n")}`:"연구용 음원 18개 확인 완료";updatePreflightAvailability();return state.audioAssets}
-function renderCalibrationForm(){const p=state.calibrationProfile;Object.keys(DEFAULT_CALIBRATION_PROFILE).forEach(k=>{const el=document.getElementById(`cal_${k}`);if(el)el.value=p[k]??""});if(!document.getElementById("cal_browserInfo").value)document.getElementById("cal_browserInfo").value=navigator.userAgent||"직접 입력";updateCalibrationSnrField()}
-function updateCalibrationSnrField(){document.getElementById("cal_measuredSnrDb").value=fmtSnr(calculateMeasuredSnr({measuredSpeechDbA:document.getElementById("cal_measuredSpeechDbA").value,measuredNoiseDbA:document.getElementById("cal_measuredNoiseDbA").value}))}
-function collectCalibrationForm(){const p={...DEFAULT_CALIBRATION_PROFILE};Object.keys(DEFAULT_CALIBRATION_PROFILE).forEach(k=>{const el=document.getElementById(`cal_${k}`);if(el)p[k]=el.value.trim()});p.measuredSpeechDbA=parseNum(p.measuredSpeechDbA);p.measuredNoiseDbA=parseNum(p.measuredNoiseDbA);p.measuredSnrDb=calculateMeasuredSnr(p);return p}
-function startAssessment(mode){if(mode==="formal"&&!isFormalAssessmentAvailable())return updatePreflightAvailability();state.assessmentMode=mode;state.sessionCalibrationSnapshot=mode==="formal"?deepCopy(state.calibrationProfile):null;renderSessionMode();showPage("evalPage")}
-function renderSessionMode(){const box=document.getElementById("sessionStatus"),badge=document.getElementById("sessionModeBadge"),info=document.getElementById("sessionAcousticInfo"),notice=document.getElementById("activeModeNotice"),sum=document.getElementById("activeCalibrationSummary");if(!state.assessmentMode){box.hidden=true;return}box.hidden=false;if(state.assessmentMode==="formal"){badge.textContent="음향 보정 완료";const p=state.sessionCalibrationSnapshot;info.textContent=`문장 ${fmtDb(p.measuredSpeechDbA,"dBA")} · 소음 ${fmtDb(p.measuredNoiseDbA,"dBA")} · SNR ${fmtSnr(p.measuredSnrDb)} · 거리 ${p.distanceMeters} m · 컴퓨터 음량 ${p.operatingSystemVolume}`;sum.textContent=info.textContent;notice.hidden=true}else{badge.textContent="체험 모드(음향 미보정)";info.textContent=UNCALIBRATED_WARNING;sum.textContent="문장 수준: 미측정 · 소음 수준: 미측정 · SNR: 미측정";notice.textContent=UNCALIBRATED_WARNING;notice.hidden=false}}
-
-document.getElementById("saveTrialBtn").addEventListener("click",saveTrial);document.getElementById("deleteTrialBtn").addEventListener("click",deleteCurrentTrial);document.getElementById("resetDirectBtn").addEventListener("click",resetDirect);document.getElementById("resetAllBtn").addEventListener("click",resetAll);document.getElementById("trialSummaryBtn").addEventListener("click",currentTrialSummary);document.getElementById("playAssessmentBtn").addEventListener("click",playAssessment);document.getElementById("previewNoiseBtn").addEventListener("click",previewNoise);document.getElementById("stopAudioBtn").addEventListener("click",()=>stopAllAudio());document.getElementById("observationSummaryBtn").addEventListener("click",()=>{state.showObservationSummary=true;updateSessionSummary()});document.getElementById("downloadReportBtn").addEventListener("click",downloadReport);window.addEventListener("beforeunload",()=>stopAllAudio(""));
-
-
-
-function defaultObservation(item){return{itemId:item.id,category:item.category,prompt:item.prompt,selfAwareness:"",understandingLevel:"",phase1:"",phase2:"미실시",phase3:"미실시",responseBehavior:"",repairStrategy:"",note:""}}
-function isDirty(o){return Boolean(o.phase1||o.selfAwareness||o.understandingLevel||o.repairStrategy||o.responseBehavior||o.note.trim()||o.phase2!=="미실시"||o.phase3!=="미실시")}
-function renderCurrentItem(){const item=assessmentItems[state.currentItem],o=getObservation(item.id);document.getElementById("itemCategoryBadge").textContent=item.category;document.getElementById("stimulusPreview").textContent=item.prompt;document.getElementById("stimulusMeta").textContent=`${item.id}번 문항 · 연결 파일: ${item.audio}`;document.getElementById("itemStateText").textContent=isSaved(item.id)?"✓ 저장 완료":isDirty(o)?"작성 중":"미기록";["selfAwareness","understandingLevel","repairStrategy","responseBehavior"].forEach(g=>setSelected(g,o[g]));document.getElementById("freeNote").value=o.note;updatePhaseControls();renderItemTabs()}
-function persistCurrentObservation(){const o=getObservation();o.note=document.getElementById("freeNote").value}
-function handleSelection(group,value){if(group==="conditionMatch"){state.conditionMatch=value;setSelected("conditionMatch",value);updatePreflightAvailability();return}const o=getObservation(),touch=getTouches();if(group==="phase1"){const previous=o.phase1;o.phase1=value;if(value==="정반응"){o.phase2="미실시";o.phase3="미실시";touch.phase2=false;touch.phase3=false}else if(previous!=="오반응"){o.phase2="미실시";o.phase3="미실시";touch.phase2=false;touch.phase3=false}}else if(group==="phase2"){if(o.phase1!=="오반응")return;const previous=o.phase2;o.phase2=value;touch.phase2=true;if(value!=="오반응"){o.phase3="미실시";touch.phase3=false}else if(previous!=="오반응"){o.phase3="미실시";touch.phase3=false}}else if(group==="phase3"){if(o.phase2!=="오반응")return;o.phase3=value;touch.phase3=true}else{o[group]=value}updatePhaseControls();renderItemTabs();document.getElementById("itemStateText").textContent=isSaved(o.itemId)?"✓ 저장 완료":"작성 중"}
-function getTrialMetrics(log){const phases=[log.phase1,log.phase2,log.phase3];const administered=phases.filter(x=>x&&x!=="미실시");const correctReachIndex=phases.findIndex(x=>x==="정반응");return{presentationCount:administered.length,firstCorrect:log.phase1==="정반응",repeatConverted:log.phase1!=="정반응"&&(log.phase2==="정반응"||log.phase3==="정반응"),correctReach:correctReachIndex<0?null:correctReachIndex+1,finalResult:correctReachIndex>=0?`${correctReachIndex+1}차 정반응`:administered.length?"최종 오반응":"기록 불완전"}}
-function aggregateLogs(logs=state.logs){const metrics=logs.map(getTrialMetrics);return{completed:logs.length,firstCorrect:metrics.filter(x=>x.firstCorrect).length,repeatConverted:metrics.filter(x=>x.repeatConverted).length,repair:logs.filter(x=>VALID_REPAIR_STRATEGIES.has(x.repairStrategy)).length,noResponse:logs.filter(x=>x.responseBehavior==="무반응").length}}
-function calibrationRecordFields(){const p=state.sessionCalibrationSnapshot||{};return{assessmentMode:state.assessmentMode||"demo",calibrationStatus:state.assessmentMode==="formal"?"calibrated":"not_calibrated",calibrationProfileName:p.profileName||"",playbackDevice:p.playbackDevice||"",speakerModel:p.speakerModel||"",operatingSystemVolume:p.operatingSystemVolume||"",speakerOutputSetting:p.speakerOutputSetting||"",distanceMeters:p.distanceMeters||"",speakerPosition:p.speakerPosition||"",measuredSpeechDbA:p.measuredSpeechDbA??null,measuredNoiseDbA:p.measuredNoiseDbA??null,measuredSnrDb:p.measuredSnrDb??null,soundLevelMeter:p.soundLevelMeter||"",calibrationDate:p.calibrationDate||"",dailyCheckDate:p.dailyCheckDate||"",examiner:p.examiner||""}}
-function validateCurrent(){const o=getObservation(),touch=getTouches();if(!state.assessmentMode)return"검사 전 환경 확인 화면에서 연구용 평가 또는 체험 모드를 먼저 시작해 주세요.";if(!o.phase1)return"1차 반응을 먼저 기록해 주세요.";if(o.phase1==="오반응"&&!touch.phase2)return"2차 반응을 선택해 주세요. 반복 제시를 하지 않았다면 ‘미실시’를 선택할 수 있습니다.";if(o.phase2==="오반응"&&!touch.phase3)return"3차 반응을 선택해 주세요. 3차 제시를 하지 않았다면 ‘미실시’를 선택할 수 있습니다.";return""}
-function saveTrial(){if(state.saveLocked)return;state.saveLocked=true;persistCurrentObservation();const error=validateCurrent();if(error){setStatus("instantFeedback",error);state.saveLocked=false;return}const o=getObservation(),index=state.logs.findIndex(x=>x.itemId===o.itemId),record={...o,...calibrationRecordFields()};if(index>=0)state.logs[index]=record;else state.logs.push(record);state.logs.sort((a,b)=>a.itemId-b.itemId);setStatus("instantFeedback",index>=0?"현재 문항의 평가 기록이 수정되었습니다.":"현재 문항의 평가 기록이 저장되었습니다.");renderLogs();updateSummaries();renderCurrentItem();state.saveLocked=false}
-function resetAssessmentData(){state.logs=[];state.itemObservations={};state.phaseTouches={};state.parentScores={};state.parentNotes={};state.currentItem=0;state.assessmentMode=null;state.sessionCalibrationSnapshot=null;state.preflightChecks={};state.testPlayed={speech:false,noise:false};state.conditionMatch="";document.getElementById("childName").value="";document.getElementById("sessionNo").value="";setSelected("conditionMatch","");renderChecklist();renderParentChecklist();renderLogs();updateSummaries();renderCurrentItem();renderSessionMode()}
-function resetAll(){if(!confirm("직접 평가, 보호자 점수와 비고, 아동 이름 및 평가 회차를 모두 초기화하시겠습니까? 보정 프로필은 유지됩니다."))return;resetAssessmentData();setStatus("instantFeedback","전체 평가 자료가 초기화되었습니다.")}
-function newAssessment(){if(!confirm("새 평가를 시작하시겠습니까? 보정 프로필은 유지되고 검사 전 확인 절차로 돌아갑니다."))return;resetAssessmentData();showPage("startPage")}
-function currentTrialSummary(){persistCurrentObservation();const o=getObservation(),m=getTrialMetrics(o);setStatus("instantFeedback",`자기인식: ${o.selfAwareness||"미기록"}\n문장 이해 수준: ${o.understandingLevel||"미기록"}\n1차 반응: ${o.phase1||"미기록"}\n2차 반응: ${o.phase2}\n3차 반응: ${o.phase3}\n제시 횟수: ${m.presentationCount}회\n최종 결과: ${m.finalResult}\n반복 후 정반응 전환: ${m.repeatConverted?"예":"아니요"}\n반응 행동: ${o.responseBehavior||"미기록"}\n수정 전략: ${o.repairStrategy||"미기록"}`)}
-function parentTotal(){return Object.keys(state.parentScores).length===caregiverItems.length?Object.values(state.parentScores).reduce((a,b)=>a+b,0):null}
-function updateParentSummary(){const complete=parentComplete(),total=parentTotal(),answered=Object.keys(state.parentScores).length,categories=parentCategories(),notes=parentNotesText();const totalText=complete?`보호자 체크리스트 원점수: ${total}/40점`:"보호자 체크리스트 원점수: --/40점";const meta=complete?"10개 문항에 모두 응답했습니다.":`모든 문항에 응답해야 원점수가 계산됩니다. (현재 ${answered}/10 응답)`;document.getElementById("parentTotalScore").textContent=totalText;document.getElementById("summaryParentTotal").textContent=totalText;document.getElementById("parentTotalMeta").textContent=meta;document.getElementById("summaryParentMeta").textContent=meta;document.getElementById("parentCategorySummary").textContent=categories.text;document.getElementById("summaryParentCategories").textContent=categories.text;document.getElementById("parentRawNotes").textContent=notes;document.getElementById("summaryParentRawNotes").textContent=notes;document.getElementById("parentSummary").textContent=complete?`보호자 체크리스트 원점수: ${total}/40점\n보호자 체크리스트 점수는 기술적 원점수로 제시되며, 본 프로그램에서는 진단적 절단점이나 등급을 적용하지 않습니다.`:"보호자 체크리스트가 완료되지 않았습니다. 본 프로그램에서는 진단적 절단점이나 등급을 적용하지 않습니다."}
-function renderLogs(){const tbody=document.getElementById("logTable");tbody.textContent="";if(!state.logs.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=12;td.className="sub";td.textContent="아직 저장된 직접 평가 기록이 없습니다.";tr.appendChild(td);tbody.appendChild(tr);return}state.logs.forEach(log=>{const m=getTrialMetrics(log),values=[`${log.itemId}번`,log.category,log.prompt,log.phase1||"미기록",log.phase2,log.phase3,m.finalResult,log.understandingLevel||"미기록",log.selfAwareness||"미기록",log.responseBehavior||"미기록",log.repairStrategy||"미기록",log.note||"-"];const tr=document.createElement("tr");values.forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td)});tbody.appendChild(tr)})}
-function technicalSummary(a){const pTotal=parentTotal(),mode=state.assessmentMode==="formal"?"연구용 평가":state.assessmentMode==="demo"?"체험 모드":"미시작",calibration=state.assessmentMode==="formal"?"음향 보정 완료":state.assessmentMode==="demo"?"체험 모드(음향 미보정)":"미확인";return`총 평가 시행 수: ${a.completed}\n1차 제시 정반응 수: ${a.firstCorrect}\n반복 후 정반응 전환 수: ${a.repeatConverted}\n수정전략 사용 수: ${a.repair}\n무반응 수: ${a.noResponse}\n보호자 체크리스트 원점수: ${pTotal===null?"미산출":`${pTotal}/40점`}\n평가 모드: ${mode}\n음향 보정 상태: ${calibration}${state.assessmentMode==="demo"?`\n\n${UNCALIBRATED_WARNING}`:""}`}
-function observationSummary(a){return technicalSummary(a)+"\n\n보호자 체크리스트 점수는 기술적 원점수로 제시되며, 본 프로그램에서는 진단적 절단점이나 등급을 적용하지 않습니다."}
-function updateSessionSummary(){const a=aggregateLogs(),pTotal=parentTotal();document.getElementById("kpiCompleted").textContent=a.completed;document.getElementById("kpiFirst").textContent=a.firstCorrect;document.getElementById("kpiImproved").textContent=a.repeatConverted;document.getElementById("kpiRepair").textContent=a.repair;document.getElementById("kpiNoResponse").textContent=a.noResponse;document.getElementById("kpiParentRaw").textContent=pTotal===null?"--":`${pTotal}/40`;document.getElementById("kpiMode").textContent=state.assessmentMode==="formal"?"연구용":state.assessmentMode==="demo"?"시연":"미시작";document.getElementById("kpiCalibration").textContent=state.assessmentMode==="formal"?"완료":state.assessmentMode==="demo"?"미보정":"미확인";document.getElementById("sessionSummary").textContent=state.showObservationSummary?observationSummary(a):technicalSummary(a)}
-function downloadReport(){persistCurrentObservation();const now=new Date(),child=document.getElementById("childName").value.trim(),session=document.getElementById("sessionNo").value.trim(),a=aggregateLogs(),complete=parentComplete(),total=parentTotal(),snapshot=state.sessionCalibrationSnapshot||{},modeText=state.assessmentMode==="formal"?"연구용 평가":state.assessmentMode==="demo"?"체험 모드":"미시작";const records=state.logs.length?state.logs.map(log=>{const m=getTrialMetrics(log);return`[${log.itemId}번]\n범주: ${log.category}\n문장: ${log.prompt}\n1차·2차·3차 반응: ${log.phase1} / ${log.phase2} / ${log.phase3}\n제시 횟수: ${m.presentationCount}회\n최종 결과: ${m.finalResult}\n문장 이해 수준: ${log.understandingLevel||"미기록"}\n자기인식: ${log.selfAwareness||"미기록"}\n반응 행동: ${log.responseBehavior||"미기록"}\n수정 전략: ${log.repairStrategy||"미기록"}\n자유 메모: ${log.note||"-"}`}).join("\n\n"):"저장된 직접 평가 기록 없음";const report=`[1. 기본정보 및 음향 보정]\n평가 모드: ${modeText}\n${state.assessmentMode==="demo"?"본 기록은 체험 모드(음향 미보정)에서 생성되었으며 음향적으로 보정된 연구자료로 해석할 수 없습니다.\n":""}아동 이름: ${child||"미입력"}\n평가 회차: ${session||"미입력"}\n평가 날짜와 시간: ${now.toLocaleString("ko-KR")}\n목표 문장 수준: ${ACOUSTIC_TARGET.speechDbA} dBA\n목표 소음 수준: ${ACOUSTIC_TARGET.noiseDbA} dBA\n목표 SNR: +${ACOUSTIC_TARGET.snrDb} dB\n실제 측정 문장 수준: ${fmtDb(snapshot.measuredSpeechDbA,"dBA")}\n실제 측정 소음 수준: ${fmtDb(snapshot.measuredNoiseDbA,"dBA")}\n실제 측정 SNR: ${fmtSnr(snapshot.measuredSnrDb)}\n보정 프로필: ${snapshot.profileName||"미적용"}\n재생 장치: ${snapshot.playbackDevice||"미적용"}\n스피커: ${snapshot.speakerModel||"미적용"}\n컴퓨터 음량: ${snapshot.operatingSystemVolume||"미적용"}\n스피커 출력 설정: ${snapshot.speakerOutputSetting||"미적용"}\n거리 및 방향: ${snapshot.distanceMeters||"미적용"} m / ${snapshot.speakerPosition||"미적용"}\n소음계: ${snapshot.soundLevelMeter||"미적용"}\n보정일: ${snapshot.calibrationDate||"미적용"}\n당일 확인일: ${snapshot.dailyCheckDate||"미적용"}\n확인자: ${snapshot.examiner||"미적용"}\n\n[2. 직접 평가 요약]\n총 평가 시행 수: ${a.completed}\n1차 제시 정반응 수: ${a.firstCorrect}\n반복 후 정반응 전환 수: ${a.repeatConverted}\n수정전략 사용 수: ${a.repair}\n무반응 수: ${a.noResponse}\n\n[3. 보호자 체크리스트 결과]\n응답 완료 여부: ${complete?"완료":"미완료"}\n보호자 체크리스트 원점수: ${complete?`${total}/40점`:"미산출"}\n보호자 체크리스트 점수는 기술적 원점수로 제시되며, 본 프로그램에서는 진단적 절단점이나 등급을 적용하지 않습니다.\n${parentCategories().text}\n보호자 비고 원문:\n${parentNotesText()}\n\n[4. 문항별 직접 평가 기록]\n${records}\n\n[5. 해석 주의사항]\n자동 임상판정은 포함하지 않았습니다. 결과는 문항별 원자료, 보호자 체크리스트, 임상가 관찰 및 추가 평가와 함께 검토해야 합니다.`;const blob=new Blob([report],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=child&&session?`${safeFilename(child)}_${safeFilename(session)}_기능적의사소통평가.txt`:`기능적의사소통평가_${reportDate(now)}.txt`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);setStatus("reportStatus","TXT 평가 보고서를 저장했습니다.")}
-
-
-async function audioCanLoad(src){return new Promise(resolve=>{const a=new Audio();let done=false;const finish=v=>{if(done)return;done=true;a.removeAttribute("src");resolve(v)};a.preload="metadata";a.onloadedmetadata=()=>finish(true);a.onerror=()=>finish(false);setTimeout(()=>finish(false),3000);a.src=src})}
-async function validateAudioAssets(){const missing=[],available=[];for(const item of assessmentItems){const ok=await audioCanLoad(item.audio);(ok?available:missing).push(item.audio)}state.audioAssets={checked:true,missing,available};document.getElementById("audioAssetBadge").textContent=missing.length?"음원 누락":"음원 확인 완료";document.getElementById("audioAssetStatus").textContent=missing.length?`누락된 파일:
-${missing.join("\n")}`:"연구용 음원 18개 확인 완료";updatePreflightAvailability();return state.audioAssets}
-
-
-async function playPreflightSpeechTest(){stopAllAudio("");try{stimulusAudio.src=assessmentItems[0].audio;stimulusAudio.volume=PLAYBACK.stimulusVolume;stimulusAudio.onended=()=>{state.testPlayed.speech=true;state.preflightChecks[5]=true;renderChecklist();setStatus("preflightStatus","문장 시험음 재생을 확인했습니다. 이 기능은 dBA를 측정하지 않습니다.")};stimulusAudio.onerror=()=>setStatus("preflightStatus",`연구용 사전 녹음 음원이 등록되지 않았습니다: ${assessmentItems[0].audio}`);await stimulusAudio.play();setStatus("preflightStatus","문장 시험음을 재생 중입니다. 이 기능은 dBA를 측정하지 않습니다.")}catch(e){setStatus("preflightStatus",`연구용 사전 녹음 음원이 등록되지 않았습니다: ${assessmentItems[0].audio}`)}}
-async function playPreflightNoiseTest(){await previewNoise();state.testPlayed.noise=true;state.preflightChecks[6]=true;renderChecklist();setStatus("preflightStatus","교실 소음 시험음을 재생 중입니다. 이 기능은 dBA를 측정하지 않습니다.")}
-
-const CALIBRATION_PROFILES_STORAGE_KEY="noiseFunctionalCommunicationCalibrationProfiles";
-const SELECTED_CALIBRATION_PROFILE_KEY="noiseFunctionalCommunicationSelectedCalibrationProfileId";
+const PLAYBACK=Object.freeze({stimulusVolume:1,noiseVolume:.45,noiseStart:7.5});
+const CALIBRATION_KEY="noise_protocol_calibration_profiles_v2";
+const SELECTED_CALIBRATION_KEY="noise_protocol_selected_calibration_v2";
+const DRAFT_KEY="noise_protocol_draft_v2";
+const VALID_REPAIR_TYPES=["full_repeat","specific_question","confirmation","other"];
+const REPAIR_LABELS={
+  none:"복구전략 없음",
+  full_repeat:"전체 반복 요청",
+  specific_question:"특정 정보 질문",
+  confirmation:"확인 질문",
+  other:"기타 복구행동"
+};
+const SELF_REPORT_LABELS={
+  heard_well:"잘 들었어요",
+  a_little_difficult:"조금 어려웠어요",
+  very_difficult:"많이 어려웠어요"
+};
+const CARE_RESPONSE_LABELS={
+  "0":"전혀 없음",
+  "1":"드물게",
+  "2":"가끔",
+  "3":"자주",
+  "4":"거의 항상",
+  "NO":"관찰 기회 없음"
+};
 const PREFLIGHT_CHECKLIST_ITEMS=[
-"저장된 프로필과 동일한 노트북과 스피커를 사용하고 있습니다.",
-"컴퓨터 음량과 스피커 출력 설정을 저장된 값에 맞췄습니다.",
-"스피커와 아동 간 거리 및 위치를 저장된 조건과 동일하게 맞췄습니다.",
-"문장 시험음이 끊김이나 왜곡 없이 정상적으로 재생되었습니다.",
-"교실 소음 시험음이 정상적으로 재생되었습니다."
+  "저장된 보정 프로필과 동일한 노트북 또는 기기를 사용하고 있습니다.",
+  "보정 시 사용한 것과 동일한 출력 장치 또는 스피커를 사용하고 있습니다.",
+  "컴퓨터와 스피커의 음량 설정을 보정 당시 값으로 맞췄습니다.",
+  "스피커와 아동 간 거리 및 위치를 보정 조건과 동일하게 맞췄습니다.",
+  "문장 음원 18개와 교실소음 음원이 정상적으로 로드되었습니다.",
+  "검사 공간과 주변 소음 상태가 보정 당시 조건과 크게 다르지 않은지 확인했습니다."
 ];
-function parseNum(v){const s=String(v??"").trim();if(!s)return null;const n=Number(s);return Number.isFinite(n)?n:null}
-function profileId(profile){return profile.id||`${profile.profileName||"profile"}-${profile.calibrationDate||Date.now()}`.replace(/\s+/g,"-")}
-function loadCalibrationProfiles(){try{const raw=localStorage.getItem(CALIBRATION_PROFILES_STORAGE_KEY);let profiles=raw?JSON.parse(raw):[];if(!Array.isArray(profiles))profiles=[];const legacy=localStorage.getItem(CALIBRATION_STORAGE_KEY);if(!profiles.length&&legacy){const p={...DEFAULT_CALIBRATION_PROFILE,...JSON.parse(legacy)};if(p.profileName){p.id=profileId(p);profiles=[p];localStorage.setItem(CALIBRATION_PROFILES_STORAGE_KEY,JSON.stringify(profiles));localStorage.setItem(SELECTED_CALIBRATION_PROFILE_KEY,p.id)}}return profiles.map(p=>{const clean={...DEFAULT_CALIBRATION_PROFILE,...p};clean.id=profileId(clean);clean.measuredSpeechDbA=parseNum(clean.measuredSpeechDbA);clean.measuredNoiseDbA=parseNum(clean.measuredNoiseDbA);clean.measuredSnrDb=calculateMeasuredSnr(clean);return clean})}catch(e){return[]}}
-function saveCalibrationProfiles(profiles){try{localStorage.setItem(CALIBRATION_PROFILES_STORAGE_KEY,JSON.stringify(profiles));return true}catch(e){setStatus("calibrationFormStatus","보정 프로필을 저장하지 못했습니다.");return false}}
-function loadCalibrationProfile(){const profiles=loadCalibrationProfiles(),selectedId=localStorage.getItem(SELECTED_CALIBRATION_PROFILE_KEY),selected=profiles.find(p=>p.id===selectedId)||profiles[0];return selected?{...DEFAULT_CALIBRATION_PROFILE,...selected}:{...DEFAULT_CALIBRATION_PROFILE}}
-function saveCalibrationProfile(profile){const clean={...DEFAULT_CALIBRATION_PROFILE,...profile};clean.id=profileId(clean);clean.browserInfo=navigator.userAgent||clean.browserInfo||"";clean.measurementMethod=clean.measurementMethod||"LAeq";clean.measuredSpeechDbA=parseNum(clean.measuredSpeechDbA);clean.measuredNoiseDbA=parseNum(clean.measuredNoiseDbA);clean.measuredSnrDb=calculateMeasuredSnr(clean);clean.status=validateCalibrationProfile(clean).status;const profiles=loadCalibrationProfiles(),idx=profiles.findIndex(p=>p.id===clean.id||p.profileName===clean.profileName);if(idx>=0)profiles[idx]=clean;else profiles.push(clean);if(!saveCalibrationProfiles(profiles))return false;localStorage.setItem(SELECTED_CALIBRATION_PROFILE_KEY,clean.id);localStorage.setItem(CALIBRATION_STORAGE_KEY,JSON.stringify(clean));return true}
-function calculateMeasuredSnr(profile){const speech=parseNum(profile.measuredSpeechDbA),noise=parseNum(profile.measuredNoiseDbA);return speech===null||noise===null?null:Number((speech-noise).toFixed(1))}
-function fmtSnr(v){return Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(1)} dB`:"미계산"}
-function validateCalibrationProfile(profile=state.calibrationProfile){const empty=!profile||!profile.profileName; if(empty)return{status:"not_calibrated",valid:false,messages:["보정 프로필을 먼저 등록해 주세요"]};const required=["profileName","playbackDevice","speakerModel","operatingSystemVolume","speakerOutputSetting","distanceMeters","speakerPosition","measuredSpeechDbA","measuredNoiseDbA","soundLevelMeter","calibrationDate","examiner"],missing=[];required.forEach(f=>{const v=profile[f];if(v===null||v===undefined||String(v).trim()==="")missing.push(f)});if(missing.length)return{status:"incomplete",valid:false,messages:["필수 보정 항목이 누락되었습니다."]};profile.measuredSnrDb=calculateMeasuredSnr(profile);const msg=[];if(Math.abs(profile.measuredSpeechDbA-ACOUSTIC_TARGET.speechDbA)>state.tolerance.speechDb)msg.push("측정된 문장 수준이 본 연구에서 설정한 보정 허용범위를 벗어났습니다.");if(Math.abs(profile.measuredNoiseDbA-ACOUSTIC_TARGET.noiseDbA)>state.tolerance.noiseDb)msg.push("측정된 소음 수준이 본 연구에서 설정한 보정 허용범위를 벗어났습니다.");if(profile.measuredSnrDb===null||Math.abs(profile.measuredSnrDb-ACOUSTIC_TARGET.snrDb)>state.tolerance.snrDb)msg.push("측정된 SNR이 본 연구에서 설정한 보정 허용범위를 벗어났습니다.");return{status:msg.length?"incomplete":"calibrated",valid:!msg.length,messages:msg}}
-function formattedDate(dateText){if(!dateText)return"미기록";const d=new Date(`${dateText}T00:00:00`);return Number.isNaN(d.getTime())?dateText:d.toLocaleDateString("ko-KR")}
-function selectedExaminer(){return(document.getElementById("preflightExaminer")?.value||"").trim()}
-function isChecklistComplete(){return PREFLIGHT_CHECKLIST_ITEMS.every((_,i)=>!!state.preflightChecks[i])}
-function selectedProfileSummaryLines(p){if(!p.profileName)return["저장된 보정 프로필이 없습니다."];return[`${p.profileName}`,`컴퓨터 음량 ${p.operatingSystemVolume||"미기록"} · ${p.speakerOutputSetting||"스피커 출력 설정 미기록"}`,`${p.speakerPosition||"위치 미기록"} · ${p.distanceMeters||"미기록"} m`,`문장 ${fmtDb(p.measuredSpeechDbA,"dBA")} · 소음 ${fmtDb(p.measuredNoiseDbA,"dBA")} · SNR ${fmtSnr(p.measuredSnrDb)}`,`최종 보정일 ${formattedDate(p.calibrationDate)}`]}
-function renderCalibrationProfile(){state.calibrationProfiles=loadCalibrationProfiles();const select=document.getElementById("calibrationProfileSelect");if(select){select.textContent="";if(!state.calibrationProfiles.length){const option=document.createElement("option");option.value="";option.textContent="등록된 보정 프로필 없음";select.appendChild(option);select.disabled=true}else{select.disabled=false;state.calibrationProfiles.forEach(p=>{const option=document.createElement("option");option.value=p.id;option.textContent=p.profileName||"이름 없는 프로필";select.appendChild(option)});const saved=localStorage.getItem(SELECTED_CALIBRATION_PROFILE_KEY);select.value=state.calibrationProfiles.some(p=>p.id===saved)?saved:state.calibrationProfiles[0].id}}state.calibrationProfile=loadCalibrationProfile();state.calibrationValidation=validateCalibrationProfile(state.calibrationProfile);const p=state.calibrationProfile,v=state.calibrationValidation,badge=document.getElementById("calibrationStatusBadge"),summary=document.getElementById("calibrationProfileSummary"),details=document.getElementById("calibrationProfileDetails");if(badge)badge.textContent={not_calibrated:"미보정",incomplete:"보정 정보 확인 필요",expired:"당일 확인 필요",calibrated:"프로필 선택됨"}[v.status]||v.status;if(summary){summary.classList.toggle("empty",!p.profileName);summary.textContent=selectedProfileSummaryLines(p).join("\n")}if(details){details.textContent=p.profileName?`재생 장치: ${p.playbackDevice||"미기록"}\n외장 스피커: ${p.speakerModel||"미기록"}\n컴퓨터 음량: ${p.operatingSystemVolume||"미기록"}\n스피커 출력 설정: ${p.speakerOutputSetting||"미기록"}\n스피커와 아동 간 거리 및 위치: ${p.distanceMeters||"미기록"} m · ${p.speakerPosition||"미기록"}\n측정된 문장 수준: ${fmtDb(p.measuredSpeechDbA,"dBA")}\n측정된 교실 소음 수준: ${fmtDb(p.measuredNoiseDbA,"dBA")}\n자동 계산 SNR: ${fmtSnr(p.measuredSnrDb)}\n최종 보정일: ${formattedDate(p.calibrationDate)}\n당일 출력 확인일: ${p.dailyCheckDate?formattedDate(p.dailyCheckDate):"미완료"}\n측정 장비: ${p.soundLevelMeter||"미기록"}\n측정 방법: ${p.measurementMethod||"LAeq"}\n보정 담당자: ${p.examiner||"미기록"}\n브라우저 정보: ${p.browserInfo||"자동 저장 전"}\n비고: ${p.note||"-"}`:"보정 프로필을 먼저 등록해 주세요."}updatePreflightAvailability()}
-function renderChecklist(){const host=document.getElementById("preflightChecklist");if(!host)return;host.textContent="";PREFLIGHT_CHECKLIST_ITEMS.forEach((text,i)=>{const li=document.createElement("li"),id=`preflightCheck${i}`,input=document.createElement("input");input.type="checkbox";input.id=id;input.checked=!!state.preflightChecks[i];if(i===3&&!state.testPlayed.speech)input.disabled=true;if(i===4&&!state.testPlayed.noise)input.disabled=true;input.addEventListener("change",()=>{state.preflightChecks[i]=input.checked;updatePreflightAvailability()});const label=document.createElement("label");label.htmlFor=id;label.textContent=text;li.append(input,label);host.appendChild(li)});updatePreflightAvailability()}
-function saveDailyCheckIfReady(){if(!state.calibrationProfile?.profileName||!isChecklistComplete())return;const profiles=loadCalibrationProfiles(),idx=profiles.findIndex(p=>p.id===state.calibrationProfile.id);if(idx<0)return;profiles[idx]={...profiles[idx],dailyCheckDate:todayString()};saveCalibrationProfiles(profiles);localStorage.setItem(CALIBRATION_STORAGE_KEY,JSON.stringify(profiles[idx]));state.calibrationProfile={...profiles[idx]};state.calibrationValidation=validateCalibrationProfile(state.calibrationProfile)}
-function isFormalAssessmentAvailable(){saveDailyCheckIfReady();return Boolean(state.calibrationValidation?.valid&&state.calibrationProfile?.profileName&&selectedExaminer()&&isChecklistComplete()&&state.audioAssets.checked&&!state.audioAssets.missing.length&&state.calibrationProfile.dailyCheckDate===todayString())}
-function updatePreflightAvailability(){const checked=PREFLIGHT_CHECKLIST_ITEMS.filter((_,i)=>state.preflightChecks[i]).length,b=document.getElementById("checklistCountBadge");if(b)b.textContent=`${checked} / ${PREFLIGHT_CHECKLIST_ITEMS.length}`;const messages=[],hasProfile=!!state.calibrationProfile?.profileName;if(!hasProfile)messages.push("보정 프로필을 먼저 등록해 주세요");else if(state.calibrationValidation&&!state.calibrationValidation.valid)messages.push(...state.calibrationValidation.messages);if(!selectedExaminer())messages.push("검사자 이름을 입력해 주세요.");if(!isChecklistComplete())messages.push("검사 전 확인 항목을 모두 선택해야 연구용 평가를 시작할 수 있습니다.");if(state.audioAssets.checked&&state.audioAssets.missing.length)messages.push("연구용 사전 녹음 음원이 누락되었습니다: "+state.audioAssets.missing.join(", "));const f=document.getElementById("formalStartBtn");if(f)f.disabled=!isFormalAssessmentAvailable();const s=document.getElementById("preflightStatus");if(s)s.textContent=messages.join("\n")||`당일 출력 확인일이 ${formattedDate(todayString())}로 자동 저장되었습니다. 연구용 평가 시작 조건이 충족되었습니다.`}
-function updateCalibrationSnrField(){const speech=parseNum(document.getElementById("cal_measuredSpeechDbA").value),noise=parseNum(document.getElementById("cal_measuredNoiseDbA").value),field=document.getElementById("cal_measuredSnrDb");field.value=speech===null||noise===null?"미계산":fmtSnr(speech-noise)}
-function renderCalibrationForm(){const p=state.calibrationProfile?.profileName?state.calibrationProfile:{...DEFAULT_CALIBRATION_PROFILE,browserInfo:navigator.userAgent||"",measurementMethod:"LAeq"};Object.keys(DEFAULT_CALIBRATION_PROFILE).forEach(k=>{const el=document.getElementById(`cal_${k}`);if(el)el.value=p[k]??""});document.getElementById("cal_browserInfo").value=navigator.userAgent||"";document.getElementById("cal_measurementMethod").value=p.measurementMethod||"LAeq";document.getElementById("cal_dailyCheckDate").value=p.dailyCheckDate||"";updateCalibrationSnrField()}
-function collectCalibrationForm(){const p={...DEFAULT_CALIBRATION_PROFILE};Object.keys(DEFAULT_CALIBRATION_PROFILE).forEach(k=>{const el=document.getElementById(`cal_${k}`);if(el)p[k]=el.value});p.browserInfo=navigator.userAgent||p.browserInfo||"";p.measurementMethod=p.measurementMethod||"LAeq";p.measuredSpeechDbA=parseNum(p.measuredSpeechDbA);p.measuredNoiseDbA=parseNum(p.measuredNoiseDbA);p.measuredSnrDb=calculateMeasuredSnr(p);p.dailyCheckDate=p.dailyCheckDate||"";return p}
-function startAssessment(mode){if(mode==="formal"&&!isFormalAssessmentAvailable()){updatePreflightAvailability();return}state.assessmentMode=mode;state.sessionCalibrationSnapshot=mode==="formal"?{...deepCopy(state.calibrationProfile),sessionExaminer:selectedExaminer(),dailyCheckDate:todayString()}:null;renderSessionMode();showPage("evalPage")}
-function calibrationRecordFields(){const p=state.sessionCalibrationSnapshot||{};return{assessmentMode:state.assessmentMode||"demo",calibrationStatus:state.assessmentMode==="formal"?"calibrated":"not_calibrated",calibrationProfileName:p.profileName||"",playbackDevice:p.playbackDevice||"",speakerModel:p.speakerModel||"",operatingSystemVolume:p.operatingSystemVolume||"",speakerOutputSetting:p.speakerOutputSetting||"",distanceMeters:p.distanceMeters||"",speakerPosition:p.speakerPosition||"",measuredSpeechDbA:p.measuredSpeechDbA??null,measuredNoiseDbA:p.measuredNoiseDbA??null,measuredSnrDb:p.measuredSnrDb??null,soundLevelMeter:p.soundLevelMeter||"",calibrationDate:p.calibrationDate||"",dailyCheckDate:p.dailyCheckDate||"",calibrationExaminer:p.examiner||"",examiner:p.sessionExaminer||""}}
-function downloadReport(){persistCurrentObservation();const now=new Date(),child=document.getElementById("childName").value.trim(),session=document.getElementById("sessionNo").value.trim(),a=aggregateLogs(),complete=parentComplete(),total=parentTotal(),snapshot=state.sessionCalibrationSnapshot||{},modeText=state.assessmentMode==="formal"?"연구용 평가":state.assessmentMode==="demo"?"체험 모드":"미시작";const records=state.logs.length?state.logs.map(log=>{const m=getTrialMetrics(log);return`[${log.itemId}번]\n범주: ${log.category}\n문장: ${log.prompt}\n1차·2차·3차 반응: ${log.phase1} / ${log.phase2} / ${log.phase3}\n제시 횟수: ${m.presentationCount}회\n최종 결과: ${m.finalResult}\n문장 이해 수준: ${log.understandingLevel||"미기록"}\n자기인식: ${log.selfAwareness||"미기록"}\n반응 행동: ${log.responseBehavior||"미기록"}\n수정 전략: ${log.repairStrategy||"미기록"}\n자유 메모: ${log.note||"-"}`}).join("\n\n"):"저장된 직접 평가 기록 없음";const report=`[1. 기본정보 및 음향 보정]\n평가 모드: ${modeText}\n${state.assessmentMode==="demo"?"본 기록은 체험 모드(음향 미보정)에서 생성되었으며 음향적으로 보정된 연구자료로 해석할 수 없습니다.\n":""}아동 이름: ${child||"미입력"}\n평가 회차: ${session||"미입력"}\n평가 날짜와 시간: ${now.toLocaleString("ko-KR")}\n목표 문장 수준: ${ACOUSTIC_TARGET.speechDbA} dBA\n목표 소음 수준: ${ACOUSTIC_TARGET.noiseDbA} dBA\n목표 SNR: +${ACOUSTIC_TARGET.snrDb} dB\n실제 측정 문장 수준: ${fmtDb(snapshot.measuredSpeechDbA,"dBA")}\n실제 측정 소음 수준: ${fmtDb(snapshot.measuredNoiseDbA,"dBA")}\n실제 측정 SNR: ${fmtSnr(snapshot.measuredSnrDb)}\n보정 프로필: ${snapshot.profileName||"미적용"}\n재생 장치: ${snapshot.playbackDevice||"미적용"}\n스피커: ${snapshot.speakerModel||"미적용"}\n컴퓨터 음량: ${snapshot.operatingSystemVolume||"미적용"}\n스피커 출력 설정: ${snapshot.speakerOutputSetting||"미적용"}\n거리 및 방향: ${snapshot.distanceMeters||"미적용"} m / ${snapshot.speakerPosition||"미적용"}\n소음계: ${snapshot.soundLevelMeter||"미적용"}\n보정일: ${snapshot.calibrationDate||"미적용"}\n당일 확인일: ${snapshot.dailyCheckDate||"미적용"}\n보정 담당자: ${snapshot.examiner||"미적용"}\n검사자: ${snapshot.sessionExaminer||selectedExaminer()||"미적용"}\n\n[2. 직접 평가 요약]\n총 평가 시행 수: ${a.completed}\n1차 제시 정반응 수: ${a.firstCorrect}\n반복 후 정반응 전환 수: ${a.repeatConverted}\n수정전략 사용 수: ${a.repair}\n무반응 수: ${a.noResponse}\n\n[3. 보호자 체크리스트 결과]\n응답 완료 여부: ${complete?"완료":"미완료"}\n보호자 체크리스트 원점수: ${complete?`${total}/40점`:"미산출"}\n보호자 체크리스트 점수는 기술적 원점수로 제시되며, 본 프로그램에서는 진단적 절단점이나 등급을 적용하지 않습니다.\n${parentCategories().text}\n보호자 비고 원문:\n${parentNotesText()}\n\n[4. 문항별 직접 평가 기록]\n${records}\n\n[5. 해석 주의사항]\n자동 임상판정은 포함하지 않았습니다. 결과는 문항별 원자료, 보호자 체크리스트, 임상가 관찰 및 추가 평가와 함께 검토해야 합니다.`;const blob=new Blob([report],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=child&&session?`${safeFilename(child)}_${safeFilename(session)}_기능적의사소통평가.txt`:`기능적의사소통평가_${reportDate(now)}.txt`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);setStatus("reportStatus","TXT 평가 보고서를 저장했습니다.")}
-function resetAssessmentData(){state.logs=[];state.itemObservations={};state.phaseTouches={};state.parentScores={};state.parentNotes={};state.currentItem=0;state.assessmentMode=null;state.sessionCalibrationSnapshot=null;state.preflightChecks={};state.testPlayed={speech:false,noise:false};state.conditionMatch="";document.getElementById("childName").value="";document.getElementById("sessionNo").value="";const examiner=document.getElementById("preflightExaminer");if(examiner)examiner.value="";renderChecklist();renderParentChecklist();renderLogs();updateSummaries();renderCurrentItem();renderSessionMode();renderCalibrationProfile()}
-async function playPreflightSpeechTest(){stopAllAudio("");try{stimulusAudio.src=assessmentItems[0].audio;stimulusAudio.volume=PLAYBACK.stimulusVolume;stimulusAudio.onended=()=>{state.testPlayed.speech=true;state.preflightChecks[3]=true;renderChecklist();setStatus("preflightStatus","문장 시험음 재생을 확인했습니다. 이 기능은 dBA를 측정하지 않습니다.")};stimulusAudio.onerror=()=>setStatus("preflightStatus",`연구용 사전 녹음 음원이 등록되지 않았습니다: ${assessmentItems[0].audio}`);await stimulusAudio.play();setStatus("preflightStatus","문장 시험음을 재생 중입니다. 이 기능은 dBA를 측정하지 않습니다.")}catch(e){setStatus("preflightStatus",`연구용 사전 녹음 음원이 등록되지 않았습니다: ${assessmentItems[0].audio}`)}}
-async function playPreflightNoiseTest(){await previewNoise();state.testPlayed.noise=true;state.preflightChecks[4]=true;renderChecklist();setStatus("preflightStatus","교실 소음 시험음을 재생 중입니다. 이 기능은 dBA를 측정하지 않습니다.")}
-function modeLabel(mode=state.assessmentMode){return mode==="formal"?"연구용 평가":mode==="demo"?"체험 모드(음향 미보정)":"미시작"}
-function setProgramVersionText(){document.querySelectorAll(".programVersionText").forEach(el=>{el.textContent=PROGRAM_VERSION})}
-function showPage(pageId){stopAllAudio("");document.getElementById("appHeader").hidden=pageId==="startPage";document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===pageId));document.querySelectorAll(".nav-btn").forEach(x=>x.classList.toggle("active",x.dataset.page===pageId));if(pageId==="summaryPage")updateSummaries();window.scrollTo({top:0,behavior:"smooth"})}
-function showFormalPreflight(){document.getElementById("formalPreflightPanel").hidden=false;document.getElementById("formalPreflightPanel").scrollIntoView({behavior:"smooth",block:"start"})}
-function openDemoIntro(){document.getElementById("demoIntroDialog").showModal()}
-function startAssessment(mode){if(mode==="formal"&&!isFormalAssessmentAvailable()){updatePreflightAvailability();return}state.assessmentMode=mode;state.sessionCalibrationSnapshot=mode==="formal"?{...deepCopy(state.calibrationProfile),sessionExaminer:selectedExaminer(),dailyCheckDate:todayString(),programVersion:PROGRAM_VERSION}:null;renderSessionMode();showPage("evalPage")}
-function renderSessionMode(){const box=document.getElementById("sessionStatus"),badge=document.getElementById("sessionModeBadge"),info=document.getElementById("sessionAcousticInfo"),card=document.getElementById("modeStatusCard");if(!state.assessmentMode){if(box)box.hidden=true;if(card)card.hidden=true;return}if(box){box.hidden=false;badge.textContent=modeLabel();info.textContent=state.assessmentMode==="formal"?"음향 보정값을 적용한 연구용 평가입니다.":"체험 결과는 연구자료로 사용할 수 없습니다."}if(!card)return;card.hidden=false;card.classList.toggle("demo",state.assessmentMode==="demo");card.classList.toggle("formal",state.assessmentMode==="formal");if(state.assessmentMode==="formal"){const p=state.sessionCalibrationSnapshot;card.innerHTML=`<h3>음향 보정 확인 완료</h3><p>문장 ${fmtDb(p.measuredSpeechDbA,"dBA")} · 교실 소음 ${fmtDb(p.measuredNoiseDbA,"dBA")} · SNR ${fmtSnr(p.measuredSnrDb)} · 거리 ${p.distanceMeters||"미기록"} m</p>`}else{card.innerHTML=`<h3>체험 모드 · 음향 미보정</h3><p>현재 음향 출력은 실제 60 dBA 및 +5 dB SNR로 확인되지 않았습니다. 이 모드의 결과는 연구자료로 사용할 수 없습니다.</p>`}}
-function calibrationRecordFields(){const p=state.sessionCalibrationSnapshot||{};return{assessmentMode:state.assessmentMode||"demo",assessmentModeLabel:modeLabel(),programVersion:PROGRAM_VERSION,calibrationStatus:state.assessmentMode==="formal"?"calibrated":"not_calibrated",calibrationProfileName:p.profileName||"",playbackDevice:p.playbackDevice||"",speakerModel:p.speakerModel||"",operatingSystemVolume:p.operatingSystemVolume||"",speakerOutputSetting:p.speakerOutputSetting||"",distanceMeters:p.distanceMeters||"",speakerPosition:p.speakerPosition||"",measuredSpeechDbA:p.measuredSpeechDbA??null,measuredNoiseDbA:p.measuredNoiseDbA??null,measuredSnrDb:p.measuredSnrDb??null,soundLevelMeter:p.soundLevelMeter||"",calibrationDate:p.calibrationDate||"",dailyCheckDate:p.dailyCheckDate||"",calibrationExaminer:p.examiner||"",examiner:p.sessionExaminer||""}}
-function technicalSummary(a){const pTotal=parentTotal(),calibration=state.assessmentMode==="formal"?"음향 보정 확인 완료":state.assessmentMode==="demo"?"음향 미보정 체험자료":"미확인";return`총 평가 시행 수: ${a.completed}\n1차 제시 정반응 수: ${a.firstCorrect}\n반복 후 정반응 전환 수: ${a.repeatConverted}\n수정전략 사용 수: ${a.repair}\n무반응 수: ${a.noResponse}\n보호자 체크리스트 원점수: ${pTotal===null?"미산출":`${pTotal}/40점`}\n평가 모드: ${modeLabel()}\n음향 보정 상태: ${calibration}`}
-function observationSummary(a){return technicalSummary(a)+"\n\n보호자 체크리스트 점수는 기술적 원점수로 제시되며, 본 프로그램에서는 진단적 절단점이나 등급을 적용하지 않습니다."}
-function updateSessionSummary(){const a=aggregateLogs(),pTotal=parentTotal();document.getElementById("kpiCompleted").textContent=a.completed;document.getElementById("kpiFirst").textContent=a.firstCorrect;document.getElementById("kpiImproved").textContent=a.repeatConverted;document.getElementById("kpiRepair").textContent=a.repair;document.getElementById("kpiNoResponse").textContent=a.noResponse;document.getElementById("kpiParentRaw").textContent=pTotal===null?"--":`${pTotal}/40`;document.getElementById("kpiMode").textContent=state.assessmentMode==="formal"?"연구용":state.assessmentMode==="demo"?"체험":"미시작";document.getElementById("kpiCalibration").textContent=state.assessmentMode==="formal"?"확인 완료":state.assessmentMode==="demo"?"음향 미보정":"미확인";document.getElementById("sessionSummary").textContent=state.showObservationSummary?observationSummary(a):technicalSummary(a)}
-function downloadReport(){persistCurrentObservation();const now=new Date(),child=document.getElementById("childName").value.trim(),session=document.getElementById("sessionNo").value.trim(),a=aggregateLogs(),complete=parentComplete(),total=parentTotal(),snapshot=state.sessionCalibrationSnapshot||{},modeText=modeLabel();const records=state.logs.length?state.logs.map(log=>{const m=getTrialMetrics(log);return`[${log.itemId}번]\n범주: ${log.category}\n문장: ${log.prompt}\n1차·2차·3차 반응: ${log.phase1} / ${log.phase2} / ${log.phase3}\n제시 횟수: ${m.presentationCount}회\n최종 결과: ${m.finalResult}\n문장 이해 수준: ${log.understandingLevel||"미기록"}\n자기인식: ${log.selfAwareness||"미기록"}\n반응 행동: ${log.responseBehavior||"미기록"}\n수정 전략: ${log.repairStrategy||"미기록"}\n자유 메모: ${log.note||"-"}\n평가 모드: ${log.assessmentModeLabel||modeLabel(log.assessmentMode)}`}).join("\n\n"):"저장된 직접 평가 기록 없음";const report=`[1. 기본정보 및 음향 보정]\n프로그램 버전: ${PROGRAM_VERSION}\n평가 모드: ${modeText}\n${state.assessmentMode==="demo"?"자료 표시: 음향 미보정 체험자료\n현재 음향 출력은 실제 60 dBA 및 +5 dB SNR로 확인되지 않았습니다. 이 모드의 결과는 연구자료로 사용할 수 없습니다.\n":""}아동 이름: ${child||"미입력"}\n평가 회차: ${session||"미입력"}\n평가 날짜와 시간: ${now.toLocaleString("ko-KR")}\n목표 문장 수준: ${ACOUSTIC_TARGET.speechDbA} dBA\n목표 소음 수준: ${ACOUSTIC_TARGET.noiseDbA} dBA\n목표 SNR: +${ACOUSTIC_TARGET.snrDb} dB\n실제 측정 문장 수준: ${fmtDb(snapshot.measuredSpeechDbA,"dBA")}\n실제 측정 소음 수준: ${fmtDb(snapshot.measuredNoiseDbA,"dBA")}\n실제 측정 SNR: ${fmtSnr(snapshot.measuredSnrDb)}\n사용 보정 프로필: ${snapshot.profileName||"미적용"}\n재생 장치: ${snapshot.playbackDevice||"미적용"}\n스피커: ${snapshot.speakerModel||"미적용"}\n컴퓨터 음량: ${snapshot.operatingSystemVolume||"미적용"}\n스피커 출력 설정: ${snapshot.speakerOutputSetting||"미적용"}\n거리 및 방향: ${snapshot.distanceMeters||"미적용"} m / ${snapshot.speakerPosition||"미적용"}\n소음계: ${snapshot.soundLevelMeter||"미적용"}\n보정일: ${snapshot.calibrationDate||"미적용"}\n당일 확인일: ${snapshot.dailyCheckDate||"미적용"}\n보정 담당자: ${snapshot.examiner||"미적용"}\n검사자: ${snapshot.sessionExaminer||selectedExaminer()||"미적용"}\n\n[2. 직접 평가 요약]\n총 평가 시행 수: ${a.completed}\n1차 제시 정반응 수: ${a.firstCorrect}\n반복 후 정반응 전환 수: ${a.repeatConverted}\n수정전략 사용 수: ${a.repair}\n무반응 수: ${a.noResponse}\n\n[3. 보호자 체크리스트 결과]\n응답 완료 여부: ${complete?"완료":"미완료"}\n보호자 체크리스트 원점수: ${complete?`${total}/40점`:"미산출"}\n보호자 체크리스트 점수는 기술적 원점수로 제시되며, 본 프로그램에서는 진단적 절단점이나 등급을 적용하지 않습니다.\n${parentCategories().text}\n보호자 비고 원문:\n${parentNotesText()}\n\n[4. 문항별 직접 평가 기록]\n${records}\n\n[5. 프로그램 이용 안내]\n본 프로그램은 현재 표준화된 검사 또는 진단 도구가 아닙니다. 직접평가와 보호자 체크리스트 결과는 자동으로 정상·비정상을 판정하지 않습니다. 입력 내용은 현재 브라우저에서 처리되며 외부 서버로 자동 전송되지 않습니다. 실제 출력 수준은 컴퓨터, 스피커, 이어폰 및 시스템 음량에 따라 달라질 수 있습니다.`;const blob=new Blob([report],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=child&&session?`${safeFilename(child)}_${safeFilename(session)}_기능적듣기평가.txt`:`기능적듣기평가_${reportDate(now)}.txt`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);setStatus("reportStatus","TXT 평가 보고서를 저장했습니다.")}
-function resetAssessmentData(){state.logs=[];state.itemObservations={};state.phaseTouches={};state.parentScores={};state.parentNotes={};state.currentItem=0;state.assessmentMode=null;state.sessionCalibrationSnapshot=null;state.preflightChecks={};state.testPlayed={speech:false,noise:false};state.conditionMatch="";document.getElementById("childName").value="";document.getElementById("sessionNo").value="";const examiner=document.getElementById("preflightExaminer");if(examiner)examiner.value="";const panel=document.getElementById("formalPreflightPanel");if(panel)panel.hidden=true;renderChecklist();renderParentChecklist();renderLogs();updateSummaries();renderCurrentItem();renderSessionMode();renderCalibrationProfile()}
-function newAssessment(){if(!confirm("새 평가를 시작하시겠습니까? 보정 프로필은 유지되고 시작 화면으로 돌아갑니다."))return;resetAssessmentData();showPage("startPage")}
-function initializePreflight(){state.calibrationProfiles=loadCalibrationProfiles();state.calibrationProfile=loadCalibrationProfile();renderTargetAcoustics();renderChecklist();renderCalibrationProfile();validateAudioAssets();setProgramVersionText();document.getElementById("showFormalPreflightBtn").addEventListener("click",showFormalPreflight);document.getElementById("editCalibrationBtn").addEventListener("click",()=>{renderCalibrationForm();document.getElementById("calibrationDialog").showModal()});document.getElementById("closeCalibrationBtn").addEventListener("click",()=>document.getElementById("calibrationDialog").close());document.getElementById("demoStartBtn").addEventListener("click",openDemoIntro);document.getElementById("closeDemoIntroBtn").addEventListener("click",()=>document.getElementById("demoIntroDialog").close());document.getElementById("confirmDemoStartBtn").addEventListener("click",()=>{document.getElementById("demoIntroDialog").close();startAssessment("demo")});document.getElementById("calibrationProfileSelect").addEventListener("change",e=>{localStorage.setItem(SELECTED_CALIBRATION_PROFILE_KEY,e.target.value);state.preflightChecks={};state.testPlayed={speech:false,noise:false};renderCalibrationProfile();renderChecklist()});document.getElementById("preflightExaminer").addEventListener("input",updatePreflightAvailability);["cal_measuredSpeechDbA","cal_measuredNoiseDbA"].forEach(id=>document.getElementById(id).addEventListener("input",updateCalibrationSnrField));document.getElementById("calibrationForm").addEventListener("submit",e=>{e.preventDefault();const profile=collectCalibrationForm();profile.status=validateCalibrationProfile(profile).status;if(saveCalibrationProfile(profile)){state.calibrationProfile=loadCalibrationProfile();state.preflightChecks={};state.testPlayed={speech:false,noise:false};renderChecklist();renderCalibrationProfile();document.getElementById("calibrationDialog").close();setStatus("preflightStatus","보정 프로필이 저장되었습니다. 일반 검사자는 저장된 프로필을 선택한 뒤 검사 전 확인 절차를 진행합니다.")}});document.getElementById("resetCalibrationFormBtn").addEventListener("click",()=>{state.calibrationProfile={...DEFAULT_CALIBRATION_PROFILE,browserInfo:navigator.userAgent||"",measurementMethod:"LAeq"};renderCalibrationForm()});document.getElementById("formalStartBtn").addEventListener("click",()=>startAssessment("formal"));document.getElementById("testSpeechBtn").addEventListener("click",playPreflightSpeechTest);document.getElementById("testNoiseBtn").addEventListener("click",playPreflightNoiseTest);document.getElementById("preflightStopAudioBtn").addEventListener("click",()=>stopAllAudio());document.getElementById("newAssessmentBtn").addEventListener("click",newAssessment);["toleranceSpeech","toleranceNoise","toleranceSnr"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{state.tolerance.speechDb=parseNum(document.getElementById("toleranceSpeech").value)??1;state.tolerance.noiseDb=parseNum(document.getElementById("toleranceNoise").value)??1;state.tolerance.snrDb=parseNum(document.getElementById("toleranceSnr").value)??1;renderCalibrationProfile()}))}
+const caregiverItems=[
+  "아동은 깨어 있는 시간 동안 보장구를 지속적으로 착용합니까?",
+  "보장구가 작동하지 않거나 소리가 평소와 다를 때 이를 표현하거나 도움을 요청합니까?",
+  "조용한 환경에서 이름을 부르면 시각적 단서 없이 반응합니까?",
+  "배경소음이 있는 환경에서 이름을 부르면 시각적 단서 없이 반응합니까?",
+  "일상에서 새롭거나 중요한 환경음을 듣고 그 소리의 존재나 위치를 알아차립니까?",
+  "조용한 환경에서 한두 문장으로 된 지시를 듣고 적절히 수행합니까?",
+  "배경소음이 있는 환경에서 한두 문장으로 된 지시를 듣고 적절히 수행합니까?",
+  "잘 듣지 못했을 때 다시 말해 달라고 하거나 특정 내용을 물어보는 등 복구전략을 사용합니까?",
+  "교실·식당·놀이터처럼 소음이 있는 장소에서도 대화나 활동에 계속 참여합니까?",
+  "여러 사람이 함께 이야기할 때 말하는 사람을 찾고 대화의 핵심 내용을 따라갑니까?"
+].map((text,i)=>({id:i+1,text}));
 
-initializePreflight();renderParentChecklist();renderCurrentItem();updateSummaries();
+function placeholderSvg(label){
+  const safe=String(label).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&apos;"}[m]));
+  return "data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="360" height="210" viewBox="0 0 360 210"><rect width="360" height="210" rx="28" fill="#F6F8FC"/><rect x="18" y="18" width="324" height="174" rx="24" fill="#FFFFFF" stroke="#5B7FE8" stroke-opacity=".28" stroke-width="3"/><circle cx="72" cy="72" r="24" fill="#FFC857" fill-opacity=".55"/><path d="M109 150h142" stroke="#64C7A5" stroke-width="12" stroke-linecap="round"/><text x="180" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#273043">${safe}</text></svg>`);
+}
+function opt(optionId,altText){return{optionId,imageSrc:placeholderSvg(altText),altText}}
+const assessmentItems=[
+  {id:1,domain:"수업 지시 및 준비물",sentence:"파란 공책을 책상 위에 올려놓으세요.",audioSrc:"audio/item01.mp3",correctOptionId:"A",options:[opt("A","파란 공책을 책상 위에 올려놓기"),opt("B","파란 공책을 가방 안에 넣기"),opt("C","빨간 공책을 책상 위에 올려놓기"),opt("D","파란 공책을 의자 밑에 두기")]},
+  {id:2,domain:"수업 지시 및 준비물",sentence:"연필 두 자루를 필통 안에 넣으세요.",audioSrc:"audio/item02.mp3",correctOptionId:"B",options:[opt("A","연필 한 자루를 책상 위에 두기"),opt("B","연필 두 자루를 필통 안에 넣기"),opt("C","색연필 두 자루를 필통 밖에 두기"),opt("D","연필 세 자루를 가방에 넣기")]},
+  {id:3,domain:"수업 지시 및 준비물",sentence:"빨간 색연필로 큰 별을 칠하세요.",audioSrc:"audio/item03.mp3",correctOptionId:"C",options:[opt("A","파란 색연필로 큰 별 칠하기"),opt("B","빨간 색연필로 작은 동그라미 칠하기"),opt("C","빨간 색연필로 큰 별 칠하기"),opt("D","노란 색연필로 큰 네모 칠하기")]},
+  {id:4,domain:"수업 지시 및 준비물",sentence:"가위는 서랍에 넣고 풀은 책상 위에 두세요.",audioSrc:"audio/item04.mp3",correctOptionId:"D",options:[opt("A","가위와 풀을 모두 서랍에 넣기"),opt("B","가위와 풀을 모두 책상 위에 두기"),opt("C","풀은 서랍에 넣고 가위는 책상 위에 두기"),opt("D","가위는 서랍에 넣고 풀은 책상 위에 두기")]},
+  {id:5,domain:"수업 지시 및 준비물",sentence:"선생님이 부르면 줄의 맨 뒤에 서세요.",audioSrc:"audio/item05.mp3",correctOptionId:"B",options:[opt("A","선생님이 부르면 줄 맨 앞에 서기"),opt("B","선생님이 부르면 줄 맨 뒤에 서기"),opt("C","선생님이 부르면 자리에 앉기"),opt("D","친구가 부르면 줄 밖에 서기")]},
+  {id:6,domain:"수업 지시 및 준비물",sentence:"수학책을 펴고 세모에 동그라미 하세요.",audioSrc:"audio/item06.mp3",correctOptionId:"C",options:[opt("A","국어책을 펴고 세모에 동그라미 하기"),opt("B","수학책을 덮고 네모에 동그라미 하기"),opt("C","수학책을 펴고 세모에 동그라미 하기"),opt("D","수학책을 펴고 세모를 색칠하기")]},
+  {id:7,domain:"학교 공간 및 일과",sentence:"급식을 먹기 전에 손을 씻으러 가요.",audioSrc:"audio/item07.mp3",correctOptionId:"D",options:[opt("A","급식을 먹은 뒤 운동장에 가기"),opt("B","급식을 먹기 전에 책 읽기"),opt("C","급식을 먹은 뒤 손 씻기"),opt("D","급식을 먹기 전에 손 씻으러 가기")]},
+  {id:8,domain:"학교 공간 및 일과",sentence:"쉬는 시간이 끝나면 교실로 돌아가요.",audioSrc:"audio/item08.mp3",correctOptionId:"A",options:[opt("A","쉬는 시간이 끝나면 교실로 돌아가기"),opt("B","쉬는 시간이 끝나면 운동장으로 가기"),opt("C","수업 중에 복도로 나가기"),opt("D","점심시간이 끝나면 집에 가기")]},
+  {id:9,domain:"학교 공간 및 일과",sentence:"비가 와서 운동장 대신 체육관에서 놀아요.",audioSrc:"audio/item09.mp3",correctOptionId:"C",options:[opt("A","비가 와도 운동장에서 놀기"),opt("B","맑아서 운동장에서 놀기"),opt("C","비가 와서 체육관에서 놀기"),opt("D","눈이 와서 도서관에서 놀기")]},
+  {id:10,domain:"학교 공간 및 일과",sentence:"책을 다 읽은 뒤 도서관 반납함에 넣어요.",audioSrc:"audio/item10.mp3",correctOptionId:"D",options:[opt("A","책을 읽기 전에 반납함에 넣기"),opt("B","책을 다 읽고 가방에 넣기"),opt("C","책을 다 읽고 책상 위에 두기"),opt("D","책을 다 읽은 뒤 도서관 반납함에 넣기")]},
+  {id:11,domain:"학교 공간 및 일과",sentence:"보건실은 교무실 옆에 있어요.",audioSrc:"audio/item11.mp3",correctOptionId:"A",options:[opt("A","보건실이 교무실 옆에 있음"),opt("B","보건실이 운동장 가운데 있음"),opt("C","보건실이 도서관 안에 있음"),opt("D","교무실이 현관 밖에 있음")]},
+  {id:12,domain:"학교 공간 및 일과",sentence:"우산은 현관 우산꽂이에 세워 두세요.",audioSrc:"audio/item12.mp3",correctOptionId:"B",options:[opt("A","우산을 교실 책상 위에 두기"),opt("B","우산을 현관 우산꽂이에 세워 두기"),opt("C","우산을 운동장에 눕혀 두기"),opt("D","우산을 사물함 위에 접어 두기")]},
+  {id:13,domain:"또래 상호작용 및 안전",sentence:"친구가 말할 때에는 얼굴을 보고 기다려요.",audioSrc:"audio/item13.mp3",correctOptionId:"D",options:[opt("A","친구가 말할 때 등을 돌리기"),opt("B","친구가 말할 때 먼저 뛰어가기"),opt("C","친구가 말할 때 큰소리로 끼어들기"),opt("D","친구 얼굴을 보고 기다리기")]},
+  {id:14,domain:"또래 상호작용 및 안전",sentence:"공을 차기 전에 앞에 사람이 없는지 살펴봐요.",audioSrc:"audio/item14.mp3",correctOptionId:"A",options:[opt("A","공 차기 전에 앞을 살펴보기"),opt("B","앞에 친구가 있어도 공 차기"),opt("C","공을 차고 나서 뒤돌아보기"),opt("D","공을 들고 교실에서 뛰기")]},
+  {id:15,domain:"또래 상호작용 및 안전",sentence:"친구의 연필을 빌리기 전에 먼저 물어봐요.",audioSrc:"audio/item15.mp3",correctOptionId:"B",options:[opt("A","친구 연필을 말없이 가져가기"),opt("B","친구 연필을 빌리기 전에 물어보기"),opt("C","친구 지우개를 숨기기"),opt("D","선생님 책상에서 연필 가져가기")]},
+  {id:16,domain:"또래 상호작용 및 안전",sentence:"복도에서는 뛰지 말고 오른쪽으로 걸어요.",audioSrc:"audio/item16.mp3",correctOptionId:"C",options:[opt("A","복도에서 가운데로 뛰기"),opt("B","복도에서 왼쪽으로 뛰기"),opt("C","복도에서 오른쪽으로 걷기"),opt("D","복도에서 친구를 밀기")]},
+  {id:17,domain:"또래 상호작용 및 안전",sentence:"친구가 넘어지면 선생님께 알려요.",audioSrc:"audio/item17.mp3",correctOptionId:"A",options:[opt("A","친구가 넘어지면 선생님께 알리기"),opt("B","친구가 넘어져도 그냥 지나가기"),opt("C","친구가 넘어지면 장난치기"),opt("D","친구가 넘어지면 공을 차기")]},
+  {id:18,domain:"또래 상호작용 및 안전",sentence:"잘 못 들었을 때는 다시 말해 달라고 해요.",audioSrc:"audio/item18.mp3",correctOptionId:"B",options:[opt("A","잘 못 들었을 때 가만히 있기"),opt("B","다시 말해 달라고 요청하기"),opt("C","잘 못 들었을 때 교실 밖으로 나가기"),opt("D","못 들은 내용을 친구에게 숨기기")]}
+];
+const state={
+  currentItem:0,
+  mode:null,
+  participantCode:"",
+  sessionNo:"",
+  examinerCode:"",
+  observations:{},
+  logs:[],
+  caregiverResponses:{},
+  caregiverNotes:{},
+  preflightChecks:{},
+  calibrationProfiles:[],
+  selectedCalibrationId:"",
+  calibrationProfile:null,
+  calibrationValid:false,
+  assets:{checked:false,loaded:0,total:18,missing:[],noiseLoaded:false},
+  playToken:0,
+  timers:new Set(),
+  saveNoticeShown:false
+};
+const stimulusAudio=new Audio();
+const noiseAudio=new Audio();
+
+function $(id){return document.getElementById(id)}
+function todayString(){return new Date().toISOString().slice(0,10)}
+function parseNum(value){const n=Number.parseFloat(String(value??"").replace(",", "."));return Number.isFinite(n)?n:null}
+function fmtNum(n,unit=""){return n===null||n===undefined||Number.isNaN(n)?"미기록":`${Number(n).toFixed(1)}${unit?` ${unit}`:""}`}
+function deepCopy(x){return JSON.parse(JSON.stringify(x))}
+function setStatus(id,text){const el=$(id);if(el)el.textContent=text}
+function setProgramVersion(){document.querySelectorAll(".programVersionText").forEach(el=>el.textContent=PROGRAM_VERSION)}
+function itemById(id){return assessmentItems.find(item=>item.id===Number(id))}
+function getCurrentItem(){return assessmentItems[state.currentItem]}
+function defaultObservation(item){return{
+  itemId:item.id,
+  domain:item.domain,
+  sentence:item.sentence,
+  correctOptionId:item.correctOptionId,
+  initialChoiceId:null,
+  initialCorrect:null,
+  repairRequested:false,
+  repairType:"none",
+  repeatPlayed:false,
+  finalChoiceId:null,
+  finalCorrect:null,
+  noResponse:false,
+  selfReport:"",
+  evaluatorNote:""
+}}
+function getObservation(itemId=getCurrentItem().id){
+  if(!state.observations[itemId]) state.observations[itemId]=defaultObservation(itemById(itemId));
+  return state.observations[itemId];
+}
+function optionLabel(item,optionId){return item.options.find(o=>o.optionId===optionId)?.altText||"미선택"}
+function correctText(value){return value===null||value===undefined?"미기록":value?"정":"오"}
+function repairText(value){return REPAIR_LABELS[value||"none"]||"미기록"}
+function selfReportText(value){return SELF_REPORT_LABELS[value]||"미기록"}
+function hasUnsavedData(){return Boolean(Object.keys(state.observations).length||state.logs.length||Object.keys(state.caregiverResponses).length||Object.keys(state.caregiverNotes).length)}
+function saveDraft(){
+  try{
+    const draft={
+      currentItem:state.currentItem,mode:state.mode,participantCode:$("participantCode")?.value||state.participantCode,sessionNo:$("sessionNo")?.value||state.sessionNo,examinerCode:$("examinerCode")?.value||state.examinerCode,
+      observations:state.observations,logs:state.logs,caregiverResponses:state.caregiverResponses,caregiverNotes:state.caregiverNotes,preflightChecks:state.preflightChecks,selectedCalibrationId:state.selectedCalibrationId
+    };
+    localStorage.setItem(DRAFT_KEY,JSON.stringify(draft));
+  }catch(e){console.warn("Draft save failed",e)}
+}
+function restoreDraft(){
+  try{
+    const raw=localStorage.getItem(DRAFT_KEY); if(!raw)return;
+    const draft=JSON.parse(raw);
+    Object.assign(state,{
+      currentItem:draft.currentItem||0,mode:draft.mode||null,participantCode:draft.participantCode||"",sessionNo:draft.sessionNo||"",examinerCode:draft.examinerCode||"",
+      observations:draft.observations||{},logs:Array.isArray(draft.logs)?draft.logs:[],caregiverResponses:draft.caregiverResponses||{},caregiverNotes:draft.caregiverNotes||{},preflightChecks:draft.preflightChecks||{},selectedCalibrationId:draft.selectedCalibrationId||""
+    });
+  }catch(e){console.warn("Draft restore failed",e)}
+}
+function clearDraft(){try{localStorage.removeItem(DRAFT_KEY)}catch(e){}}
+
+function loadCalibrationProfiles(){
+  try{return JSON.parse(localStorage.getItem(CALIBRATION_KEY)||"[]")}catch(e){console.warn("Calibration load failed",e);return[]}
+}
+function saveCalibrationProfiles(profiles){
+  try{localStorage.setItem(CALIBRATION_KEY,JSON.stringify(profiles));return true}catch(e){console.warn("Calibration save failed",e);return false}
+}
+function calculateSnr(profile){const s=parseNum(profile.speechDba),n=parseNum(profile.noiseDba);return s!==null&&n!==null?Number((s-n).toFixed(1)):null}
+function validCalibration(profile){
+  if(!profile)return false;
+  return ["speechDba","noiseDba","snrDb","calibratedAt","deviceId","distance","position"].every(k=>profile[k]!==null&&profile[k]!==undefined&&String(profile[k]).trim()!=="");
+}
+function loadSelectedCalibration(){
+  state.calibrationProfiles=loadCalibrationProfiles();
+  const saved=state.selectedCalibrationId||localStorage.getItem(SELECTED_CALIBRATION_KEY)||"";
+  state.selectedCalibrationId=state.calibrationProfiles.some(p=>p.id===saved)?saved:(state.calibrationProfiles[0]?.id||"");
+  state.calibrationProfile=state.calibrationProfiles.find(p=>p.id===state.selectedCalibrationId)||null;
+  state.calibrationValid=validCalibration(state.calibrationProfile);
+}
+function renderCalibrationProfile(){
+  loadSelectedCalibration();
+  const select=$("calibrationProfileSelect");
+  if(select){
+    select.textContent="";
+    if(!state.calibrationProfiles.length){
+      const option=document.createElement("option");option.value="";option.textContent="등록된 보정 프로필 없음";select.appendChild(option);select.disabled=true;
+    }else{
+      select.disabled=false;
+      state.calibrationProfiles.forEach(p=>{const option=document.createElement("option");option.value=p.id;option.textContent=p.profileName||"이름 없는 프로필";select.appendChild(option)});
+      select.value=state.selectedCalibrationId;
+    }
+  }
+  const p=state.calibrationProfile;
+  $("calibrationStatusBadge").textContent=state.calibrationValid?"프로필 선택됨":"보정 프로필 필요";
+  const summary=$("calibrationProfileSummary"),details=$("calibrationProfileDetails");
+  if(!p){
+    summary.classList.add("empty"); summary.textContent="저장된 보정 프로필이 없습니다.";
+    details.textContent="보정 프로필을 먼저 등록해 주세요.";
+  }else if(state.calibrationValid){
+    summary.classList.remove("empty");
+    summary.textContent=[
+      p.profileName,
+      `장치 ${p.deviceId} · 거리 ${p.distance} · 위치 ${p.position}`,
+      `문장 ${fmtNum(p.speechDba,"dBA")} · 교실소음 ${fmtNum(p.noiseDba,"dBA")} · SNR ${fmtNum(p.snrDb,"dB")}`,
+      `최종 보정일 ${p.calibratedAt}`
+    ].join("\n");
+    details.textContent=[
+      `프로필 이름: ${p.profileName}`,
+      `장치 ID: ${p.deviceId}`,
+      `재생 장치 설명: ${p.deviceLabel||"미기록"}`,
+      `출력 장치/스피커: ${p.outputDevice||"미기록"}`,
+      `음량 설정: ${p.volumeSetting||"미기록"}`,
+      `문장 수준: ${fmtNum(p.speechDba,"dBA")}`,
+      `교실소음 수준: ${fmtNum(p.noiseDba,"dBA")}`,
+      `SNR: ${fmtNum(p.snrDb,"dB")}`,
+      `보정일: ${p.calibratedAt}`,
+      `거리: ${p.distance}`,
+      `위치: ${p.position}`,
+      `보정 담당 코드: ${p.researcherCode||"미기록"}`,
+      `비고: ${p.note||"-"}`
+    ].join("\n");
+  }else{
+    summary.classList.remove("empty");
+    summary.textContent=`${p.profileName||"이름 없는 프로필"}\n연구자용 보정 모드 시작에 필요한 보정 정보가 부족합니다.`;
+    details.textContent=JSON.stringify(p,null,2);
+  }
+  updatePreflightAvailability();
+}
+function renderCalibrationForm(profile=state.calibrationProfile||{}){
+  ["profileName","deviceId","deviceLabel","outputDevice","volumeSetting","speechDba","noiseDba","calibratedAt","distance","position","researcherCode","note"].forEach(k=>{const el=$(`cal_${k}`);if(el)el.value=profile[k]??""});
+  $("cal_snrDb").value=fmtNum(calculateSnr(profile),"dB");
+}
+function collectCalibrationForm(){
+  const profile={id:state.calibrationProfile?.id||`cal_${Date.now()}`};
+  ["profileName","deviceId","deviceLabel","outputDevice","volumeSetting","speechDba","noiseDba","calibratedAt","distance","position","researcherCode","note"].forEach(k=>{profile[k]=$(`cal_${k}`).value.trim()});
+  profile.speechDba=parseNum(profile.speechDba);
+  profile.noiseDba=parseNum(profile.noiseDba);
+  profile.snrDb=calculateSnr(profile);
+  return profile;
+}
+
+async function assetExists(src){
+  try{
+    const r=await fetch(src,{method:"HEAD",cache:"no-store"});
+    return r.ok;
+  }catch(e){
+    console.warn("Audio asset check failed",src,e);
+    return false;
+  }
+}
+async function validateAudioAssets(){
+  const missing=[];
+  for(const item of assessmentItems){
+    const ok=await assetExists(item.audioSrc);
+    if(!ok)missing.push(item.audioSrc);
+  }
+  const noiseLoaded=await assetExists(CLASSROOM_NOISE_FILE);
+  if(!noiseLoaded)console.warn("Noise asset check failed",CLASSROOM_NOISE_FILE);
+  state.assets={checked:true,loaded:assessmentItems.length-missing.length,total:assessmentItems.length,missing,noiseLoaded};
+  $("audioAssetBadge").textContent=missing.length?"음원 확인 필요":"음원 확인 완료";
+  $("audioAssetStatus").textContent=missing.length?`음원 로드 ${state.assets.loaded}/18 완료 — ${missing.length}개 확인 필요`:"음원 로드 18/18 완료";
+  if(missing.length)console.warn("Missing item audio assets",missing);
+  if(noiseLoaded&&state.assets.loaded===18)state.preflightChecks[4]=true;
+  renderChecklist();
+  updatePreflightAvailability();
+}
+function isChecklistComplete(){return PREFLIGHT_CHECKLIST_ITEMS.every((_,i)=>!!state.preflightChecks[i])}
+function isFormalAvailable(){
+  return Boolean(state.calibrationValid&&$("examinerCode").value.trim()&&isChecklistComplete()&&state.assets.checked&&state.assets.loaded===18&&state.assets.noiseLoaded);
+}
+function renderChecklist(){
+  const host=$("preflightChecklist"); if(!host)return;
+  host.textContent="";
+  PREFLIGHT_CHECKLIST_ITEMS.forEach((text,i)=>{
+    const li=document.createElement("li"),input=document.createElement("input"),label=document.createElement("label"),id=`preflightCheck${i}`;
+    input.type="checkbox"; input.id=id; input.checked=!!state.preflightChecks[i];
+    if(i===4){input.disabled=!(state.assets.checked&&state.assets.loaded===18&&state.assets.noiseLoaded)}
+    input.addEventListener("change",()=>{state.preflightChecks[i]=input.checked;updatePreflightAvailability();saveDraft()});
+    label.htmlFor=id; label.textContent=text;
+    li.append(input,label); host.appendChild(li);
+  });
+  updatePreflightAvailability();
+}
+function updatePreflightAvailability(){
+  const checked=PREFLIGHT_CHECKLIST_ITEMS.filter((_,i)=>state.preflightChecks[i]).length;
+  $("checklistCountBadge").textContent=`${checked} / ${PREFLIGHT_CHECKLIST_ITEMS.length}`;
+  const messages=[];
+  if(!state.calibrationValid)messages.push("유효한 보정 프로필이 필요합니다.");
+  if(!$("examinerCode").value.trim())messages.push("평가자 코드를 입력해 주세요.");
+  if(!isChecklistComplete())messages.push("검사 전 체크리스트를 모두 확인해 주세요.");
+  if(!state.assets.checked)messages.push("음원 로드 상태를 확인하고 있습니다.");
+  else if(state.assets.loaded<18||!state.assets.noiseLoaded)messages.push("음원 또는 교실소음 파일 확인이 필요합니다.");
+  $("formalStartBtn").disabled=!isFormalAvailable();
+  $("preflightStatus").textContent=messages.join("\n")||"연구자용 보정 모드 시작 조건이 충족되었습니다.";
+}
+
+function showPage(id){
+  stopAllAudio("");
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+  if(id==="resultPage")renderResults();
+  if(id==="caregiverPage")renderCaregiver();
+}
+function startMode(mode){
+  if(mode==="formal"&&!isFormalAvailable()){updatePreflightAvailability();return}
+  state.mode=mode;
+  state.examinerCode=$("examinerCode").value.trim();
+  state.sessionCalibrationSnapshot=mode==="formal"?deepCopy(state.calibrationProfile):null;
+  renderSessionMode();
+  showPage("evalPage");
+  saveDraft();
+}
+function renderSessionMode(){
+  const box=$("sessionStatus"),badge=$("sessionModeBadge"),info=$("sessionAcousticInfo"),notice=$("modeNotice");
+  if(!state.mode){box.hidden=true;notice.textContent="평가 모드를 먼저 선택해 주세요.";return}
+  box.hidden=false;
+  if(state.mode==="formal"){
+    badge.textContent="연구자용 보정 모드";
+    const p=state.sessionCalibrationSnapshot||state.calibrationProfile;
+    info.textContent=validCalibration(p)?`화자 성인 표준어 화자 1인 · 소음 교실소음 1종 · 문장 ${fmtNum(p.speechDba,"dBA")} · 교실소음 ${fmtNum(p.noiseDba,"dBA")} · SNR ${fmtNum(p.snrDb,"dB")}`:"보정 프로필 확인 필요";
+    notice.textContent="연구자용 보정 모드입니다.";
+    notice.className="sub";
+  }else{
+    badge.textContent="체험 모드";
+    info.textContent="음향 미보정 · 체험 결과는 연구자료로 사용할 수 없습니다.";
+    notice.textContent="음향 미보정 · 체험 결과는 연구자료로 사용할 수 없습니다. 고정 디지털 상대레벨(시연용)로 재생됩니다.";
+    notice.className="mode-notice demo";
+  }
+}
+function renderItemTabs(){
+  const host=$("itemTabs");host.textContent="";
+  assessmentItems.forEach((item,index)=>{
+    const b=document.createElement("button"); b.type="button"; b.className="item-tab";
+    if(index===state.currentItem)b.classList.add("active");
+    if(state.logs.some(log=>log.itemId===item.id))b.classList.add("completed");
+    b.textContent=state.logs.some(log=>log.itemId===item.id)?`✓ ${item.id}번`:`${item.id}번`;
+    b.addEventListener("click",()=>{state.currentItem=index;renderCurrentItem();saveDraft()});
+    host.appendChild(b);
+  });
+  $("progressBadge").textContent=`저장 ${state.logs.length} / ${assessmentItems.length}문항`;
+  $("itemProgressFill").style.width=`${state.logs.length/assessmentItems.length*100}%`;
+  $("currentItemCounter").textContent=`현재 문항 ${state.currentItem+1} / ${assessmentItems.length}`;
+}
+function renderCurrentItem(){
+  const item=getCurrentItem(),o=getObservation(item.id);
+  $("itemDomainBadge").textContent=item.domain;
+  $("itemTitle").textContent=`${String(item.id).padStart(2,"0")}번 문항`;
+  $("sentenceText").textContent=item.sentence;
+  $("itemStateText").textContent=state.logs.some(log=>log.itemId===item.id)?"저장 완료":(o.initialChoiceId||o.evaluatorNote||o.repairType!=="none"?"작성 중":"미저장");
+  const grid=$("optionGrid");grid.textContent="";
+  item.options.forEach(option=>{
+    const b=document.createElement("button");b.type="button";b.className="option-card";
+    const isFinalPhase=o.repeatPlayed;
+    const selected=(isFinalPhase?o.finalChoiceId:o.initialChoiceId)===option.optionId;
+    if(selected)b.classList.add("selected");
+    if(selected&&option.optionId===item.correctOptionId)b.classList.add("correct");
+    if(selected&&option.optionId!==item.correctOptionId)b.classList.add("error");
+    const img=document.createElement("img");img.src=option.imageSrc;img.alt=option.altText;
+    const text=document.createElement("div");text.className="option-label";text.textContent=option.altText;
+    b.append(img,text);
+    b.addEventListener("click",()=>selectOption(option.optionId));
+    grid.appendChild(b);
+  });
+  renderRepairChips();
+  renderSelfReportChips();
+  $("noResponseCheck").checked=!!o.noResponse;
+  $("evaluatorNote").value=o.evaluatorNote||"";
+  $("repeatPlayBtn").disabled=!(o.repairRequested&&!o.repeatPlayed);
+  renderItemTabs();
+}
+function selectOption(optionId){
+  const item=getCurrentItem(),o=getObservation(item.id);
+  if(o.repeatPlayed){
+    o.finalChoiceId=optionId;
+    o.finalCorrect=optionId===item.correctOptionId;
+  }else{
+    o.initialChoiceId=optionId;
+    o.initialCorrect=optionId===item.correctOptionId;
+  }
+  renderCurrentItem();saveDraft();
+}
+function renderRepairChips(){
+  const host=$("repairTypeChips"),o=getObservation();host.textContent="";
+  Object.entries(REPAIR_LABELS).forEach(([value,label])=>{
+    const b=document.createElement("button");b.type="button";b.className="chip";if(o.repairType===value)b.classList.add("active");b.textContent=label;
+    b.addEventListener("click",()=>{o.repairType=value;o.repairRequested=value!=="none";if(value==="none")o.repeatPlayed=false;renderCurrentItem();saveDraft()});
+    host.appendChild(b);
+  });
+}
+function renderSelfReportChips(){
+  const host=$("selfReportChips"),o=getObservation();host.textContent="";
+  Object.entries(SELF_REPORT_LABELS).forEach(([value,label])=>{
+    const b=document.createElement("button");b.type="button";b.className="chip";if(o.selfReport===value)b.classList.add("active");b.textContent=label;
+    b.addEventListener("click",()=>{o.selfReport=value;renderSelfReportChips();saveDraft()});
+    host.appendChild(b);
+  });
+}
+function stopAllAudio(message){
+  state.playToken++;
+  state.timers.forEach(t=>clearTimeout(t));state.timers.clear();
+  [stimulusAudio,noiseAudio].forEach(a=>{a.pause();a.removeAttribute("src");a.load();a.onended=null;a.onerror=null});
+  if(message!==undefined)setStatus("audioStatus",message||"모든 소리를 정지했습니다.");
+  $("playAssessmentBtn").disabled=false;
+}
+function schedule(fn,ms){const id=setTimeout(()=>{state.timers.delete(id);fn()},ms);state.timers.add(id);return id}
+function resetNoisePosition(){try{noiseAudio.currentTime=PLAYBACK.noiseStart}catch(e){}}
+async function playItem({repeat=false}={}){
+  const item=getCurrentItem(),button=repeat?$("repeatPlayBtn"):$("playAssessmentBtn");
+  stopAllAudio("");
+  const token=state.playToken;
+  button.disabled=true;
+  noiseAudio.src=CLASSROOM_NOISE_FILE;noiseAudio.volume=PLAYBACK.noiseVolume;resetNoisePosition();
+  noiseAudio.onerror=()=>{if(token!==state.playToken)return;console.warn("Noise file error",CLASSROOM_NOISE_FILE);stopAllAudio("");setStatus("audioStatus","교실소음 파일을 재생할 수 없습니다. 개발자 콘솔을 확인해 주세요.")};
+  try{await noiseAudio.play()}catch(e){console.warn("Noise play failed",CLASSROOM_NOISE_FILE,e);stopAllAudio("");setStatus("audioStatus","교실소음 파일을 재생할 수 없습니다. 개발자 콘솔을 확인해 주세요.");return}
+  setStatus("audioStatus","교실소음을 먼저 재생하고 있습니다.");
+  schedule(()=>{
+    if(token!==state.playToken)return;
+    stimulusAudio.src=item.audioSrc;stimulusAudio.volume=PLAYBACK.stimulusVolume;
+    stimulusAudio.onerror=()=>{if(token!==state.playToken)return;console.warn("Item audio error",item.audioSrc);stopAllAudio("");setStatus("audioStatus","문항 음원을 재생할 수 없습니다. 개발자 콘솔을 확인해 주세요.")};
+    stimulusAudio.onended=()=>{if(token!==state.playToken)return;schedule(()=>{noiseAudio.pause();resetNoisePosition();button.disabled=repeat||!(getObservation().repairRequested&&!getObservation().repeatPlayed);setStatus("audioStatus",repeat?"추가 재생이 완료되었습니다.":"문항 재생이 완료되었습니다.")},500)};
+    stimulusAudio.play().then(()=>{if(repeat){const o=getObservation();o.repeatPlayed=true;renderCurrentItem();saveDraft()}setStatus("audioStatus",repeat?"추가 1회 재생 중입니다.":"소음 조건에서 문항을 재생 중입니다.")}).catch(e=>{console.warn("Item play failed",item.audioSrc,e);stopAllAudio("");setStatus("audioStatus","문항 음원을 재생할 수 없습니다. 개발자 콘솔을 확인해 주세요.")});
+  },1000);
+}
+async function previewNoise(){
+  stopAllAudio("");
+  noiseAudio.src=CLASSROOM_NOISE_FILE;noiseAudio.volume=PLAYBACK.noiseVolume;resetNoisePosition();
+  try{await noiseAudio.play();setStatus("preflightStatus","교실소음 시험음을 재생 중입니다. 이 기능은 물리적 음향을 측정하지 않습니다.")}catch(e){console.warn("Noise preview failed",CLASSROOM_NOISE_FILE,e);setStatus("preflightStatus","교실소음 시험음을 재생할 수 없습니다. 개발자 콘솔을 확인해 주세요.")}
+}
+async function previewSpeech(){
+  stopAllAudio("");
+  stimulusAudio.src=assessmentItems[0].audioSrc;stimulusAudio.volume=PLAYBACK.stimulusVolume;
+  try{await stimulusAudio.play();setStatus("preflightStatus","문장 시험음을 재생 중입니다. 이 기능은 물리적 음향을 측정하지 않습니다.")}catch(e){console.warn("Speech preview failed",assessmentItems[0].audioSrc,e);setStatus("preflightStatus","문장 시험음을 재생할 수 없습니다. 개발자 콘솔을 확인해 주세요.")}
+}
+function persistCurrentInputs(){
+  state.participantCode=$("participantCode").value.trim();
+  state.sessionNo=$("sessionNo").value.trim();
+  const o=getObservation();
+  o.noResponse=$("noResponseCheck").checked;
+  o.evaluatorNote=$("evaluatorNote").value.trim();
+}
+function validateSave(o){
+  if(!state.mode)return"평가 모드를 먼저 선택해 주세요.";
+  if(!o.noResponse&&!o.initialChoiceId)return"최초 선택을 기록하거나 무반응 여부를 표시해 주세요.";
+  if(o.repeatPlayed&&!o.noResponse&&!o.finalChoiceId)return"추가 제시 후 최종 선택을 기록해 주세요.";
+  return"";
+}
+function saveCurrentItem(){
+  persistCurrentInputs();
+  const item=getCurrentItem(),o=getObservation(item.id),msg=validateSave(o);
+  if(msg){setStatus("instantFeedback",msg);return}
+  const log={...deepCopy(o),...calibrationRecordFields()};
+  const idx=state.logs.findIndex(x=>x.itemId===item.id);
+  if(idx>=0)state.logs[idx]=log;else state.logs.push(log);
+  state.logs.sort((a,b)=>a.itemId-b.itemId);
+  setStatus("instantFeedback",idx>=0?"현재 문항 기록이 수정되었습니다.":"현재 문항 기록이 저장되었습니다.");
+  renderCurrentItem();renderResults();saveDraft();
+}
+function currentTrialSummary(){
+  persistCurrentInputs();
+  const item=getCurrentItem(),o=getObservation(item.id);
+  setStatus("instantFeedback",[
+    `최초 선택: ${optionLabel(item,o.initialChoiceId)}`,
+    `최초 정오: ${correctText(o.initialCorrect)}`,
+    `복구전략: ${repairText(o.repairType)}`,
+    `추가 제시 여부: ${o.repeatPlayed?"예":"아니요"}`,
+    `최종 선택: ${o.finalChoiceId?optionLabel(item,o.finalChoiceId):"미기록"}`,
+    `최종 정오: ${correctText(o.finalCorrect)}`,
+    `자기보고: ${selfReportText(o.selfReport)}`,
+    `무반응 여부: ${o.noResponse?"예":"아니요"}`
+  ].join("\n"));
+}
+function calibrationRecordFields(){
+  const p=state.sessionCalibrationSnapshot||{};
+  return{assessmentMode:state.mode||"demo",assessmentModeLabel:modeLabel(),programVersion:PROGRAM_VERSION,calibrationProfileName:p.profileName||"",deviceId:p.deviceId||"",distance:p.distance||"",position:p.position||"",speechDba:p.speechDba??null,noiseDba:p.noiseDba??null,snrDb:p.snrDb??null,calibratedAt:p.calibratedAt||"",examinerCode:state.examinerCode||""}
+}
+function modeLabel(mode=state.mode){return mode==="formal"?"연구자용 보정 모드":mode==="demo"?"체험 모드":"미선택"}
+
+function renderCaregiver(){
+  const host=$("caregiverList");host.textContent="";
+  caregiverItems.forEach(item=>{
+    const card=document.createElement("div");card.className="care-item";
+    const title=document.createElement("div");title.className="care-title";title.textContent=`${item.id}. ${item.text}`;card.appendChild(title);
+    const row=document.createElement("div");row.className="likert-row";
+    Object.entries(CARE_RESPONSE_LABELS).forEach(([value,label])=>{
+      const b=document.createElement("button");b.type="button";b.className="score-btn";if(state.caregiverResponses[item.id]===value)b.classList.add("active");b.textContent=`${value}: ${label}`;
+      b.addEventListener("click",()=>{state.caregiverResponses[item.id]=value;renderCaregiver();renderResults();saveDraft()});
+      row.appendChild(b);
+    });
+    card.appendChild(row);
+    const lab=document.createElement("label");lab.htmlFor=`careNote${item.id}`;lab.textContent="보호자 사례 또는 비고";lab.style.marginTop="12px";card.appendChild(lab);
+    const ta=document.createElement("textarea");ta.id=`careNote${item.id}`;ta.value=state.caregiverNotes[item.id]||"";ta.addEventListener("input",e=>{state.caregiverNotes[item.id]=e.target.value;renderResults();saveDraft()});card.appendChild(ta);
+    host.appendChild(card);
+  });
+  renderCaregiverSummary();
+}
+function renderCaregiverSummary(){
+  const answered=caregiverItems.filter(i=>state.caregiverResponses[i.id]!==undefined).length;
+  const no=caregiverItems.filter(i=>state.caregiverResponses[i.id]==="NO").length;
+  $("caregiverCountBadge").textContent=`${answered} / ${caregiverItems.length}`;
+  const lines=caregiverItems.map(i=>`${i.id}. ${CARE_RESPONSE_LABELS[state.caregiverResponses[i.id]]||"미응답"}${state.caregiverNotes[i.id]?` — ${state.caregiverNotes[i.id]}`:""}`);
+  $("caregiverRawList").textContent=lines.join("\n");
+  $("caregiverSummary").textContent=`응답 완료 문항 수: ${answered} / 10\n관찰 기회 없음 문항 수: ${no}`;
+  $("caregiverResultList").textContent=lines.join("\n");
+}
+function aggregateDirect(){
+  const logs=state.logs,repairCounts={full_repeat:0,specific_question:0,confirmation:0,other:0},self={heard_well:0,a_little_difficult:0,very_difficult:0,unrecorded:0};
+  logs.forEach(log=>{
+    if(VALID_REPAIR_TYPES.includes(log.repairType))repairCounts[log.repairType]++;
+    if(log.selfReport)self[log.selfReport]++;else self.unrecorded++;
+  });
+  return{
+    completed:logs.length,
+    initialCorrect:logs.filter(l=>l.initialCorrect===true).length,
+    repeatCount:logs.filter(l=>l.repeatPlayed).length,
+    changedAfterRepeat:logs.filter(l=>l.repeatPlayed&&(l.initialChoiceId!==l.finalChoiceId||l.initialCorrect!==l.finalCorrect)).length,
+    noResponse:logs.filter(l=>l.noResponse).length,
+    repairCounts,
+    self
+  }
+}
+function renderResults(){
+  const a=aggregateDirect();
+  $("kpiCompleted").textContent=`${a.completed}/18`;
+  $("kpiInitialCorrect").textContent=a.initialCorrect;
+  $("kpiRepeat").textContent=a.repeatCount;
+  $("kpiChanged").textContent=a.changedAfterRepeat;
+  $("kpiNoResponse").textContent=a.noResponse;
+  const caregiverAnswered=caregiverItems.filter(i=>state.caregiverResponses[i.id]!==undefined).length;
+  $("kpiCaregiver").textContent=`${caregiverAnswered}/10`;
+  $("technicalSummary").textContent=[
+    `완료 문항 수: ${a.completed}`,
+    `최초 제시 정반응 수: ${a.initialCorrect}`,
+    `추가 제시 문항 수: ${a.repeatCount}`,
+    `추가 제시 후 반응 변화 수: ${a.changedAfterRepeat}`,
+    `복구전략 유형별 횟수: 전체 반복 요청 ${a.repairCounts.full_repeat}, 특정 정보 질문 ${a.repairCounts.specific_question}, 확인 질문 ${a.repairCounts.confirmation}, 기타 복구행동 ${a.repairCounts.other}`,
+    `무반응 수: ${a.noResponse}`,
+    `자기보고 분포: 잘 들었어요 ${a.self.heard_well}, 조금 어려웠어요 ${a.self.a_little_difficult}, 많이 어려웠어요 ${a.self.very_difficult}, 미기록 ${a.self.unrecorded}`
+  ].join("\n");
+  renderLogs();
+  renderCaregiverSummary();
+}
+function renderLogs(){
+  const tbody=$("logTable"),cards=$("logCards");tbody.textContent="";cards.textContent="";
+  if(!state.logs.length){
+    const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=12;td.textContent="아직 저장된 직접평가 기록이 없습니다.";tr.appendChild(td);tbody.appendChild(tr);
+    cards.textContent="아직 저장된 직접평가 기록이 없습니다.";return;
+  }
+  state.logs.forEach(log=>{
+    const item=itemById(log.itemId);
+    const values=[`${log.itemId}번`,log.domain,log.sentence,optionLabel(item,log.initialChoiceId),correctText(log.initialCorrect),repairText(log.repairType),log.repeatPlayed?"예":"아니요",log.finalChoiceId?optionLabel(item,log.finalChoiceId):"미기록",correctText(log.finalCorrect),selfReportText(log.selfReport),log.noResponse?"예":"아니요",log.evaluatorNote||"-"];
+    const tr=document.createElement("tr");values.forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td)});tbody.appendChild(tr);
+    const card=document.createElement("div");card.className="result-card";card.textContent=values.map((v,i)=>`${["문항 번호","영역","문장","최초 선택","최초 정오","복구전략","추가 제시 여부","최종 선택","최종 정오","자기보고","무반응 여부","평가자 메모"][i]}: ${v}`).join("\n");cards.appendChild(card);
+  });
+}
+function integratedSummary(){
+  const a=aggregateDirect(),caregiverAnswered=caregiverItems.filter(i=>state.caregiverResponses[i.id]!==undefined).length,no=caregiverItems.filter(i=>state.caregiverResponses[i.id]==="NO").length;
+  $("technicalSummary").textContent=[
+    `평가 모드: ${modeLabel()}`,
+    `직접평가 완료 문항 수: ${a.completed}`,
+    `최초 제시 정반응 수: ${a.initialCorrect}`,
+    `추가 제시 문항 수: ${a.repeatCount}`,
+    `추가 제시 후 반응 변화 수: ${a.changedAfterRepeat}`,
+    `무반응 수: ${a.noResponse}`,
+    `보호자 보고 응답 완료 문항 수: ${caregiverAnswered}`,
+    `관찰 기회 없음 문항 수: ${no}`,
+    `위 내용은 현재 입력된 기록을 기술적으로 정리한 것입니다.`
+  ].join("\n");
+}
+function reportText(){
+  persistCurrentInputs();
+  const now=new Date(),a=aggregateDirect(),caregiverAnswered=caregiverItems.filter(i=>state.caregiverResponses[i.id]!==undefined).length,no=caregiverItems.filter(i=>state.caregiverResponses[i.id]==="NO").length;
+  const direct=state.logs.length?state.logs.map(log=>{
+    const item=itemById(log.itemId);
+    return `[${log.itemId}번]\n영역: ${log.domain}\n문장: ${log.sentence}\n최초 선택: ${optionLabel(item,log.initialChoiceId)}\n최초 정오: ${correctText(log.initialCorrect)}\n복구전략: ${repairText(log.repairType)}\n추가 제시 여부: ${log.repeatPlayed?"예":"아니요"}\n최종 선택: ${log.finalChoiceId?optionLabel(item,log.finalChoiceId):"미기록"}\n최종 정오: ${correctText(log.finalCorrect)}\n자기보고: ${selfReportText(log.selfReport)}\n무반응 여부: ${log.noResponse?"예":"아니요"}\n평가자 메모: ${log.evaluatorNote||"-"}`;
+  }).join("\n\n"):"저장된 직접평가 기록 없음";
+  const caregiver=caregiverItems.map(i=>`${i.id}. ${i.text}\n응답: ${CARE_RESPONSE_LABELS[state.caregiverResponses[i.id]]||"미응답"}\n사례/비고: ${state.caregiverNotes[i.id]||"-"}`).join("\n\n");
+  const cal=state.sessionCalibrationSnapshot||{};
+  const acoustic=state.mode==="formal"&&validCalibration(cal)?`보정 프로필: ${cal.profileName}\n장치 ID: ${cal.deviceId}\n거리: ${cal.distance}\n위치: ${cal.position}\n문장 수준: ${fmtNum(cal.speechDba,"dBA")}\n교실소음 수준: ${fmtNum(cal.noiseDba,"dBA")}\nSNR: ${fmtNum(cal.snrDb,"dB")}\n보정일: ${cal.calibratedAt}`:"음향 정보: 고정 디지털 상대레벨(시연용)";
+  return `[기본정보]\n프로그램 버전: ${PROGRAM_VERSION}\n평가 모드: ${modeLabel()}\n참여자 코드: ${state.participantCode||"미입력"}\n평가자 코드: ${state.examinerCode||"미입력"}\n평가 회차: ${state.sessionNo||"미입력"}\n평가 날짜와 시간: ${now.toLocaleString("ko-KR")}\n화자: 성인 표준어 화자 1인\n소음: 교실소음 1종\n${state.mode==="demo"?"음향 미보정 · 체험 결과는 연구자료로 사용할 수 없습니다.\n":""}${acoustic}\n\n[직접평가 결과]\n완료 문항 수: ${a.completed}\n최초 제시 정반응 수: ${a.initialCorrect}\n추가 제시 문항 수: ${a.repeatCount}\n추가 제시 후 반응 변화 수: ${a.changedAfterRepeat}\n복구전략 유형별 횟수: 전체 반복 요청 ${a.repairCounts.full_repeat}, 특정 정보 질문 ${a.repairCounts.specific_question}, 확인 질문 ${a.repairCounts.confirmation}, 기타 복구행동 ${a.repairCounts.other}\n무반응 수: ${a.noResponse}\n자기보고 분포: 잘 들었어요 ${a.self.heard_well}, 조금 어려웠어요 ${a.self.a_little_difficult}, 많이 어려웠어요 ${a.self.very_difficult}, 미기록 ${a.self.unrecorded}\n\n[보호자 보고 결과]\n응답 완료 문항 수: ${caregiverAnswered}\n관찰 기회 없음 문항 수: ${no}\n\n[문항별 직접평가 기록]\n${direct}\n\n[문항별 보호자 보고]\n${caregiver}\n\n[참고]\n본 프로토콜은 현재 표준화 검사가 아니며, 결과는 문항별 기록과 관찰 내용을 함께 검토하기 위한 자료입니다.`;
+}
+function downloadReport(){
+  const text=reportText(),blob=new Blob([text],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  const code=(state.participantCode||"participant").replace(/[\\/:*?"<>|]/g,"");
+  a.href=url;a.download=`${code}_소음환경기능적듣기평가.txt`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);setStatus("reportStatus","TXT 파일을 저장했습니다.");
+}
+function confirmReset(action){
+  if(!confirm("현재 저장된 평가 기록이 삭제됩니다. 계속하시겠습니까?"))return;
+  action();
+}
+function resetDirect(){
+  confirmReset(()=>{state.logs=[];state.observations={};state.currentItem=0;renderCurrentItem();renderResults();saveDraft()});
+}
+function resetAll(){
+  confirmReset(()=>{state.logs=[];state.observations={};state.caregiverResponses={};state.caregiverNotes={};state.participantCode="";state.sessionNo="";state.examinerCode="";$("participantCode").value="";$("sessionNo").value="";$("examinerCode").value="";state.currentItem=0;renderCurrentItem();renderCaregiver();renderResults();saveDraft()});
+}
+function newAssessment(){
+  confirmReset(()=>{state.mode=null;state.logs=[];state.observations={};state.caregiverResponses={};state.caregiverNotes={};state.participantCode="";state.sessionNo="";state.examinerCode="";state.preflightChecks={};state.currentItem=0;clearDraft();$("participantCode").value="";$("sessionNo").value="";$("examinerCode").value="";renderSessionMode();renderChecklist();renderCurrentItem();renderCaregiver();renderResults();showPage("preflightPage")});
+}
+function openDemo(){
+  state.mode="demo";renderSessionMode();showPage("evalPage");saveDraft();
+}
+function init(){
+  restoreDraft();
+  setProgramVersion();
+  $("participantCode").value=state.participantCode||"";
+  $("sessionNo").value=state.sessionNo||"";
+  $("examinerCode").value=state.examinerCode||"";
+  document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",()=>showPage(btn.dataset.page)));
+  $("showFormalPreflightBtn").addEventListener("click",()=>{$("formalPreflightPanel").hidden=false;$("formalPreflightPanel").scrollIntoView({behavior:"smooth",block:"start"})});
+  $("demoStartBtn").addEventListener("click",openDemo);
+  $("formalStartBtn").addEventListener("click",()=>startMode("formal"));
+  $("editCalibrationBtn").addEventListener("click",()=>{renderCalibrationForm();$("calibrationDialog").showModal()});
+  $("closeCalibrationBtn").addEventListener("click",()=>$("calibrationDialog").close());
+  $("calibrationForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    const profile=collectCalibrationForm();
+    if(!validCalibration(profile)){setStatus("calibrationFormStatus","필수 보정 정보를 입력해 주세요.");return}
+    const profiles=loadCalibrationProfiles(),idx=profiles.findIndex(p=>p.id===profile.id);
+    if(idx>=0)profiles[idx]=profile;else profiles.push(profile);
+    saveCalibrationProfiles(profiles);state.selectedCalibrationId=profile.id;localStorage.setItem(SELECTED_CALIBRATION_KEY,profile.id);
+    $("calibrationDialog").close();renderCalibrationProfile();saveDraft();
+  });
+  $("resetCalibrationFormBtn").addEventListener("click",()=>renderCalibrationForm({}));
+  ["cal_speechDba","cal_noiseDba"].forEach(id=>$(id).addEventListener("input",()=>{$("cal_snrDb").value=fmtNum(calculateSnr(collectCalibrationForm()),"dB")}));
+  $("calibrationProfileSelect").addEventListener("change",e=>{state.selectedCalibrationId=e.target.value;localStorage.setItem(SELECTED_CALIBRATION_KEY,state.selectedCalibrationId);state.preflightChecks={};renderCalibrationProfile();renderChecklist();saveDraft()});
+  $("examinerCode").addEventListener("input",()=>{state.examinerCode=$("examinerCode").value.trim();updatePreflightAvailability();saveDraft()});
+  $("testSpeechBtn").addEventListener("click",previewSpeech);
+  $("testNoiseBtn").addEventListener("click",previewNoise);
+  $("preflightStopAudioBtn").addEventListener("click",()=>stopAllAudio(""));
+  $("playAssessmentBtn").addEventListener("click",()=>playItem());
+  $("repeatPlayBtn").addEventListener("click",()=>playItem({repeat:true}));
+  $("stopAudioBtn").addEventListener("click",()=>stopAllAudio());
+  $("saveTrialBtn").addEventListener("click",saveCurrentItem);
+  $("trialSummaryBtn").addEventListener("click",currentTrialSummary);
+  $("noResponseCheck").addEventListener("change",()=>{getObservation().noResponse=$("noResponseCheck").checked;saveDraft()});
+  $("evaluatorNote").addEventListener("input",()=>{getObservation().evaluatorNote=$("evaluatorNote").value;saveDraft()});
+  $("participantCode").addEventListener("input",()=>{state.participantCode=$("participantCode").value.trim();saveDraft()});
+  $("sessionNo").addEventListener("input",()=>{state.sessionNo=$("sessionNo").value.trim();saveDraft()});
+  $("recordSummaryBtn").addEventListener("click",integratedSummary);
+  $("downloadReportBtn").addEventListener("click",downloadReport);
+  $("resetDirectBtn").addEventListener("click",resetDirect);
+  $("resetAllBtn").addEventListener("click",resetAll);
+  $("newAssessmentBtn").addEventListener("click",newAssessment);
+  window.addEventListener("beforeunload",e=>{if(hasUnsavedData()){e.preventDefault();e.returnValue=""}stopAllAudio("")});
+  renderCalibrationProfile();renderChecklist();renderCurrentItem();renderCaregiver();renderResults();renderSessionMode();validateAudioAssets();
+}
+document.addEventListener("DOMContentLoaded",init);
 </script>
 </body>
 </html>
